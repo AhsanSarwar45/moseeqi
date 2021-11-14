@@ -1,31 +1,25 @@
-import { Link, Routes, Route } from 'react-router-dom';
-import SignUp from '../routes/SignUp';
-import About from '../routes/About';
-import Home from '../routes/Home';
+import { Link } from 'react-router-dom';
+import { Spacer, Button, HStack, Heading } from '@chakra-ui/react';
 
-const Navbar = () => (
-    <nav>
-    <ul>
-        <li><Link to='/'>Home</Link></li>
-        <li><Link to='/feed'>Feed</Link></li>
-        <li><Link to='/discover'>Discover</Link></li>
-        <li><Link to='/about'>About</Link></li>
-        <li><Link to='/studio'>Studio</Link></li>
-        <li><Link to='/login'>Login</Link></li>
-        <li><Link to='/signup'>Signup</Link></li>
-    </ul>
-    </nav>
+export const Navbar = () => (
+    <HStack w="full" pr={10} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
+        <Spacer />
+        <Link to='/'>
+                <Heading textColor="white" size="sm">
+                    Home
+                </Heading>
+        </Link>
+        <Link to='/about'>
+                <Heading textColor="white" size="sm">
+                    About
+                </Heading>
+        </Link>
+        <Link to='/signup'>
+                <Button colorScheme="secondary" textColor="white" size="sm">
+                    SIGN UP
+                </Button>
+        </Link>
+    </HStack>
+
 );
 
-const Main = () => (
-    <Routes>
-    <Route path='/' element={<Home/>}/>
-    <Route path='/about' element={<About/>}/>
-    <Route path='/signup' element={<SignUp/>}/>
-    </Routes>
-);
-
-export {
-  Navbar,
-  Main,
-}

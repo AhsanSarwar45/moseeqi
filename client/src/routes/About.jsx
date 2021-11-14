@@ -1,7 +1,9 @@
+import {Navbar} from "../components/NavBar";
+
 const About = () => (
     <div className='about'>
-    <h1>Welcome to About</h1>
-   
+    <Navbar/>
+    Made by some idiots.
     </div>
 );
 

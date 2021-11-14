@@ -1,11 +1,11 @@
 import React from "react";
-import {Navbar, Main} from "./components/NavBar";
+
+import { Main } from "./Main";
+
 
 
 const App = () => (
     <div className="App">
-      <h1>Moseeqi</h1>
-      <Navbar />
       <Main />
     </div>
 )
