@@ -2,8 +2,8 @@
 
 1. Clone the repository
 2. Open cloned directory in terminal
-3. Run `npm install` to install all packages
 4. Navigate to server directory using `cd server`
+3. Run `npm install` to install all serverpackages
 5. Start the server using `npm start`
 6. Navigate to client directory using `cd ../client`
 7. Run `npm install` to install all client packages 
