@@ -23,15 +23,15 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
-  `phone_number` int NOT NULL,
-  `e-mail` varchar(40) DEFAULT NULL,
-  `username` varchar(30) DEFAULT NULL,
-  `password` varchar(16) DEFAULT NULL,
-  `follower_count` int DEFAULT NULL,
+  `phone_number` varchar(12) DEFAULT NULL,
+  `email` varchar(40) NOT NULL,
+  `username` varchar(30) NOT NULL,
+  `password` varchar(16) NOT NULL,
+  `follower_count` int(10) unsigned zerofill DEFAULT NULL,
   `profile_picture_blob` blob,
   `type` varchar(3) DEFAULT NULL,
-  `earnings` int DEFAULT NULL,
-  PRIMARY KEY (`phone_number`)
+  `earnings` int(10) unsigned zerofill DEFAULT NULL,
+  PRIMARY KEY (`email`,`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -41,6 +41,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES ('5','ahsanrockzs@gmail.com','Ahsan','hgfjhgfj',NULL,NULL,NULL,NULL),('5','vicolo','New','hgfjhgfj',NULL,NULL,NULL,NULL),('03073334400','vicolodggh','NewFae','hgfjhgfj',NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-15 20:47:00
+-- Dump completed on 2021-11-15 22:34:12
