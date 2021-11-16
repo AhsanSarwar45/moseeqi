@@ -23,5 +23,5 @@ If you want to import the current version of the Moseeqi schema:
 ## Automatic server restart
 If you want the Node server to restart automatically after every save: 
 
-1. Install nodemon using `npm install nodemon`
+1. Install nodemon using `npm install -g nodemon`
 2. Instead of `npm start`, use `nodemon index.js`
