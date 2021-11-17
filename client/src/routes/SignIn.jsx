@@ -10,8 +10,10 @@ const SignIn = () => {
     const SignInOnClick = ()=>{
         Axios.post('http://localhost:3001/sign_in', 
         {
-            phone_number: phone_number
+            phone_number: phone_number,
+            password: password
         }).then(()=>{
+            Axios.get('http://localhost:3001/incorrect-credentials')
             console.log("Success");
         });
     };
@@ -27,9 +29,10 @@ const SignIn = () => {
                 <Text textColor="gray" align="center" fontSize="8pt">
                     Enter your account details{' '}
                 </Text>
-                <Button colorScheme="primary" w="full" size="lg" onClick = {SignInOnClick}>
+                <Button colorScheme="green" w="full" size="lg" onClick = {SignInOnClick}>
                     SIGN IN
                 </Button>
+
             </VStack>
         </VStack>
     </Container>
