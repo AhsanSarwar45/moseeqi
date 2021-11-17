@@ -44,6 +44,15 @@ app.post('/create_user', (req, res) => {
       });
 });
 
+app.post('/sign_in', (req, res) => {
+  console.log(req.body);
+  const phone_number = req.body.phone_number;
+  const password = req.body.password;
+  //checks if an instance exists in db or not
+  console.log(phone_number, password, "blah blah");
+  res.end();
+});
+
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
 });
