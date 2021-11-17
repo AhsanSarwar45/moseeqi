@@ -20,8 +20,8 @@ export const Navbar = () => (
                 </Button>
         </Link>
         <Link to='/sign_in'>
-                <Button colorScheme="secondary" textColor="white" size="sm">
-                    Sign In
+                <Button colorScheme="green" textColor="white" size="sm">
+                    SIGN IN
                 </Button>
         </Link>
     </HStack>
