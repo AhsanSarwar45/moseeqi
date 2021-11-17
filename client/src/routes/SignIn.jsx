@@ -29,9 +29,10 @@ const SignIn = () => {
                 <Text textColor="gray" align="center" fontSize="8pt">
                     Enter your account details{' '}
                 </Text>
-                <Button colorScheme="primary" w="full" size="lg" onClick = {SignInOnClick}>
+                <Button colorScheme="green" w="full" size="lg" onClick = {SignInOnClick}>
                     SIGN IN
                 </Button>
+
             </VStack>
         </VStack>
     </Container>
