@@ -54,14 +54,28 @@ app.post('/sign_in', (req, res) => {
   console.log(req.body);
   const phone_number = req.body.phone_number;
   const password = req.body.password;
-
   db.query(
-    'SELECT * FROM user WHERE phone_number = phone_numb'
-  )
+    'SELECT username FROM user WHERE phone_number = ? AND password = ?',
+    [phone_number, password], (err, result) => {
+    if (err)
+      throw err;
+    if (result[0]) { //sql query result is not null
+      console.log("user name:", result[0].username);
+      res.send(result[0].username);
+    } else {
+      res.send("invalid");
+    }
+    });
   //checks if an instance exists in db or not
   console.log(phone_number, password, "blah blah");
-  res.end();
+  // res.end();
 });
+
+app.post('/user', (req, res) => {
+  console.log(req.body);
+  // res.end();
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
