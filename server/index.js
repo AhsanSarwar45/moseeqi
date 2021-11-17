@@ -33,21 +33,31 @@ app.post('/create_user', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  db.query(
+  if (!phone_number || !username || !email || !password){
+    res.send("incomplete-information");
+  } else{
+    db.query(
       'INSERT INTO user (phone_number, username, email, password) VALUES (?,?,?,?)',
       [phone_number, username, email, password], (err, result) => {
         if (err) {
-          console.error(`Error adding user to database: ${err}`);
+          if (err.errno === 1062){
+            res.send("duplicate-entry")
+          }
         } else {
-          res.send('User added to databAse successfully');
+          res.send("user-added");
         }
       });
+  }
 });
 
 app.post('/sign_in', (req, res) => {
   console.log(req.body);
   const phone_number = req.body.phone_number;
   const password = req.body.password;
+
+  db.query(
+    'SELECT * FROM user WHERE phone_number = phone_numb'
+  )
   //checks if an instance exists in db or not
   console.log(phone_number, password, "blah blah");
   res.end();

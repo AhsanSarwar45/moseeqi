@@ -10,8 +10,10 @@ const SignIn = () => {
     const SignInOnClick = ()=>{
         Axios.post('http://localhost:3001/sign_in', 
         {
-            phone_number: phone_number
+            phone_number: phone_number,
+            password: password
         }).then(()=>{
+            Axios.get('http://localhost:3001/incorrect-credentials')
             console.log("Success");
         });
     };
