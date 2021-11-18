@@ -26,16 +26,16 @@ const ValidMessage = () => {
     );
 }
 
-const SignIn = () => {
+const Login = () => {
     const [password, getPassword] = useState("");
     const [phone_number, getPhoneNumber] = useState(0);
     const [isInvalid, setIsInvalid] = useState(false);
     const [isValid, setValid] = useState(false);
 
-    const SignInOnClick = ()=>{
+    const LoginOnClick = ()=>{
         setIsInvalid(false);
         setValid(false);
-        Axios.post('http://localhost:3001/sign_in', 
+        Axios.post('http://localhost:3001/login', 
         {
             phone_number: phone_number,
             password: password
@@ -62,8 +62,8 @@ const SignIn = () => {
                 <Text textColor="gray" align="center" fontSize="8pt">
                     Enter your account details{' '}
                 </Text>
-                <Button colorScheme="green" w="full" size="lg" onClick = {SignInOnClick}>
-                    SIGN IN
+                <Button colorScheme="green" w="full" size="lg" onClick = {LoginOnClick}>
+                    LOG IN
                 </Button>
                 {isInvalid ? <InvalidMessage/> : null }
                 {isValid ? <ValidMessage/> : null}
@@ -74,4 +74,4 @@ const SignIn = () => {
    
 };
 
-export default SignIn;
+export default Login;

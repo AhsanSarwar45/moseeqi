@@ -50,7 +50,7 @@ app.post('/create_user', (req, res) => {
   }
 });
 
-app.post('/sign_in', (req, res) => {
+app.post('/login', (req, res) => {
   console.log(req.body);
   const phone_number = req.body.phone_number;
   const password = req.body.password;
