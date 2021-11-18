@@ -24,18 +24,18 @@ export const Login = () => {
 			phone_number: phone_number,
 			password: password
 		}).then((response) => {
-			if (response.data === 'invalid') {
+			if (response.data === "/incorrect_credentials") {
 				setIsInvalid(true);
 				console.log('user name or password is invalid');
-			} else {
-				console.log('hello', response.data, '!');
-				Axios.post('http://localhost:3001/user', [ response.data ], {
+			} else if (response.data === "/sign_in_successful") {
+				//console.log('hello', response.data, '!');
+				Axios.post('http://localhost:3001/user', [response.data], {
 					username: response.data
 				}).then(() => {
-					console.log('back on sing in page');
+					console.log('hit');
 				});
 			}
-			console.log('Success');
+			//console.log('Success');
 		});
 	};
 

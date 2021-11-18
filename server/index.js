@@ -57,7 +57,7 @@ app.post('/sign_in', (req, res) => {
 		(err, result) => {
 			if (!result[0] || result[0].password != req.body.password) {
         //query returned nothing or password incorrect
-        console.log("hit");
+        //console.log("hit");
         res.send("/incorrect_credentials");
       } else {
         res.send("/sign_in_successful");
@@ -68,7 +68,7 @@ app.post('/sign_in', (req, res) => {
 
 app.post('/user', (req, res) => {
 	console.log(req.body);
-	// res.end();
+	// ?
 });
 
 app.listen(PORT, () => {
