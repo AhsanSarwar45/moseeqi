@@ -19,6 +19,11 @@ export const Navbar = () => (
                     SIGN UP
                 </Button>
         </Link>
+        <Link to='/login'>
+                <Button colorScheme="green" textColor="white" size="sm">
+                    LOG IN
+                </Button>
+        </Link>
     </HStack>
 
 );

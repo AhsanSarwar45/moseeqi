@@ -168,14 +168,12 @@ CREATE TABLE `user` (
   `phone_number` varchar(45) NOT NULL,
   `email` varchar(45) NOT NULL,
   `username` varchar(45) NOT NULL,
-  `password` varchar(45) NOT NULL,
-  `follower_count` int(10) unsigned zerofill DEFAULT '0000000000',
+  `password` varchar(45) DEFAULT NULL,
+  `follower_count` int(10) unsigned zerofill DEFAULT NULL,
   `profile_picture` blob,
-  `type` varchar(45) DEFAULT '1',
-  `earnings` int DEFAULT '0',
-  PRIMARY KEY (`phone_number`),
-  UNIQUE KEY `email_UNIQUE` (`email`),
-  UNIQUE KEY `phone_number_UNIQUE` (`phone_number`),
+  `type` varchar(45) DEFAULT NULL,
+  `earnings` int DEFAULT NULL,
+  PRIMARY KEY (`phone_number`,`email`,`username`),
   KEY `username_idx` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -207,4 +205,4 @@ CREATE TABLE `views` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-18 17:24:42
+-- Dump completed on 2021-11-18 16:05:10

@@ -1,48 +1,157 @@
 import { Button, VStack, Heading, Container, Text } from '@chakra-ui/react';
+
+import { Formik, Form, Field } from 'formik';
+import validator from 'validator';
 import { TextInput, PasswordInput } from '../components/TextInput';
 import { useState } from 'react';
-import Axios from 'axios'
 
-const SignUp = () => {
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [phone_number, setPhoneNumber] = useState(0);
+import { useNavigate } from 'react-router-dom';
 
-    const SignUpOnClick = ()=>{
-        Axios.post('http://localhost:3001/create_user', 
-        {
-            username: username, 
-            email: email, 
-            password: password, 
-            phone_number: phone_number
-        }).then(()=>{
-            console.log("Success");
-        });
-    };
+import Axios from 'axios';
 
-    return(
-         
-        <Container maxWidth="full" pt="30px">
-        <VStack padding={0} spacing={5}>
-            <Heading size="md">Create Account</Heading>
-            <TextInput label="Username" value = {username} onChange = {(event)=>{setUsername(event.target.value)}}/>
-            <TextInput label="Email" value = {email} onChange = {(event)=>{setEmail(event.target.value)}}/>
-            <TextInput type = "tel" label="Phone Number"value = {phone_number} onChange = {(event)=>{setPhoneNumber(event.target.value)}} />
-            <PasswordInput label="Password" value = {password} onChange = {(event)=>{setPassword(event.target.value)}}/>
-            <PasswordInput label=" Repeat Password" />
-            <VStack w="300px" align="left" pt={5}>
-                <Text textColor="gray" align="center" fontSize="8pt">
-                    By Signing up, you agree to our terms and conditions{' '}
-                </Text>
-                <Button colorScheme="primary" w="full" size="lg" onClick = {SignUpOnClick}>
-                    SIGN UP
-                </Button>
-            </VStack>
-        </VStack>
-    </Container>
-    );
-   
+export const SignUp = () => {
+	const navigate = useNavigate();
+	const [ isDup, setIsDup ] = useState(false);
+
+	const SignUpOnClick = (values, actions) => {
+		setTimeout(() => {
+			actions.setSubmitting(false);
+			Axios.post('http://localhost:3001/create_user', values).then((response) => {
+				console.log(response.data);
+				if (response.data === 'user-added') {
+					//console.log('Sucess!');
+					navigate('/signup_success');
+				} else if (response.data === 'duplicate-entry') {
+					//update page
+					console.log("check");
+					setIsDup(true);
+				}
+			});
+		}, 1000);
+	};
+
+	const validate = (values) => {
+		const errors = {};
+
+		if (!values.username) {
+			errors.username = 'Username is required';
+		}
+		if (!values.email) {
+			errors.email = 'Email is required';
+		} else if (!validator.isEmail(values.email)) {
+			errors.email = 'Invalid Email';
+		}
+		if (!values.phone_number) {
+			errors.phone_number = 'Phone Number is required';
+		} else if (!validator.isMobilePhone(values.phone_number)) {
+			errors.phone_number = 'Invalid Phone Number';
+		} else if (isDup) {
+			errors.phone_number = 'Phone Number already registered';
+		}
+
+		if (!values.password) {
+			errors.password = 'Password is required';
+		}
+
+		if (values.password && values.confirm !== values.password) {
+			errors.confirm = 'Passwords do not match';
+		}
+		//...
+
+		return errors;
+	};
+
+	return (
+		<Container maxWidth="full" pt="30px">
+			<VStack padding={0} spacing={10}>
+				<Heading size="md">Create Account</Heading>
+				<Formik
+					initialValues={{ username: '', email: '', phone_number: '', password: '', confirm: '' }}
+					onSubmit={SignUpOnClick}
+					validate={validate}
+				>
+					{(props) => (
+						<Form>
+							<Field name="username">
+								{({ field, form }) => (
+									<TextInput
+										label="Username"
+										id="username"
+										placeholder=""
+										field={field}
+										error={form.errors.username}
+										touched={form.touched.username}
+									/>
+								)}
+							</Field>
+							<Field name="email">
+								{({ field, form }) => (
+									<TextInput
+										label="Email"
+										id="email"
+										placeholder="example@site.com"
+										field={field}
+										error={form.errors.email}
+										touched={form.touched.email}
+									/>
+								)}
+							</Field>
+							<Field name="phone_number">
+								{({ field, form }) => (
+									<TextInput
+										label="Phone Number"
+										id="phone_number"
+										placeholder=""
+										field={field}
+										error={form.errors.phone_number}
+										touched={form.touched.phone_number}
+										type="tel"
+									/>
+								)}
+							</Field>
+							<Field name="password">
+								{({ field, form }) => (
+									<PasswordInput
+										label="Password"
+										id="password"
+										placeholder=""
+										field={field}
+										error={form.errors.password}
+										touched={form.touched.password}
+									/>
+								)}
+							</Field>
+							<Field name="confirm">
+								{({ field, form }) => (
+									<PasswordInput
+										label="Confirm Password"
+										id="confirm"
+										placeholder=""
+										field={field}
+										error={form.errors.confirm}
+										touched={form.touched.confirm}
+									/>
+								)}
+							</Field>
+
+							<Button
+								colorScheme="primary"
+								w="full"
+								size="lg"
+								isLoading={props.isSubmitting}
+								type="submit"
+							>
+								Sign Up
+							</Button>
+							<VStack w="300px" align="left" pt={5}>
+								<Text textColor="gray" align="center" fontSize="8pt">
+									By Signing up, you agree to our terms and conditions{' '}
+								</Text>
+							</VStack>
+						</Form>
+					)}
+				</Formik>
+			</VStack>
+		</Container>
+	);
 };
-
-export default SignUp;
