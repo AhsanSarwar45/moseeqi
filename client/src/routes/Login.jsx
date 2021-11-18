@@ -13,7 +13,7 @@ const InvalidMessage = () => {
 	);
 };
 
-const SignIn = () => {
+export const Login = () => {
 	const [ password, getPassword ] = useState('');
 	const [ phone_number, getPhoneNumber ] = useState(0);
 	const [ isInvalid, setIsInvalid ] = useState(false);
@@ -71,5 +71,3 @@ const SignIn = () => {
 		</Container>
 	);
 };
-
-export default SignIn;
