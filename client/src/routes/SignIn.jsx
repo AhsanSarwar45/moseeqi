@@ -3,24 +3,41 @@ import { TextInput, PasswordInput } from '../components/TextInput';
 import { useState } from 'react';
 import Axios from 'axios'
 
+const InvalidMessage = () => {
+    return(
+        <Container colorScheme="pink" maxWidth="full" pt="30px">
+            <Text textColor="red" align="center" fontSize="12pt">
+                Password or Phone Number is Invalid{' '}
+            </Text>
+        </Container>
+    );
+}
+
 const SignIn = () => {
     const [password, getPassword] = useState("");
     const [phone_number, getPhoneNumber] = useState(0);
+    const [isInvalid, setIsInvalid] = useState(false);
 
     const SignInOnClick = ()=>{
+        setIsInvalid(false);
         Axios.post('http://localhost:3001/sign_in', 
         {
             phone_number: phone_number,
             password: password
         }).then((response)=>{
-            //console.log(response.data);
-            if (response.data === "/incorrect_credentials"){
-                //AHSAN: IMPLEMENT STATE
-                console.log("front end hit")
-            } else if (response.data === "/sign_in_successful"){
-                //AHSAN: IMPLEMENT STATE
-                console.log("front end succ");
+            if (response.data === "invalid"){
+                setIsInvalid(true);
+                console.log("user name or password is invalid");
+            } else {
+                console.log("hello", response.data, "!");
+                Axios.post('http://localhost:3001/user', [response.data], 
+                {
+                    username: response.data
+                }).then(()=>{
+                    console.log("back on sing in page");
+                });
             }
+            console.log("Success");
         });
     };
 
@@ -38,7 +55,7 @@ const SignIn = () => {
                 <Button colorScheme="green" w="full" size="lg" onClick = {SignInOnClick}>
                     SIGN IN
                 </Button>
-
+                {isInvalid ? <InvalidMessage/> : null }
             </VStack>
         </VStack>
     </Container>
