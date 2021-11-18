@@ -29,11 +29,33 @@ export const Login = () => {
 			} else {
 				console.log('sucess login', response.data, '!');
 
+<<<<<<< HEAD
 				sessionStorage.setItem('user-data', JSON.stringify(values));
 				sessionStorage.setItem('isUserLogged', true);
+=======
+    const LoginOnClick =  (values, actions)=>{
+        setIsInvalid(false);
+        setValid(false);
+        actions.setSubmitting(false);
+        Axios.post('http://localhost:3001/login', 
+		{
+			phone_number: phone_number,
+			password: password
+		}).then((response)=>{
+            if (response.data === "/invalid"){
+                setIsInvalid(true);
+                console.log("user name or password is invalid");
+            } else {
+                
+                console.log("sucess login", response.data, "!");
+				
+                sessionStorage.setItem("user-data", JSON.stringify(values));
+                sessionStorage.setItem("isUserLogged", true);
+>>>>>>> 1b7bd806b174c78e46f160f0a400a53df0bd6bfa
 
 				let data = sessionStorage.getItem('user-data');
 				data = JSON.parse(data);
+<<<<<<< HEAD
 				console.log(data);
 				Axios.post('http://localhost:3001/get-user', {
 					phone_number: data.phone_number
@@ -41,6 +63,16 @@ export const Login = () => {
 					console.log(`recieved: `, response);
 				});
 				sessionStorage.getItem('isUserLogged');
+=======
+				//console.log(data);
+				Axios.post('http://localhost:3001/get-user', 
+				{
+					phone_number: data.phone_number
+				}).then((response)=>{
+					console.log("recieved: ", response);
+				})
+				sessionStorage.getItem("isUserLogged");
+>>>>>>> 1b7bd806b174c78e46f160f0a400a53df0bd6bfa
 				navigate('/user');
 			}
 		});
@@ -80,6 +112,7 @@ export const Login = () => {
 								)}
 							</Field>
 
+<<<<<<< HEAD
 							<Button
 								colorScheme="secondary"
 								w="full"
@@ -95,4 +128,23 @@ export const Login = () => {
 			</VStack>
 		</Container>
 	);
+=======
+                        <Button
+                            colorScheme="secondary"
+                            w="full"
+                            size="lg"
+                            isLoading={props.isSubmitting}
+                            type="submit"
+                        >
+                            Log In
+                        </Button>
+                    </Form>
+                )}
+            </Formik>
+        </VStack>
+    </Container>
+
+    );
+   
+>>>>>>> 1b7bd806b174c78e46f160f0a400a53df0bd6bfa
 };
