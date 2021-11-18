@@ -72,10 +72,27 @@ app.post('/sign_in', (req, res) => {
 });
 
 app.post('/user', (req, res) => {
-  console.log(req.body);
-  // res.end();
+  console.log("in /user:", req.body);
+  res.end();
 });
 
+
+app.post('/search', (req, res) => {
+  console.log(req.body);
+  const username = req.body.username;
+  db.query(
+    'SELECT username, phone_number FROM user WHERE username=?',
+    [username], (err, result) => {
+    if (err)
+      throw err;
+    if (result[0]) { //sql query result is not null
+      console.log("query successful");
+      res.send(result);
+    } else {
+      res.send("no_match");
+    }
+    });
+});
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
