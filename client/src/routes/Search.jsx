@@ -6,18 +6,19 @@ import Axios from 'axios'
 export const Search = () => {
     const [username, getUsername] = useState("");
     const SearchOnClick = () =>{
-            console.log("inside search on click")
+            //console.log("inside search on click")
             Axios.post('http://localhost:3001/search', 
             {
                 username: username
             }).then((response)=>{
-                if (response==='no_match'){
-                    console.log("handle no match situation")
+                if (response === '/no_match'){
+                    //display no match
+                    //console.log("handle no match situation")
                 } else {
                 for (let i = 0; i < response.data.length; i++) {
                     console.log(response.data[i]);
                   }
-                console.log("now we need to print users list.");
+                //console.log("now we need to print users list.");
                 }
             });
         };

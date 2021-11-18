@@ -28,8 +28,12 @@ export const Login = () => {
         setIsInvalid(false);
         setValid(false);
         actions.setSubmitting(false);
-        Axios.post('http://localhost:3001/login', values).then((response)=>{
-            if (response.data === "invalid"){
+        Axios.post('http://localhost:3001/login', 
+		{
+			phone_number: phone_number,
+			password: password
+		}).then((response)=>{
+            if (response.data === "/invalid"){
                 setIsInvalid(true);
                 console.log("user name or password is invalid");
             } else {
@@ -41,12 +45,12 @@ export const Login = () => {
 
 				let data = sessionStorage.getItem("user-data");
 				data = JSON.parse(data);
-				console.log(data);
+				//console.log(data);
 				Axios.post('http://localhost:3001/get-user', 
 				{
 					phone_number: data.phone_number
 				}).then((response)=>{
-					console.log(`recieved: `, response);
+					console.log("recieved: ", response);
 				})
 				sessionStorage.getItem("isUserLogged");
 				navigate('/user');
@@ -96,7 +100,7 @@ export const Login = () => {
                             isLoading={props.isSubmitting}
                             type="submit"
                         >
-                            Sign Up
+                            Log In
                         </Button>
                     </Form>
                 )}
