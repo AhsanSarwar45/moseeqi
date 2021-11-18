@@ -12,9 +12,15 @@ const SignIn = () => {
         {
             phone_number: phone_number,
             password: password
-        }).then(()=>{
-            Axios.get('http://localhost:3001/incorrect-credentials')
-            console.log("Success");
+        }).then((response)=>{
+            //console.log(response.data);
+            if (response.data === "/incorrect_credentials"){
+                //AHSAN: IMPLEMENT STATE
+                console.log("front end hit")
+            } else if (response.data === "/sign_in_successful"){
+                //AHSAN: IMPLEMENT STATE
+                console.log("front end succ");
+            }
         });
     };
 

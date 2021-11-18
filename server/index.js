@@ -41,26 +41,32 @@ app.post('/create_user', (req, res) => {
       [phone_number, username, email, password], (err, result) => {
         if (err) {
           if (err.errno === 1062){
-            res.send("duplicate-entry")
+            res.send("/duplicate_entry")
           }
         } else {
-          res.send("user-added");
+          res.send("/user_added");
         }
       });
   }
 });
 
 app.post('/sign_in', (req, res) => {
-  console.log(req.body);
+  //console.log(req.body);
   const phone_number = req.body.phone_number;
   const password = req.body.password;
 
   db.query(
-    'SELECT * FROM user WHERE phone_number = phone_numb'
-  )
-  //checks if an instance exists in db or not
-  console.log(phone_number, password, "blah blah");
-  res.end();
+    'SELECT password FROM user WHERE phone_number = ?', 
+    [phone_number], (err, result) => {
+      //console.log(result[0]);
+      if (!result[0] || result[0].password != req.body.password) {
+        //query returned nothing or password incorrect
+        console.log("hit");
+        res.send("/incorrect_credentials");
+      } else {
+        res.send("/sign_in_successful");
+      }
+    });
 });
 
 app.listen(PORT, () => {

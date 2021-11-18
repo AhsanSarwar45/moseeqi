@@ -25,11 +25,11 @@ const SignUp = () => {
             phone_number: phone_number
         }).then((response)=>{
             console.log(response.data);
-            if (response.data === "user-added"){
-                console.log("here");
-            } else if (response.data === "incomplete-information"){
-                console.log("error");
-            } else if (response.data === "duplicate-entry"){
+            if (response.data === "/user_added"){
+                //AHSAN: IMPLEMENT STATE
+            } else if (response.data === "/incomplete_information"){
+                //use state similar to isDup
+            } else if (response.data === "/duplicate_entry"){
                 //update page
                 setIsDup(true);
             }
