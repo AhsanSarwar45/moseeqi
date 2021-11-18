@@ -33,11 +33,23 @@ export const Login = () => {
                 setIsInvalid(true);
                 console.log("user name or password is invalid");
             } else {
-                navigate('/user');
+                
                 console.log("sucess login", response.data, "!");
-                // sessionStorage.setItem("isUserLogged", true);
-                // sessionStorage.setItem("isUserLogged", false);
-               // setValid(true);
+				
+                sessionStorage.setItem("user-data", JSON.stringify(values));
+                sessionStorage.setItem("isUserLogged", true);
+
+				let data = sessionStorage.getItem("user-data");
+				data = JSON.parse(data);
+				console.log(data);
+				Axios.post('http://localhost:3001/get-user', 
+				{
+					phone_number: data.phone_number
+				}).then((response)=>{
+					console.log(`recieved: `, response);
+				})
+				sessionStorage.getItem("isUserLogged");
+				navigate('/user');
             }
         });
     };

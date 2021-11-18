@@ -94,6 +94,29 @@ app.post('/search', (req, res) => {
     });
 });
 
+app.post('/get-user', (req, res) => {
+  console.log("get user request recei", req.body);
+  db.query(
+    'SELECT * FROM user WHERE phone_number=?',
+    [req.body.phone_number], (err, result) => {
+    if (err)
+      throw err;
+    if (result[0]) { //sql query result is not null
+      console.log("query successful");
+      console.log(result);
+      res.send(result);
+    } 
+    });
+});
+
+
+
+
+
+
+
+
+
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
 });
