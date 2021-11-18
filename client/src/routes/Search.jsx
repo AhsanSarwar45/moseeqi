@@ -1,17 +1,5 @@
-import {
-	Box,
-	Button,
-	Center,
-	HStack,
-	Avatar,
-	VStack,
-	List,
-	ListItem,
-	Heading,
-	Container,
-	Text
-} from '@chakra-ui/react';
-import { SimpleInput, PasswordInput } from '../components/TextInput';
+import { Box, Button, HStack, Avatar, VStack, List, ListItem, Heading, Container } from '@chakra-ui/react';
+import { SimpleInput } from '../components/TextInput';
 import { useState } from 'react';
 import Axios from 'axios';
 
