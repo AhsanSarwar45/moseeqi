@@ -111,12 +111,6 @@ app.post('/get-user', (req, res) => {
 
 
 
-
-
-
-
-
-
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
 });
