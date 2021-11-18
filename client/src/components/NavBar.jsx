@@ -14,17 +14,16 @@ export const Navbar = () => (
                     About
                 </Heading>
         </Link>
-        <Link to='/login'>
-                <Heading textColor="white" size="sm">
-                   Login
-                </Heading>
-        </Link>
         <Link to='/signup'>
                 <Button colorScheme="secondary" textColor="white" size="sm">
                     SIGN UP
                 </Button>
         </Link>
-
+        <Link to='/login'>
+                <Button colorScheme="green" textColor="white" size="sm">
+                    LOG IN
+                </Button>
+        </Link>
     </HStack>
 
 );
