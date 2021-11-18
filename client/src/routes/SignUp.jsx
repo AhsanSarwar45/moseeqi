@@ -13,23 +13,6 @@ export const SignUp = () => {
 	const navigate = useNavigate();
 	const [ isDup, setIsDup ] = useState(false);
 
-	// const SignUpOnClick = () => {
-	// 	Axios.post('http://localhost:3001/create_user', {
-	// 		username: username,
-	// 		email: email,
-	// 		password: password,
-	// 		phone_number: phone_number
-	// 	}).then((response) => {
-	// 		console.log(response.data);
-	// 		if (response.data === '/user_added') {
-	// 			//AHSAN: IMPLEMENT STATE
-	// 		} else if (response.data === '/duplicate_entry') {
-	// 			//update page
-	// 			setIsDup(true);
-	// 		}
-	// 	});
-	// };
-
 	const SignUpOnClick = (values, actions) => {
 		setTimeout(() => {
 			actions.setSubmitting(false);

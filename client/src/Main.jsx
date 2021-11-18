@@ -1,10 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
-import SignUp from './routes/SignUp';
-import About from './routes/About';
-import Home from './routes/Home';
-import Login from './routes/Login';
-import User from './routes/User';
-import Search from './routes/Search';
+import {SignUp} from './routes/SignUp';
+import {About} from './routes/About';
+import {Home} from './routes/Home';
+import {Login} from './routes/Login';
+import {User} from './routes/User';
+import {Search} from './routes/Search';
 
 export const Main = () => (
     <Routes>

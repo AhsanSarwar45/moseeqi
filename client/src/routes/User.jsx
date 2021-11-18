@@ -1,9 +1,8 @@
 import {NavbarUser} from "../components/NavBarUser";
 
-const Home = () => (  
+export const User = () => (  
     <div className='home'>
         <NavbarUser/>
     </div>
 );
 
-export default Home;

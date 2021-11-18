@@ -2,6 +2,8 @@ import React from 'react';
 import {
 	useBoolean,
 	Box,
+	Text,
+	VStack,
 	FormControl,
 	FormErrorMessage,
 	FormLabel,
@@ -23,6 +25,21 @@ export const TextInput = ({ label, id, placeholder, field, error, touched, type 
 		</FormControl>
 	);
 };
+
+export const SimpleInput = ({label, value, onChange, type}) => {
+	return (
+		<VStack w="300px" align="left">
+			<Text ml="18px">{label}</Text>
+			<Input type = {type} value = {value} onChange = {onChange} variant = "filled" />
+		</VStack>
+	);
+};
+
+SimpleInput.defaultProps = {
+  label: "Input",
+  type: "",
+}
+ 
 
 export const PasswordInput = ({ label, id, placeholder, field, error, touched }) => {
 	const [ show, setShow ] = useBoolean();

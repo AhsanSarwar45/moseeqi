@@ -1,9 +1,9 @@
 import { Button, VStack, Heading, Container, Text } from '@chakra-ui/react';
-import { TextInput, PasswordInput } from '../components/TextInput';
+import { SimpleInput, PasswordInput } from '../components/TextInput';
 import { useState } from 'react';
 import Axios from 'axios'
 
-const Search = () => {
+export const Search = () => {
     const [username, getUsername] = useState("");
     const SearchOnClick = () =>{
             console.log("inside search on click")
@@ -27,7 +27,7 @@ const Search = () => {
         <Container maxWidth="full" pt="30px">
         <VStack padding={0} spacing={5}>
             <Heading size="md">Search Profile</Heading>
-            <TextInput type="name" label="Enter User Name:" value = {username} onChange = {(event)=>{getUsername(event.target.value)}} />
+            <SimpleInput type="name" label="Enter User Name:" value = {username} onChange = {(event)=>{getUsername(event.target.value)}} />
             <VStack w="300px" align="left" pt={5}>
                 <Button colorScheme="green" w="full" size="lg" onClick = {SearchOnClick}>
                     SEARCH
@@ -38,5 +38,3 @@ const Search = () => {
     );
    
 };
-
-export default Search;
