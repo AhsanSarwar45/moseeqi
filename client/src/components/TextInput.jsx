@@ -1,35 +1,53 @@
 import React from 'react';
-import { useBoolean, Button, VStack, Text, InputGroup, Input, InputRightElement } from '@chakra-ui/react';
+import {
+	useBoolean,
+	Box,
+	FormControl,
+	FormErrorMessage,
+	FormLabel,
+	Button,
+	InputGroup,
+	Input,
+	InputRightElement
+} from '@chakra-ui/react';
 
-export const TextInput = ({label, value, onChange, type}) => {
+export const TextInput = ({ label, id, placeholder, field, error, touched, type }) => {
 	return (
-		<VStack w="300px" align="left">
-			<Text ml="18px">{label}</Text>
-			<Input type = {type} value = {value} onChange = {onChange} variant = "filled" />
-		</VStack>
+		<FormControl isInvalid={error && touched}>
+			<FormLabel ml="18px" htmlFor={id}>
+				{label}
+			</FormLabel>
+			<Input {...field} id={id} placeholder={placeholder} variant="filled" type={type} />
+			<FormErrorMessage>{error}</FormErrorMessage>
+			<Box w="100%" h={5} p={4} color="white" />
+		</FormControl>
 	);
 };
 
-TextInput.defaultProps = {
-  label: "Input",
-  type: "",
-}
- 
-
-export const PasswordInput = ({label, value, onChange}) => {
+export const PasswordInput = ({ label, id, placeholder, field, error, touched }) => {
 	const [ show, setShow ] = useBoolean();
 
 	return (
-		<VStack w="300px" align="left">
-			<Text ml="18px">{label}</Text>
+		<FormControl isInvalid={error && touched}>
+			<FormLabel ml="18px" htmlFor={id}>
+				{label}
+			</FormLabel>
 			<InputGroup size="md">
-				<Input variant="filled" value = {value} onChange = {onChange} type={show ? 'text' : 'password'} />
+				<Input
+					{...field}
+					id={id}
+					placeholder={placeholder}
+					variant="filled"
+					type={show ? 'text' : 'password'}
+				/>
 				<InputRightElement width="4.5rem">
 					<Button h="1.75rem" size="sm" onClick={setShow.toggle}>
 						{show ? 'Hide' : 'Show'}
 					</Button>
 				</InputRightElement>
 			</InputGroup>
-		</VStack>
+			<FormErrorMessage>{error}</FormErrorMessage>
+			<Box w="100%" h={5} p={4} color="white" />
+		</FormControl>
 	);
 };
