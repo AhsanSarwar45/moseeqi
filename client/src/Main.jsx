@@ -6,6 +6,7 @@ import {Login} from './routes/Login';
 import {User} from './routes/User';
 import {SignUpSuccess} from './routes/SignUpSuccess';
 import {Search} from './routes/Search';
+import { ViewProfile } from './routes/ViewProfile';
 
 export const Main = () => (
     <Routes>
@@ -16,5 +17,6 @@ export const Main = () => (
     <Route path='/user' element={<User/>}/>
     <Route path='/signup_success' element={<SignUpSuccess/>}/>
     <Route path='/search' element={<Search/>}/>
+    <Route path='/view-profile' element={<ViewProfile/>}/>
     </Routes>
 );

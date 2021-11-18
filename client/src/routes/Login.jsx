@@ -96,7 +96,7 @@ export const Login = () => {
                             isLoading={props.isSubmitting}
                             type="submit"
                         >
-                            Sign Up
+                            LOG IN
                         </Button>
                     </Form>
                 )}
