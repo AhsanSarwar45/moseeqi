@@ -38,10 +38,10 @@ app.post('/create_user', (req, res) => {
 		(err, result) => {
 			if (err) {
 				if (err.errno === 1062) {
-					res.send('duplicate-entry');
+					res.send('/duplicate_entry');
 				}
 			} else {
-				res.send('user-added');
+				res.send('/user_added');
 			}
 		}
 	);
@@ -52,22 +52,18 @@ app.post('/sign_in', (req, res) => {
 	const phone_number = req.body.phone_number;
 	const password = req.body.password;
 	db.query(
-		'SELECT username FROM user WHERE phone_number = ? AND password = ?',
-		[ phone_number, password ],
+		'SELECT password FROM user WHERE phone_number = ?', 
+    [phone_number],
 		(err, result) => {
-			if (err) throw err;
-			if (result[0]) {
-				//sql query result is not null
-				console.log('user name:', result[0].username);
-				res.send(result[0].username);
-			} else {
-				res.send('invalid');
-			}
+			if (!result[0] || result[0].password != req.body.password) {
+        //query returned nothing or password incorrect
+        console.log("hit");
+        res.send("/incorrect_credentials");
+      } else {
+        res.send("/sign_in_successful");
+      }
 		}
 	);
-	//checks if an instance exists in db or not
-	console.log(phone_number, password, 'blah blah');
-	// res.end();
 });
 
 app.post('/user', (req, res) => {
