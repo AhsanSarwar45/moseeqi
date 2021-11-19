@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { SignUp } from './routes/SignUp';
 import { About } from './routes/About';
-import { Home } from './routes/Home';
+import { Landing } from './routes/Landing';
 import { Login } from './routes/Login';
 import { User } from './routes/User';
 import { SignUpSuccess } from './routes/SignUpSuccess';
@@ -10,7 +10,7 @@ import { Profile } from './routes/Profile';
 
 export const Main = () => (
 	<Routes>
-		<Route path="/" element={<Home />} />
+		<Route path="/" element={<Landing />} />
 		<Route path="/about" element={<About />} />
 		<Route path="/signup" element={<SignUp />} />
 		<Route path="/login" element={<Login />} />

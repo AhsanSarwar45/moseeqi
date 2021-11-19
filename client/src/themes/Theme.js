@@ -50,8 +50,7 @@ const Theme = extendTheme({
 	components: {
 		Button: {
 			baseStyle: {
-				borderRadius: 'full',
-				fontWeight: 'bold'
+				borderRadius: 'full'
 			}
 		},
 		Input: {

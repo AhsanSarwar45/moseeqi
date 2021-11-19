@@ -1,8 +1,7 @@
 import { WithSubnavigation } from '../components/NavBar';
 
-export const About = () => (
-	<div className="about">
+export const Landing = () => (
+	<div className="home">
 		<WithSubnavigation />
-		Made by some idiots.
 	</div>
 );
