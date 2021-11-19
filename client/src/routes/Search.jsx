@@ -16,7 +16,6 @@ const UserCard = ({ user }) => {
 };
 
 export const Search = () => {
-<<<<<<< HEAD
 	const [ username, getUsername ] = useState('');
 	const [ users, setUsers ] = useState([]);
 	const SearchOnClick = () => {
@@ -36,26 +35,6 @@ export const Search = () => {
 			}
 		});
 	};
-=======
-    const [username, getUsername] = useState("");
-    const SearchOnClick = () =>{
-            //console.log("inside search on click")
-            Axios.post('http://localhost:3001/search', 
-            {
-                username: username
-            }).then((response)=>{
-                if (response === '/no_match'){
-                    //display no match
-                    //console.log("handle no match situation")
-                } else {
-                for (let i = 0; i < response.data.length; i++) {
-                    console.log(response.data[i]);
-                  }
-                //console.log("now we need to print users list.");
-                }
-            });
-        };
->>>>>>> 1b7bd806b174c78e46f160f0a400a53df0bd6bfa
 
 	return (
 		<Container maxWidth="full" pt="30px">

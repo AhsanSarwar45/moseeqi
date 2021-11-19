@@ -26,7 +26,6 @@ db.connect(function(err) {
 });
 
 app.post('/create_user', (req, res) => {
-<<<<<<< HEAD
 	console.log(req.body);
 	const phone_number = req.body.phone_number;
 	const username = req.body.username;
@@ -69,44 +68,6 @@ app.post('/login', (req, res) => {
 	//checks if an instance exists in db or not
 	console.log(phone_number, password, 'blah blah');
 	// res.end();
-=======
-  //console.log(req.body);
-  const phone_number = req.body.phone_number;
-  const username = req.body.username;
-  const email = req.body.email;
-  const password = req.body.password;
-
-  db.query(
-    'INSERT INTO user (phone_number, username, email, password) VALUES (?,?,?,?)',
-    [phone_number, username, email, password], (err, result) => {
-      if (err) {
-        if (err.errno === 1062){
-          res.send("/duplicate_entry")
-        }
-      } else {
-        res.send("/user_added");
-      }
-    });
-});
-
-app.post('/login', (req, res) => {
-  //console.log(req.body);
-  const phone_number = req.body.phone_number;
-  const password = req.body.password;
-  db.query(
-    'SELECT username FROM user WHERE phone_number = ? AND password = ?',
-    [phone_number, password], (err, result) => {
-    if (err)
-      throw err;
-    if (result[0]) { //sql query result is not null
-      //console.log("user name:", result[0].username);
-      res.send(result[0].username);
-    } else {
-      res.send("/invalid");
-    }
-    });
-  
->>>>>>> 1b7bd806b174c78e46f160f0a400a53df0bd6bfa
 });
 
 app.post('/user', (req, res) => {
@@ -115,7 +76,6 @@ app.post('/user', (req, res) => {
 });
 
 app.post('/search', (req, res) => {
-<<<<<<< HEAD
 	console.log(req.body);
 	const username = req.body.username;
 	db.query('SELECT username, phone_number FROM user WHERE username=?', [ username ], (err, result) => {
@@ -128,22 +88,6 @@ app.post('/search', (req, res) => {
 			res.send('no_match');
 		}
 	});
-=======
-  //console.log(req.body);
-  const username = req.body.username;
-  db.query(
-    'SELECT username, phone_number FROM user WHERE username=?',
-    [username], (err, result) => {
-    if (err)
-      throw err;
-    if (result[0]) { //sql query result is not null
-      console.log("query successful");
-      res.send(result);
-    } else {
-      res.send("/no_match");
-    }
-    });
->>>>>>> 1b7bd806b174c78e46f160f0a400a53df0bd6bfa
 });
 
 app.post('/get-user', (req, res) => {
