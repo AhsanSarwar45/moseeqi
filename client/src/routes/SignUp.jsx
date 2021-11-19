@@ -18,12 +18,11 @@ export const SignUp = () => {
 			actions.setSubmitting(false);
 			Axios.post('http://localhost:3001/create_user', values).then((response) => {
 				console.log(response.data);
-				if (response.data === 'user-added') {
-					//console.log('Sucess!');
+				if (response.data === '/user_added') {
+					//console.log('Success!');
 					navigate('/signup_success');
-				} else if (response.data === 'duplicate-entry') {
+				} else if (response.data === '/duplicate_entry') {
 					//update page
-					console.log("check");
 					setIsDup(true);
 				}
 			});

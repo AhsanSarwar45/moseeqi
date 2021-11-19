@@ -89,22 +89,20 @@ export const Login = () => {
                             )}
                         </Field>
 
-                        <Button
-                            colorScheme="secondary"
-                            w="full"
-                            size="lg"
-                            isLoading={props.isSubmitting}
-                            type="submit"
-                        >
-                            LOG IN
-                        </Button>
-                    </Form>
-                )}
-            </Formik>
-        </VStack>
-    </Container>
-
-    );
-   
+							<Button
+								colorScheme="secondary"
+								w="full"
+								size="lg"
+								isLoading={props.isSubmitting}
+								type="submit"
+							>
+								Login
+							</Button>
+						</Form>
+					)}
+				</Formik>
+			</VStack>
+		</Container>
+	);
 };
 
