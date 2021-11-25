@@ -1,15 +1,38 @@
-import { Box, Button, HStack, Avatar, VStack, List, ListItem, Heading, Container } from '@chakra-ui/react';
+import { Box, Button, HStack, Avatar, VStack, Text, List, ListItem, Heading, Container } from '@chakra-ui/react';
 import { SimpleInput } from '../components/TextInput';
 import { useState } from 'react';
 import Axios from 'axios';
 
+const MatchMessage = ({ users }) => {
+	return(
+		<List spacing={3}>
+			{users.map((user) => (
+				<ListItem key={user.phone_number}>
+					<UserCard user={user} />
+				</ListItem>
+			))}
+		</List>
+	);
+};
+
+const NoMatchMessage = () => {
+	return(
+		<Box shadow="md" borderRadius="full" padding={2} w="300px" bgGradient="linear(to-t, pink.200, pink.100)">
+			<Text textColor="red" align="center" fontSize="12pt">
+				No Match Found{' '}
+			</Text>
+		</Box>
+	);
+};
+
 const UserCard = ({ user }) => {
 	return (
-		<Box bg="gray.200" borderRadius="full" padding={5} w="500px">
+		<Box  shadow="md" borderRadius="full" padding={1} w="500px" bgGradient="linear(to-t, gray.200, gray.100)">
 			<HStack>
-				<Avatar size="xl" name={user.username} />
+				<Avatar shadow="md" size="md" name={user.username} />
 				<Box w="10px" />
-				<Heading textColor="black">{user.username}</Heading>
+				<Text fontSize='2xl' textColor="black">{user.username}</Text>
+				<Text fontSize='md' textColor="gray">({user.follower_count} followers)</Text>
 			</HStack>
 		</Box>
 	);
@@ -18,23 +41,23 @@ const UserCard = ({ user }) => {
 export const Search = () => {
 	const [ username, getUsername ] = useState('');
 	const [ users, setUsers ] = useState([]);
+	const [ isNoMatch, setNoMatch ] = useState(false);
 	const SearchOnClick = () => {
-		console.log('inside search on click');
 		Axios.post('http://localhost:3001/search', {
 			username: username
 		}).then((response) => {
-			if (response === 'no_match') {
-				console.log('handle no match situation');
+			if (response.data === 'no_match') {
+				setNoMatch(true);
 			} else {
 				for (let i = 0; i < response.data.length; i++) {
 					setUsers((users) => [ ...users, response.data[i] ]);
 				}
 				setUsers(response.data);
-				console.log('now we need to print users list.');
-				console.log(users);
+				setNoMatch(false);
 			}
 		});
 	};
+
 
 	return (
 		<Container maxWidth="full" pt="30px">
@@ -53,13 +76,8 @@ export const Search = () => {
 						SEARCH
 					</Button>
 				</VStack>
-				<List spacing={3}>
-					{users.map((user) => (
-						<ListItem key={user.phone_number}>
-							<UserCard user={user} />
-						</ListItem>
-					))}
-				</List>
+				{isNoMatch? <NoMatchMessage/> : null}
+				{(!isNoMatch)? <MatchMessage users={users}/> : null}
 			</VStack>
 		</Container>
 	);
