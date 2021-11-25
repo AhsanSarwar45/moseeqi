@@ -1,7 +1,8 @@
-import { Box, Button, HStack, Avatar, VStack, Text, List, ListItem, Heading, Container } from '@chakra-ui/react';
+import { Box, Spacer, Button, HStack, Avatar, VStack, Text, List, ListItem, Heading, Container } from '@chakra-ui/react';
 import { SimpleInput } from '../components/TextInput';
 import { useState } from 'react';
 import Axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const MatchMessage = ({ users }) => {
 	return(
@@ -28,12 +29,14 @@ const NoMatchMessage = () => {
 const UserCard = ({ user }) => {
 	return (
 		<Box  shadow="md" borderRadius="full" padding={1} w="500px" bgGradient="linear(to-t, gray.200, gray.100)">
+			<Link to="/profile">
 			<HStack>
-				<Avatar shadow="md" size="md" name={user.username} />
+				<Avatar shadow="md" size="md" name={user.username} src="https://i.pinimg.com/originals/3b/85/a0/3b85a067c5add90cba61445eec1a6945.jpg"/>
 				<Box w="10px" />
-				<Text fontSize='2xl' textColor="black">{user.username}</Text>
+						<Text fontSize='2xl' textColor="black">{user.username}</Text>
 				<Text fontSize='md' textColor="gray">({user.follower_count} followers)</Text>
 			</HStack>
+			</Link>
 		</Box>
 	);
 };
@@ -60,6 +63,15 @@ export const Search = () => {
 
 
 	return (
+		<div>
+        <HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
+            <Spacer />
+			<Link to="/user">
+				<Button colorScheme="blue" textColor="white" size="sm">
+                    Back   
+				</Button>
+			</Link>
+		</HStack>
 		<Container maxWidth="full" pt="30px">
 			<VStack padding={0} spacing={5}>
 				<Heading size="md">Search Profile</Heading>
@@ -80,5 +92,6 @@ export const Search = () => {
 				{(!isNoMatch)? <MatchMessage users={users}/> : null}
 			</VStack>
 		</Container>
+		</div>
 	);
 };

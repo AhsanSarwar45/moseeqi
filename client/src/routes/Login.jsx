@@ -1,8 +1,9 @@
-import { Button, VStack, Heading, Container, Text } from '@chakra-ui/react';
+import { HStack, Spacer, Button, VStack, Heading, Container, Text } from '@chakra-ui/react';
 import { TextInput, PasswordInput } from '../components/TextInput';
 import { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Axios from 'axios'
 
 const InvalidMessage = () => {
@@ -15,12 +16,8 @@ const InvalidMessage = () => {
     );
 }
 
-
 export const Login = () => {
     const navigate = useNavigate();
-
-    const [password, getPassword] = useState("");
-    const [phone_number, getPhoneNumber] = useState(0);
     const [isInvalid, setIsInvalid] = useState(false);
     const [isValid, setValid] = useState(false);
 
@@ -33,15 +30,10 @@ export const Login = () => {
                 setIsInvalid(true);
                 console.log("user name or password is invalid");
             } else {
-                
-                console.log("sucess login", response.data, "!");
-				
                 sessionStorage.setItem("user-data", JSON.stringify(values));
                 sessionStorage.setItem("isUserLogged", true);
-
 				let data = sessionStorage.getItem("user-data");
 				data = JSON.parse(data);
-				console.log(data);
 				Axios.post('http://localhost:3001/get-user', 
 				{
 					phone_number: data.phone_number
@@ -55,7 +47,15 @@ export const Login = () => {
     };
 
     return(
-         
+        <div>
+        <HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
+            <Spacer />
+			<Link to="/">
+				<Button colorScheme="blue" textColor="white" size="sm">
+                    Back   
+				</Button>
+			</Link>
+		</HStack>
         <Container maxWidth="full" pt="30px">
         <VStack padding={0} spacing={5}>
             <Heading size="md">Login</Heading>
@@ -103,7 +103,7 @@ export const Login = () => {
             </Formik>
         </VStack>
     </Container>
-
+    </div>
     );
    
 };

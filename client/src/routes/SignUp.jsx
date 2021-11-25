@@ -1,5 +1,5 @@
-import { Button, VStack, Heading, Container, Text } from '@chakra-ui/react';
-
+import { Button, HStack, Spacer, VStack, Heading, Container, Text } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import validator from 'validator';
 import { TextInput, PasswordInput } from '../components/TextInput';
@@ -62,6 +62,15 @@ export const SignUp = () => {
 	};
 
 	return (
+        <div>
+        <HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
+            <Spacer />
+			<Link to="/">
+				<Button colorScheme="blue" textColor="white" size="sm">
+                    Back   
+				</Button>
+			</Link>
+		</HStack>
 		<Container maxWidth="full" pt="30px">
 			<VStack padding={0} spacing={10}>
 				<Heading size="md">Create Account</Heading>
@@ -153,5 +162,6 @@ export const SignUp = () => {
 				</Formik>
 			</VStack>
 		</Container>
+		</div>
 	);
 };
