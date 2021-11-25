@@ -7,6 +7,7 @@ import { User } from './routes/User';
 import { SignUpSuccess } from './routes/SignUpSuccess';
 import { Search } from './routes/Search';
 import { Profile } from './routes/Profile';
+import { UploadMusic } from './routes/UploadMusic';
 
 export const Main = () => (
 	<Routes>
@@ -18,5 +19,6 @@ export const Main = () => (
 		<Route path="/signup_success" element={<SignUpSuccess />} />
 		<Route path="/search" element={<Search />} />
 		<Route path="/profile" element={<Profile />} />
+		<Route path="/upload_music" element={<UploadMusic />} />
 	</Routes>
 );

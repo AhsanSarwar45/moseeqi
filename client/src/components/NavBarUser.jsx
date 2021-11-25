@@ -11,13 +11,18 @@ export const NavbarUser = () => {
 	return (
 		<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
 			<Spacer />
+			<Link to="/upload_music">
+				<Button colorScheme="primary" textColor="white" size="sm">
+					UPLOAD MUSIC
+				</Button>
+			</Link>
 			<Link to="/profile">
-				<Button colorScheme="default" textColor="white" size="sm">
+				<Button colorScheme="primary" textColor="white" size="sm">
 					PROFILE
 				</Button>
 			</Link>
 			<Link to="/search">
-				<Button colorScheme="default" textColor="white" size="sm">
+				<Button colorScheme="primary" textColor="white" size="sm">
 					SEARCH
 				</Button>
 			</Link>
