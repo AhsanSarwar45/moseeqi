@@ -1,19 +1,34 @@
-import { Link } from 'react-router-dom';
 import { NavbarUser } from '../components/NavBarUser';
-import { Spacer, Button, HStack, VStack, Heading, Container, Text } from '@chakra-ui/react';
+import { Spacer, VStack, Heading, Text, Box, StackDivider } from '@chakra-ui/react';
 
 export const Profile = () => {
 	let data = sessionStorage.getItem('user-data');
 	data = JSON.parse(data);
-	console.log(data);
-
+	
 	return (
 		<div>
 			<NavbarUser />
-			<VStack padding={0} spacing={5}>
-				<Heading size="md">Profile Info:</Heading>
-				<Text> Phone Number: {data.phone_number} </Text>
-				<Text> Password: {data.password} </Text>
+			<VStack
+			divider={<StackDivider borderColor="gray.200" />}
+			spacing={4}
+			align="center"
+			>
+				<Box h="20px" padding="30px">
+					<Heading size="md">Profile Info:</Heading>
+				</Box>
+				<Box h="20px" >
+					<Text> User Name: {data.username} </Text>
+				</Box>
+				<Box h="20px">
+					<Text> Phone Number: {data.phone_number} </Text>
+				</Box>
+				<Box h="20px">
+					<Text> Followers: {data.follower_count} </Text>
+				</Box>
+				<Box h="20px">
+					<Text> Earnings: {data.earnings} </Text>
+				</Box>
+				<Spacer/>
 			</VStack>
 		</div>
 	);
