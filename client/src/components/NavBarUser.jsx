@@ -9,15 +9,15 @@ export const NavbarUser = () => {
 	};
 
 	return (
-		<HStack w="full" pr={10} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
+		<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
 			<Spacer />
 			<Link to="/profile">
-				<Button colorScheme="green" textColor="white" size="sm">
+				<Button colorScheme="default" textColor="white" size="sm">
 					PROFILE
 				</Button>
 			</Link>
 			<Link to="/search">
-				<Button colorScheme="blue" textColor="white" size="sm">
+				<Button colorScheme="default" textColor="white" size="sm">
 					SEARCH
 				</Button>
 			</Link>
