@@ -1,6 +1,6 @@
 // import { NavbarUser } from '../components/NavBarUser';
 import { Link } from 'react-router-dom';
-import { Spacer, HStack, Button, VStack, Heading, Text, Box, StackDivider } from '@chakra-ui/react';
+import { Spacer, Image, HStack, Button, VStack, Heading, Text, Box, StackDivider } from '@chakra-ui/react';
 
 export const Profile = () => {
 	let data = sessionStorage.getItem('user-data');
@@ -20,9 +20,15 @@ export const Profile = () => {
 			<VStack
 			divider={<StackDivider borderColor="gray.200" />}
 			spacing={4}
+			pt={3}
 			align="center"
 			>
-				<Box h="20px" padding="30px">
+				<Image
+					borderRadius="full"
+					boxSize="150px"
+					src="https://i.pinimg.com/originals/3b/85/a0/3b85a067c5add90cba61445eec1a6945.jpg"
+				/>
+				<Box h="20px">
 					<Heading size="md">Profile Info:</Heading>
 				</Box>
 				<Box h="20px" >
