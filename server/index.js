@@ -66,7 +66,7 @@ app.post('/login', (req, res) => {
 		}
 	);
 	//checks if an instance exists in db or not
-	console.log(phone_number, password, 'blah blah');
+	// console.log(phone_number, password, 'blah blah');
 	// res.end();
 });
 
@@ -78,7 +78,7 @@ app.post('/user', (req, res) => {
 app.post('/search', (req, res) => {
 	console.log(req.body);
 	const username = req.body.username;
-	db.query('SELECT username, phone_number FROM user WHERE username=?', [ username ], (err, result) => {
+	db.query('SELECT username, phone_number, follower_count FROM user WHERE username=?', [ username ], (err, result) => {
 		if (err) throw err;
 		if (result[0]) {
 			//sql query result is not null
