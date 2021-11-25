@@ -46,8 +46,8 @@ export const Login = () => {
 				{
 					phone_number: data.phone_number
 				}).then((response)=>{
-					console.log(`recieved: `, response);
-				})
+                    sessionStorage.setItem("user-data", JSON.stringify(response.data[0]));
+                })
 				sessionStorage.getItem("isUserLogged");
 				navigate('/user');
             }
