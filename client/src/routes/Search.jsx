@@ -1,5 +1,6 @@
-import { Box, Spacer, Button, HStack, Avatar, VStack, Text, List, ListItem, Heading, Container } from '@chakra-ui/react';
+import { Box, FormControl, FormLabel, Radio, FormHelperText,RadioGroup, Select, Spacer, Button, HStack, Avatar, VStack, Text, List, ListItem, Heading, Container } from '@chakra-ui/react';
 import { SimpleInput } from '../components/TextInput';
+import { Formik, Form, Field } from 'formik';
 import { useState } from 'react';
 import Axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -26,6 +27,16 @@ const NoMatchMessage = () => {
 	);
 };
 
+const InProgressMessage = () => {
+	return(
+		<Box shadow="md" borderRadius="full" padding={2} w="300px" bgGradient="linear(to-t, orange.200, yellow.100)">
+			<Text textColor="black" align="center" fontSize="12pt">
+				Abhi Ye Karna Hai :){' '}
+			</Text>
+		</Box>
+	);
+};
+
 const UserCard = ({ user }) => {
 	return (
 		<Box  shadow="md" borderRadius="full" padding={1} w="500px" bgGradient="linear(to-t, gray.200, gray.100)">
@@ -43,9 +54,14 @@ const UserCard = ({ user }) => {
 
 export const Search = () => {
 	const [ username, getUsername ] = useState('');
+	const [value, setValue] = useState('user');
 	const [ users, setUsers ] = useState([]);
 	const [ isNoMatch, setNoMatch ] = useState(false);
+	const [ inProgress, setInProgress ] = useState(false);
 	const SearchOnClick = () => {
+		setInProgress(false);
+		setNoMatch(false);
+		if(value==='user'){
 		Axios.post('http://localhost:3001/search', {
 			username: username
 		}).then((response) => {
@@ -59,12 +75,20 @@ export const Search = () => {
 				setNoMatch(false);
 			}
 		});
+		} else if (value==='song'){
+			setInProgress(true);
+			console.log('song search');
+		} else {
+			setInProgress(true);
+			console.log('invalid search');
+		}
 	};
 
 
 	return (
+		
 		<div>
-        <HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
+		<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
             <Spacer />
 			<Link to="/user">
 				<Button colorScheme="blue" textColor="white" size="sm">
@@ -74,7 +98,7 @@ export const Search = () => {
 		</HStack>
 		<Container maxWidth="full" pt="30px">
 			<VStack padding={0} spacing={5}>
-				<Heading size="md">Search Profile</Heading>
+				<Heading size="md">Search</Heading>					
 				<SimpleInput
 					type="name"
 					label="Enter User Name:"
@@ -83,12 +107,25 @@ export const Search = () => {
 						getUsername(event.target.value);
 					}}
 				/>
+				<VStack w="300px" align="left" pt={0}>
+				<FormControl isRequired>
+				<FormHelperText>Select Search Type:</FormHelperText>
+				<RadioGroup name="search-type" colorScheme="green" onChange={setValue} value={value} defaultValue="user">
+					<HStack spacing="40px" pt={1}>
+					<Radio value="user">User</Radio>
+					<Radio value="song">Song</Radio>
+					<Radio value="both">Both</Radio>
+					</HStack>
+				</RadioGroup>
+				</FormControl>
+				</VStack>
 				<VStack w="300px" align="left" pt={5}>
 					<Button colorScheme="green" w="full" size="lg" onClick={SearchOnClick}>
 						SEARCH
 					</Button>
 				</VStack>
 				{isNoMatch? <NoMatchMessage/> : null}
+				{inProgress? <InProgressMessage/> : null}
 				{(!isNoMatch)? <MatchMessage users={users}/> : null}
 			</VStack>
 		</Container>
