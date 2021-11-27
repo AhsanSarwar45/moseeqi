@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
 
 // If enviromental variable does not exist, set port to 3001
 const PORT = process.env.PORT || 3001;
@@ -9,6 +10,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(fileUpload());
 
 const db = mysql.createConnection({
 	host: 'localhost',
@@ -21,7 +23,6 @@ db.connect(function(err) {
 		console.error(`Error connecting to database: ${err}`);
 		return;
 	}
-
 	console.log(`Connected to database as id ${db.threadId}`);
 });
 
@@ -45,6 +46,24 @@ app.post('/create_user', (req, res) => {
 			}
 		}
 	);
+});
+
+
+app.post('/upload', (req, res) => {
+	console.log("in /upload");
+	if(req.files === null){
+		console.log("no file");
+		return res.status(400).json({msg: 'No File Uplaoded'});
+	}
+	console.log("file found");
+	const file = req.files.file;
+	file.mv(`${__dirname}/uploads/${file.name}`, err => {
+		if(err){
+			console.error(err);
+			return res.status(500).send(err);
+		}
+		res.json({fileName: file.name, filePath: `/uploads/${file.name}`});
+	});  //crnt dir???
 });
 
 app.post('/login', (req, res) => {
