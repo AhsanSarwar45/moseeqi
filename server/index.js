@@ -111,7 +111,7 @@ app.post('/user', (req, res) => {
 app.post('/search_user', (req, res) => {
 	console.log(req.body);
 	const username = req.body.username;
-	db.query('SELECT username, phone_number, follower_count FROM user WHERE username=?', [ username ], (err, result) => {
+	db.query('SELECT username, phone_number, follower_count FROM user WHERE username LIKE ?', [ '%'+username+'%' ], (err, result) => {
 		if (err) throw err;
 		if (result[0]) {
 			//sql query result is not null
@@ -126,7 +126,7 @@ app.post('/search_user', (req, res) => {
 app.post('/search_music', (req, res) => {
 	console.log(req.body);
 	const sname = req.body.sname;
-	db.query('SELECT sname, username, like_count, genre, music_path FROM music WHERE sname=?', [ sname ], (err, result) => {
+	db.query('SELECT sname, username, like_count, genre, music_path FROM music WHERE sname LIKE ?', [ '%'+sname+'%' ], (err, result) => {
 		if (err) throw err;
 		if (result[0]) {
 			//sql query result is not null

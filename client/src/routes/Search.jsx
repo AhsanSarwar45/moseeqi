@@ -46,7 +46,7 @@ const SongCard = ({ song }) => {
 			<HStack>
 				<Avatar shadow="md" size="md" name={song.sname} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRikhddhHqZyLCxvwFFd1weIv6wQttST0z9q4MjTnLnyxv9cp1HEqvBNnzqm98IXfvWyFI&usqp=CAU"/>
 				<Box w="10px" />
-						<Text fontSize='2xl' textColor="black">{song.sname}</Text>
+						<Text fontSize='l' textColor="black">{song.sname}</Text>
 				<Text fontSize='md' textColor="gray">(creator: {song.username})</Text>
 			</HStack>
 			</Link>
