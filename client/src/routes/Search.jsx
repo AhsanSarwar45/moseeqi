@@ -5,12 +5,24 @@ import { useState } from 'react';
 import Axios from 'axios';
 import { Link } from 'react-router-dom';
 
-const MatchMessage = ({ users }) => {
+const UserMatchMessage = ({ users }) => {
 	return(
 		<List spacing={3}>
 			{users.map((user) => (
 				<ListItem key={user.phone_number}>
 					<UserCard user={user} />
+				</ListItem>
+			))}
+		</List>
+	);
+};
+
+const SongMatchMessage = ({ songs }) => {
+	return(
+		<List spacing={3}>
+			{songs.map((song) => (
+				<ListItem key={song.sname, song.phone_number}>
+					<SongCard song={song} />
 				</ListItem>
 			))}
 		</List>
@@ -27,12 +39,17 @@ const NoMatchMessage = () => {
 	);
 };
 
-const InProgressMessage = () => {
-	return(
-		<Box shadow="md" borderRadius="full" padding={2} w="300px" bgGradient="linear(to-t, orange.200, yellow.100)">
-			<Text textColor="black" align="center" fontSize="12pt">
-				Abhi Ye Karna Hai :){' '}
-			</Text>
+const SongCard = ({ song }) => {
+	return (
+		<Box  shadow="md" borderRadius="full" padding={1} w="500px" bgGradient="linear(to-t, gray.200, gray.100)">
+			<Link to="/profile">
+			<HStack>
+				<Avatar shadow="md" size="md" name={song.sname} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRikhddhHqZyLCxvwFFd1weIv6wQttST0z9q4MjTnLnyxv9cp1HEqvBNnzqm98IXfvWyFI&usqp=CAU"/>
+				<Box w="10px" />
+						<Text fontSize='2xl' textColor="black">{song.sname}</Text>
+				<Text fontSize='md' textColor="gray">(creator: {song.username})</Text>
+			</HStack>
+			</Link>
 		</Box>
 	);
 };
@@ -54,33 +71,82 @@ const UserCard = ({ user }) => {
 
 export const Search = () => {
 	const [ username, getUsername ] = useState('');
-	const [value, setValue] = useState('user');
+	const [ value, setValue] = useState('user');
 	const [ users, setUsers ] = useState([]);
+	const [ songs, setSongs ] = useState([]);
 	const [ isNoMatch, setNoMatch ] = useState(false);
-	const [ inProgress, setInProgress ] = useState(false);
+	const [ isSongMatch, setSongMatch ] = useState(false);
+	const [ isUserMatch, setUserMatch ] = useState(false);
 	const SearchOnClick = () => {
-		setInProgress(false);
 		setNoMatch(false);
 		if(value==='user'){
-		Axios.post('http://localhost:3001/search', {
+		Axios.post('http://localhost:3001/search_user', {
 			username: username
 		}).then((response) => {
 			if (response.data === 'no_match') {
 				setNoMatch(true);
+				setSongMatch(false);
+				setUserMatch(false);
 			} else {
 				for (let i = 0; i < response.data.length; i++) {
 					setUsers((users) => [ ...users, response.data[i] ]);
 				}
 				setUsers(response.data);
 				setNoMatch(false);
+				setUserMatch(true);
+				setSongMatch(false);
 			}
 		});
 		} else if (value==='song'){
-			setInProgress(true);
 			console.log('song search');
-		} else {
-			setInProgress(true);
-			console.log('invalid search');
+			Axios.post('http://localhost:3001/search_music', {
+			sname: username
+			}).then((response) => {
+				if (response.data === 'no_match') {
+					setNoMatch(true);
+					setSongMatch(false);
+					setUserMatch(false);
+				} else {
+					for (let i = 0; i < response.data.length; i++) {
+						setSongs((songs) => [ ...songs, response.data[i] ]);
+					}
+					setSongs(response.data);
+					setNoMatch(false);
+					setSongMatch(true);
+					setUserMatch(false);
+				}
+			});
+		} else if (value === 'both') {
+			console.log('both search');
+			setNoMatch(true);
+			Axios.post('http://localhost:3001/search_user', {
+			username: username
+			}).then((response) => {
+				if (response.data === 'no_match') {
+					setSongMatch(false);
+				} else {
+					for (let i = 0; i < response.data.length; i++) {
+						setUsers((users) => [ ...users, response.data[i] ]);
+					}
+					setUsers(response.data);
+					setUserMatch(true);
+					setNoMatch(false);
+				}
+			});
+			Axios.post('http://localhost:3001/search_music', {
+			sname: username
+			}).then((response) => {
+				if (response.data === 'no_match') {
+					setSongMatch(false);
+				} else {
+					for (let i = 0; i < response.data.length; i++) {
+						setSongs((songs) => [ ...songs, response.data[i] ]);
+					}
+					setSongs(response.data);
+					setSongMatch(true);
+					setNoMatch(false);
+				}
+			});
 		}
 	};
 
@@ -125,8 +191,8 @@ export const Search = () => {
 					</Button>
 				</VStack>
 				{isNoMatch? <NoMatchMessage/> : null}
-				{inProgress? <InProgressMessage/> : null}
-				{(!isNoMatch)? <MatchMessage users={users}/> : null}
+				{isUserMatch? <UserMatchMessage users={users}/> : null}
+				{isSongMatch? <SongMatchMessage songs={songs}/> : null}
 			</VStack>
 		</Container>
 		</div>
