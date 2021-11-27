@@ -39,6 +39,15 @@ CREATE TABLE `added` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `added`
+--
+
+LOCK TABLES `added` WRITE;
+/*!40000 ALTER TABLE `added` DISABLE KEYS */;
+/*!40000 ALTER TABLE `added` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `follows`
 --
 
@@ -62,6 +71,15 @@ CREATE TABLE `follows` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `follows`
+--
+
+LOCK TABLES `follows` WRITE;
+/*!40000 ALTER TABLE `follows` DISABLE KEYS */;
+/*!40000 ALTER TABLE `follows` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `likes`
 --
 
@@ -77,6 +95,15 @@ CREATE TABLE `likes` (
   CONSTRAINT `username` FOREIGN KEY (`username`) REFERENCES `user` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `likes`
+--
+
+LOCK TABLES `likes` WRITE;
+/*!40000 ALTER TABLE `likes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `likes` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `listens`
@@ -96,6 +123,15 @@ CREATE TABLE `listens` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `listens`
+--
+
+LOCK TABLES `listens` WRITE;
+/*!40000 ALTER TABLE `listens` DISABLE KEYS */;
+/*!40000 ALTER TABLE `listens` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `music`
 --
 
@@ -108,13 +144,22 @@ CREATE TABLE `music` (
   `username` varchar(45) DEFAULT NULL,
   `like_count` int(10) unsigned zerofill DEFAULT NULL,
   `genre` varchar(45) DEFAULT NULL,
-  `music_file` blob,
+  `music_path` varchar(45) DEFAULT NULL,
   `promoted` tinyint DEFAULT NULL,
   PRIMARY KEY (`sname`,`phone_number`),
   KEY `phone_number_idx` (`phone_number`),
   CONSTRAINT `phone_number` FOREIGN KEY (`phone_number`) REFERENCES `user` (`phone_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `music`
+--
+
+LOCK TABLES `music` WRITE;
+/*!40000 ALTER TABLE `music` DISABLE KEYS */;
+/*!40000 ALTER TABLE `music` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `playlist`
@@ -132,6 +177,15 @@ CREATE TABLE `playlist` (
   CONSTRAINT `creator_username` FOREIGN KEY (`creator_phone_number`) REFERENCES `user` (`phone_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `playlist`
+--
+
+LOCK TABLES `playlist` WRITE;
+/*!40000 ALTER TABLE `playlist` DISABLE KEYS */;
+/*!40000 ALTER TABLE `playlist` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `supports`
@@ -158,6 +212,15 @@ CREATE TABLE `supports` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `supports`
+--
+
+LOCK TABLES `supports` WRITE;
+/*!40000 ALTER TABLE `supports` DISABLE KEYS */;
+/*!40000 ALTER TABLE `supports` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user`
 --
 
@@ -169,7 +232,7 @@ CREATE TABLE `user` (
   `email` varchar(45) NOT NULL,
   `username` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
-  `follower_count` int(10) unsigned zerofill DEFAULT '0000000000',
+  `follower_count` int unsigned NOT NULL DEFAULT '0',
   `profile_picture` blob,
   `type` varchar(45) DEFAULT '1',
   `earnings` int DEFAULT '0',
@@ -179,6 +242,16 @@ CREATE TABLE `user` (
   KEY `username_idx` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES ('03131462111','test1@l.com','test1','1',0,NULL,'1',0),('03131462112','abc@xyz.com','ahmad','abc',0,NULL,'1',0),('03131462115','2@lums.edu.pk','ahmad','abc',0,NULL,'1',0),('0313146233','asd@fgh.com','asd','abc',0,NULL,'1',0),('0327462112','2222@lums.edu.pk','031314','abc',0,NULL,'1',0),('121231134','ashd@sd.com','msamadbkj','abc',0,NULL,'1',0),('123454527','exp@xom.com','saad','abc',0,NULL,'1',0),('89134961376','23100@lums.edu.pk','zinkon_123','123',0,NULL,'1',0),('8914961','23100@lums.edu.com','z','123',0,NULL,'1',0);
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `views`
@@ -197,6 +270,15 @@ CREATE TABLE `views` (
   CONSTRAINT `views_pname` FOREIGN KEY (`pname`) REFERENCES `playlist` (`pname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `views`
+--
+
+LOCK TABLES `views` WRITE;
+/*!40000 ALTER TABLE `views` DISABLE KEYS */;
+/*!40000 ALTER TABLE `views` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -207,4 +289,4 @@ CREATE TABLE `views` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-18 17:24:42
+-- Dump completed on 2021-11-27 16:59:02
