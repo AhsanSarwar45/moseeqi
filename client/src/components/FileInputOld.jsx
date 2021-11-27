@@ -13,18 +13,24 @@ export const FileInputOld = () => {
 
 	const onSubmit = async e => {
 		e.preventDefault();
+		let data = sessionStorage.getItem("user-data");
+		data = JSON.parse(data);
 		var formData = new FormData();
 		formData.append('file', file);
+		formData.append('ph', data.phone_number);
+		formData.append('user_name', data.username);
 		console.log("fd:", formData);
 
 		try{
-			const res = await Axios.post('http://localhost:3001/upload', formData, {
-				headers: {
+			const res = await Axios.post('http://localhost:3001/upload_music', formData, {	
+                headers: {
 					'Content-Type': 'multipart/form-data'
 				}
+                
 			});
 			const {fileName, filePath} = res.data;
 			setUploadedFile({fileName, filePath});
+
 		} catch( err ) {
 			if (err.response.status === 400) {
 				console.log('No File Uploaded.');

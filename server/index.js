@@ -49,21 +49,35 @@ app.post('/create_user', (req, res) => {
 });
 
 
-app.post('/upload', (req, res) => {
-	console.log("in /upload");
+app.post('/upload_music', (req, res) => {
+	console.log(req.body);
+	const phone_number = req.body.ph;
+	const user_name = req.body.user_name;
 	if(req.files === null){
 		console.log("no file");
 		return res.status(400).json({msg: 'No File Uplaoded'});
 	}
-	console.log("file found");
 	const file = req.files.file;
-	file.mv(`${__dirname}/uploads/${file.name}`, err => {
+	file.mv(`${__dirname}/uploads/music/${file.name}`, err => {
 		if(err){
 			console.error(err);
 			return res.status(500).send(err);
 		}
-		res.json({fileName: file.name, filePath: `/uploads/${file.name}`});
-	});  //crnt dir???
+		console.log("ph#", phone_number);
+		db.query(
+			'INSERT INTO music (sname, phone_number, username, like_count, genre, music_path, promoted) VALUES (?,?,?,?,?,?,?)',
+			[ file.name, phone_number, user_name, 0, '', `${__dirname}/uploads/music/${file.name}`, 0],
+			(err) => {
+				if (err) {
+					throw err
+				} else {
+					console.log("music added sucessfully");
+				};
+			}
+		);
+		res.json({fileName: file.name, filePath: `/uploads/music/${file.name}`});
+	});
+
 });
 
 app.post('/login', (req, res) => {

@@ -144,7 +144,7 @@ CREATE TABLE `music` (
   `username` varchar(45) DEFAULT NULL,
   `like_count` int(10) unsigned zerofill DEFAULT NULL,
   `genre` varchar(45) DEFAULT NULL,
-  `music_path` varchar(45) DEFAULT NULL,
+  `music_path` varchar(300) DEFAULT NULL,
   `promoted` tinyint DEFAULT NULL,
   PRIMARY KEY (`sname`,`phone_number`),
   KEY `phone_number_idx` (`phone_number`),
@@ -158,6 +158,7 @@ CREATE TABLE `music` (
 
 LOCK TABLES `music` WRITE;
 /*!40000 ALTER TABLE `music` DISABLE KEYS */;
+INSERT INTO `music` VALUES ('Fall-2021 (2).png','03131462112','ahmad',0000000000,'','${__dirname}/uploads/music/${file.name}',0);
 /*!40000 ALTER TABLE `music` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -289,4 +290,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-27 16:59:02
+-- Dump completed on 2021-11-27 18:56:18
