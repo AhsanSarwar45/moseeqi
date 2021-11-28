@@ -53,7 +53,7 @@ export const FileInputOld = () => {
 		<Container>
 			<form onSubmit={onSubmit}>
 				<div>
-					<input type="file" id="customFile" onChange={onChange} />
+					<input accept="audio/*" type="file" id="customFile" onChange={onChange} />
 					<label className="custom-file-label" htmlFor="customFile">
 						{fileName}
 					</label>

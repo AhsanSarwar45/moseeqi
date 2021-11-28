@@ -16,7 +16,7 @@ export const NavbarUser = () => {
 					UPLOAD MUSIC
 				</Button>
 			</Link>
-			<Link to="/profile">
+			<Link to={`/profile/${JSON.parse(sessionStorage.getItem('user-data')).phone_number}`}>
 				<Button colorScheme="primary" textColor="white" size="sm">
 					PROFILE
 				</Button>

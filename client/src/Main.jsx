@@ -18,7 +18,7 @@ export const Main = () => (
 		<Route path="/user" element={<User />} />
 		<Route path="/signup_success" element={<SignUpSuccess />} />
 		<Route path="/search" element={<Search />} />
-		<Route path="/profile" element={<Profile />} />
+		<Route path="/profile/:phone_number" element={<Profile />} />
 		<Route path="/upload_music" element={<UploadMusic />} />
 	</Routes>
 );
