@@ -16,6 +16,11 @@ export const NavbarUser = () => {
 					UPLOAD MUSIC
 				</Button>
 			</Link>
+			<Link to="/delete_music">
+				<Button colorScheme="orange" textColor="white" size="sm">
+					DELETE MUSIC
+				</Button>
+			</Link>
 			<Link to="/profile">
 				<Button colorScheme="primary" textColor="white" size="sm">
 					PROFILE
