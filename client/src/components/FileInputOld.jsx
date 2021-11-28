@@ -1,12 +1,13 @@
 import Axios from 'axios';
-import { Container } from '@chakra-ui/react';
+import { Container, Button, HStack, Spacer, VStack, InputGroup, FormControl, Input, Heading } from '@chakra-ui/react';
 import React, { Fragment, useState } from 'react';
 import { InvalidMessage } from './InvalidMessage';
 
 export const FileInputOld = () => {
 	const [ file, setFile ] = useState('');
 	const [ fileName, setFileName ] = useState('Choose File');
-	const [ uploadedFile, setUploadedFile ] = useState({});
+	const [ uploadedFile, setUploadedFile ] = useState(false);
+	const [ noFile, setNoFile ] = useState(false);
 	const [ isDup, setIsDup ] = useState(false);
 
 	const onChange = (e) => {
@@ -15,6 +16,9 @@ export const FileInputOld = () => {
 	};
 
 	const onSubmit = async (e) => {
+		setIsDup(false);
+		setUploadedFile(false);
+		setNoFile(false);
 		e.preventDefault();
 		let data = sessionStorage.getItem('user-data');
 		data = JSON.parse(data);
@@ -31,37 +35,32 @@ export const FileInputOld = () => {
 			.then((response) => {
 				if (response.data === 'success') {
 					console.log('Sucess uploading image!');
+					setUploadedFile(true);
 				} else if (response.data === 'duplicate-entry') {
-					//update page
 					setIsDup(true);
 				}
 			})
 			.catch((err) => {
 				if (err.response.status === 400) {
 					console.log('No File Uploaded.');
+					setNoFile(true);
 				} else if (err.response.status === 500) {
 					console.log('Server Error');
 				} else {
 					console.log(err);
 				}
 			});
-		// const { fileName, filePath } = res.data;
-		// setUploadedFile({ fileName, filePath });
 	};
 
 	return (
-		<Container>
-			<form onSubmit={onSubmit}>
-				<div>
-					<input type="file" id="customFile" onChange={onChange} />
-					<label className="custom-file-label" htmlFor="customFile">
-						{fileName}
-					</label>
-					<input type="submit" value="Upload" />
-				</div>
-			</form>
-			{isDup ? <InvalidMessage message="Duplicate file name!" /> : null}
-			{/* <FileUpload name="File" acceptedFileTypes="image/*" /> */}
-		</Container>
+			<VStack padding={0} spacing={10}>
+				<Input type="file" id="customFile" bgColor="gray.100" padding={2} onChange={onChange}/>
+				<Button type="submit" value="UPLOAD" w={200} colorScheme="green" onClick={onSubmit}>
+					Upload
+				</Button>
+				{isDup ? <InvalidMessage message="Duplicate file name!" />: null}
+				{noFile ? <InvalidMessage message="No File Selected!" />: null}
+				{uploadedFile ? <InvalidMessage message="Upload Successful!" color="green.800" bg="linear(to-t, green.200, green.100)"/> : null}
+			</VStack>
 	);
 };

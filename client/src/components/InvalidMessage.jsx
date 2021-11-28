@@ -1,11 +1,11 @@
-import { Container, Text } from '@chakra-ui/layout';
+import { Container, Box, Text } from '@chakra-ui/layout';
 
-export const InvalidMessage = ({ message }) => {
+export const InvalidMessage = ({ message, color="red", bg="linear(to-t, pink.200, pink.100)" }) => {
 	return (
-		<Container maxWidth="full" pt="30px">
-			<Text textColor="red" align="center" fontSize="12pt">
+		<Box shadow="md" borderRadius="full" padding={2} w="300px" bgGradient={bg}>
+			<Text textColor={color} align="center" fontSize="12pt">
 				{message}
 			</Text>
-		</Container>
+		</Box>
 	);
 };
