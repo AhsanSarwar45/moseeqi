@@ -1,14 +1,19 @@
 import { Button, HStack, Spacer, VStack, Heading, Container, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
-import { TextInput} from '../components/TextInput';
 import {FileInputOld} from '../components/FileInputOld';
-import { useState } from 'react';
-
-import Axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 export const UploadMusic = () => {
+	const validate = (values) => {
+		const errors = {};
+		if (!values.name) {
+			errors.name = 'Name is required';
+		}
+		if (!values.file) {
+			errors.file = 'File is required';
+		}
+		return errors;
+	};
 
 	return (
         <div>
@@ -24,6 +29,11 @@ export const UploadMusic = () => {
 			<VStack padding={0} spacing={10}>
 				<Heading size="md">Upload Music</Heading>
 				<FileInputOld/>
+				<VStack w="300px" align="left" pt={5}>
+					<Text textColor="gray" align="center" fontSize="8pt">
+						By Uploading this file, you agree to our terms and conditions.{' '}
+					</Text>
+				</VStack>
 			</VStack>
 		</Container>
 		</div>
