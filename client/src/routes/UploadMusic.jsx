@@ -1,19 +1,8 @@
 import { Button, HStack, Spacer, VStack, Heading, Container, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { Formik, Form, Field } from 'formik';
 import {FileInputOld} from '../components/FileInputOld';
 
 export const UploadMusic = () => {
-	const validate = (values) => {
-		const errors = {};
-		if (!values.name) {
-			errors.name = 'Name is required';
-		}
-		if (!values.file) {
-			errors.file = 'File is required';
-		}
-		return errors;
-	};
 
 	return (
         <div>

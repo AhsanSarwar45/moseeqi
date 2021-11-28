@@ -25,7 +25,7 @@ export const Profile = () => {
 			{/* <NavbarUser /> */}
 			<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
 				<Spacer />
-				<Link to="/user">
+				<Link to="/search">
 					<Button colorScheme="blue" textColor="white" size="sm">
 						Back
 					</Button>

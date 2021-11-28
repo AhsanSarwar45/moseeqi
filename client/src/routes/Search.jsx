@@ -1,6 +1,5 @@
-import { Box, FormControl, FormLabel, Radio, FormHelperText,RadioGroup, Select, Spacer, Button, HStack, Avatar, VStack, Text, List, ListItem, Heading, Container } from '@chakra-ui/react';
+import { Box, FormControl, Radio, FormHelperText,RadioGroup, Spacer, Button, HStack, Avatar, VStack, Text, List, ListItem, Heading, Container } from '@chakra-ui/react';
 import { SimpleInput } from '../components/TextInput';
-import { Formik, Form, Field } from 'formik';
 import { useState } from 'react';
 import Axios from 'axios';
 import { Link } from 'react-router-dom';
