@@ -139,6 +139,49 @@ app.post('/search_user', (req, res) => {
 	);
 });
 
+app.post('/delete_music', (req, res) => {
+	console.log(req.body);
+	const phone_number = req.body.phone_number;
+	const sname = req.body.sname;
+	db.query(
+		'SELECT sname FROM music WHERE sname=? AND phone_number=?',
+		[ sname, phone_number],
+		(err, result) => {
+			if (err) throw err;
+			if (result[0]) {
+				//sql query result is not null
+				db.query(
+					'DELETE FROM music WHERE sname=? AND phone_number=?',
+					[ sname, phone_number],
+					(err) => {
+						if (err) {
+							res.send('deletion_failed');
+							throw err;
+						} else {
+							var dir = `/data/${phone_number}/music`;
+							var abs_dir = `./data/${phone_number}/music`;
+
+							if (!fs.existsSync(abs_dir)) {
+								res.send('deletion_failed');
+							}
+							const absolute_path = `.${dir}/${sname}`;
+							fs.unlink(absolute_path, (err) => {
+							if (err) {
+								console.error(err);
+								res.send('deletion_failed');
+							}});
+							res.send("deletion_complete");
+						}
+					}
+				);
+			} else {
+				res.send('no_match');
+			}
+		}
+	);
+});
+
+
 app.post('/search_music', (req, res) => {
 	console.log(req.body);
 	const sname = req.body.sname;
