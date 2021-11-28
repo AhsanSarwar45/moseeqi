@@ -49,7 +49,6 @@ export const Login = () => {
 			<Container maxWidth="full" pt="30px">
 				<VStack padding={0} spacing={5}>
 					<Heading size="md">Login</Heading>
-					{isInvalid ? <InvalidMessage message="Invalid Phone Number or Password!" /> : null}
 					<Formik initialValues={{ phone_number: '', password: '' }} onSubmit={LoginOnClick}>
 						{(props) => (
 							<Form>
@@ -91,6 +90,7 @@ export const Login = () => {
 							</Form>
 						)}
 					</Formik>
+					{isInvalid ? <InvalidMessage message="Invalid Phone Number or Password!" /> : null}
 				</VStack>
 			</Container>
 		</div>
