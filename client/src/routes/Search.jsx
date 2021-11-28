@@ -48,7 +48,7 @@ const SongCard = ({ song }) => {
 const UserCard = ({ user }) => {
 	return (
 		<Box  shadow="md" borderRadius="full" padding={1} w="500px" bgGradient="linear(to-t, gray.200, gray.100)">
-			<Link to="/profile">
+			<Link to={`/profile/${user.phone_number}`}>
 			<HStack>
 				<Avatar shadow="md" size="md" name={user.username} src={user.profile_picture}/>
 				<Box w="10px" />
