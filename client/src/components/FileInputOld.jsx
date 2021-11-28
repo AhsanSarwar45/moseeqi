@@ -53,14 +53,20 @@ export const FileInputOld = () => {
 	};
 
 	return (
-			<VStack padding={0} spacing={10}>
-				<Input type="file" id="customFile" bgColor="gray.100" padding={2} onChange={onChange}/>
-				<Button type="submit" value="UPLOAD" w={200} colorScheme="green" onClick={onSubmit}>
-					Upload
-				</Button>
-				{isDup ? <InvalidMessage message="Duplicate file name!" />: null}
-				{noFile ? <InvalidMessage message="No File Selected!" />: null}
-				{uploadedFile ? <InvalidMessage message="Upload Successful!" color="green.800" bg="linear(to-t, green.200, green.100)"/> : null}
-			</VStack>
+		<VStack padding={0} spacing={10}>
+			<Input type="file" id="customFile" bgColor="gray.100" padding={2} onChange={onChange} />
+			<Button type="submit" value="UPLOAD" w={200} colorScheme="green" onClick={onSubmit}>
+				Upload
+			</Button>
+			{isDup ? <InvalidMessage message="Duplicate file name!" /> : null}
+			{noFile ? <InvalidMessage message="No File Selected!" /> : null}
+			{uploadedFile ? (
+				<InvalidMessage
+					message="Upload Successful!"
+					color="green.800"
+					bg="linear(to-t, green.200, green.100)"
+				/>
+			) : null}
+		</VStack>
 	);
 };
