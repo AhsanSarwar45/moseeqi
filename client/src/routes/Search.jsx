@@ -4,6 +4,7 @@ import { Formik, Form, Field } from 'formik';
 import { useState } from 'react';
 import Axios from 'axios';
 import { Link } from 'react-router-dom';
+import { InvalidMessage } from '../components/InvalidMessage';
 
 const UserMatchMessage = ({ users }) => {
 	return(
@@ -26,16 +27,6 @@ const SongMatchMessage = ({ songs }) => {
 				</ListItem>
 			))}
 		</List>
-	);
-};
-
-const NoMatchMessage = () => {
-	return(
-		<Box shadow="md" borderRadius="full" padding={2} w="300px" bgGradient="linear(to-t, pink.200, pink.100)">
-			<Text textColor="red" align="center" fontSize="12pt">
-				No Match Found{' '}
-			</Text>
-		</Box>
 	);
 };
 
@@ -190,7 +181,7 @@ export const Search = () => {
 						SEARCH
 					</Button>
 				</VStack>
-				{isNoMatch? <NoMatchMessage/> : null}
+				{isNoMatch? <InvalidMessage message="No Match Found!" /> : null}
 				{isUserMatch? <UserMatchMessage users={users}/> : null}
 				{isSongMatch? <SongMatchMessage songs={songs}/> : null}
 			</VStack>
