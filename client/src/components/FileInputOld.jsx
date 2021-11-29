@@ -12,6 +12,7 @@ export const FileInputOld = () => {
 	const [ isDup, setIsDup ] = useState(false);
 	const [ invalidFile, setInvalidFile ] = useState(false);
 	const [ songName, setSongName ] = useState('');
+	const [ genre, setGenre ] = useState('');
 
 	const onChange = (e) => {
 		if (e.target.files.length > 0) {
@@ -48,6 +49,7 @@ export const FileInputOld = () => {
 			formData.append('ph', data.phone_number);
 			formData.append('user_name', data.username);
 			formData.append('sname', songName);
+			formData.append('genre', genre);
 			Axios.post('http://localhost:3001/upload_music', formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data'
@@ -90,6 +92,13 @@ export const FileInputOld = () => {
 				value={songName}
 				onChange={(event) => {
 					setSongName(event.target.value);
+				}}
+			/>
+			<SimpleInput
+				label="Genre"
+				value={genre}
+				onChange={(event) => {
+					setGenre(event.target.value);
 				}}
 			/>
 			<Button type="submit" value="UPLOAD" w={200} colorScheme="green" onClick={onSubmit}>
