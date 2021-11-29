@@ -66,7 +66,7 @@ app.post('/upload_music', (req, res) => {
 		fs.mkdirSync(abs_dir, { recursive: true });
 	}
 
-	const absolute_path = `.${dir}/${file.name}`;
+	const absolute_path = `${abs_dir}/${file.name}`;
 	const relative_path = `${dir}/${file.name}`;
 
 	file.mv(absolute_path, (err) => {
@@ -143,50 +143,42 @@ app.post('/delete_music', (req, res) => {
 	console.log(req.body);
 	const phone_number = req.body.phone_number;
 	const sname = req.body.sname;
-	db.query(
-		'SELECT sname FROM music WHERE sname=? AND phone_number=?',
-		[ sname, phone_number],
-		(err, result) => {
-			if (err) throw err;
-			if (result[0]) {
-				//sql query result is not null
-				db.query(
-					'DELETE FROM music WHERE sname=? AND phone_number=?',
-					[ sname, phone_number],
-					(err) => {
-						if (err) {
-							res.send('deletion_failed');
-							throw err;
-						} else {
-							var dir = `/data/${phone_number}/music`;
-							var abs_dir = `./data/${phone_number}/music`;
+	db.query('SELECT sname FROM music WHERE sname=? AND phone_number=?', [ sname, phone_number ], (err, result) => {
+		if (err) throw err;
+		if (result[0]) {
+			//sql query result is not null
+			db.query('DELETE FROM music WHERE sname=? AND phone_number=?', [ sname, phone_number ], (err) => {
+				if (err) {
+					res.send('deletion_failed');
+					throw err;
+				} else {
+					var dir = `/data/${phone_number}/music`;
+					var abs_dir = `./data/${phone_number}/music`;
 
-							if (!fs.existsSync(abs_dir)) {
-								res.send('deletion_failed');
-							}
-							const absolute_path = `.${dir}/${sname}`;
-							fs.unlink(absolute_path, (err) => {
-							if (err) {
-								console.error(err);
-								res.send('deletion_failed');
-							}});
-							res.send("deletion_complete");
-						}
+					if (!fs.existsSync(abs_dir)) {
+						res.send('deletion_failed');
 					}
-				);
-			} else {
-				res.send('no_match');
-			}
+					const absolute_path = `.${dir}/${sname}`;
+					fs.unlink(absolute_path, (err) => {
+						if (err) {
+							console.error(err);
+							res.send('deletion_failed');
+						}
+					});
+					res.send('deletion_complete');
+				}
+			});
+		} else {
+			res.send('no_match');
 		}
-	);
+	});
 });
-
 
 app.post('/search_music', (req, res) => {
 	console.log(req.body);
 	const sname = req.body.sname;
 	db.query(
-		'SELECT sname, username, like_count, genre, music_path FROM music WHERE sname LIKE ?',
+		'SELECT sname, phone_number, username, like_count, genre, music_path FROM music WHERE sname LIKE ?',
 		[ '%' + sname + '%' ],
 		(err, result) => {
 			if (err) throw err;
@@ -215,9 +207,9 @@ app.post('/get-user', (req, res) => {
 });
 
 app.post('/get-music', (req, res) => {
-	console.log('get user request recei', req.body);
+	console.log('get music request recei', req.body);
 	db.query(
-		'SELECT * FROM user WHERE phone_number=? sname=?',
+		'SELECT * FROM music WHERE phone_number=? AND sname=?',
 		[ req.body.phone_number, req.body.sname ],
 		(err, result) => {
 			if (err) throw err;

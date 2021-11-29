@@ -7,6 +7,7 @@ import { User } from './routes/User';
 import { SignUpSuccess } from './routes/SignUpSuccess';
 import { Search } from './routes/Search';
 import { Profile } from './routes/Profile';
+import { Music } from './routes/Music';
 import { UploadMusic } from './routes/UploadMusic';
 import { DeleteMusic } from './routes/DeleteMusic';
 
@@ -20,7 +21,8 @@ export const Main = () => (
 		<Route path="/signup_success" element={<SignUpSuccess />} />
 		<Route path="/search" element={<Search />} />
 		<Route path="/profile/:phone_number" element={<Profile />} />
+		<Route path="/music/:phone_number/:sname" element={<Music />} />
 		<Route path="/upload_music" element={<UploadMusic />} />
-		<Route path="/delete_music" element={<DeleteMusic />}/>
+		<Route path="/delete_music" element={<DeleteMusic />} />
 	</Routes>
 );
