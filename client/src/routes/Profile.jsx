@@ -29,13 +29,21 @@ export const Profile = () => {
 		});
 	}, []);
 
-	const deleteAccount = (result , response) => {
-		Axios.post('http://localhost:3001/delete_user', {
+	const deleteAccount = () => {
+		Axios.post('http://localhost:3001/delete_account', {
 			phone_number: phone_number
 		}).then((response) => {
 
 		});
 	};
+
+	const followUser = () => {
+		Axios.post('http://localhost:3001/follow_user', {
+			phone_number: phone_number
+		}).then((response) => {
+
+		});
+	}
 
 	return (
 		<div>
@@ -45,9 +53,13 @@ export const Profile = () => {
 				< Button colorScheme="blue" textColor="white" size="sm" onClick={()=> navigate(-1)}>
 					Back
 				</Button>
-				{isSelfProfile ? <Button colorScheme="red" textColor="white" size="sm" onClick={deleteAccount}>
-					Delete Account
-				</Button> : null}
+				{isSelfProfile ? 
+				<Link to = "/"> 
+					<Button colorScheme="red" textColor="white" size="sm" onClick={deleteAccount}>
+						Delete Account
+					</Button>
+				</Link>
+				: <Button colorScheme="red" textColor="white" size="sm" onClick={followUser}>Follow</Button>}
 			</HStack>
 			<VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} pt={3} align="center">
 				<Image

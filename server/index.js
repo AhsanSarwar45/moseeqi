@@ -147,6 +147,7 @@ app.post('/delete_music', (req, res) => {
 	const phone_number = req.body.phone_number;
 	const sname = req.body.sname;
 	db.query('SELECT sname FROM music WHERE sname=? AND phone_number=?', [ sname, phone_number ], (err, result) => {
+		console.log('phone_NUMBER: ', phone_number);
 		if (err) throw err;
 		if (result[0]) {
 			//sql query result is not null
@@ -227,18 +228,20 @@ app.post('/get-music', (req, res) => {
 });
 
 app.post('/delete_account', (req, res) => {
-	const username = req.body.username;
+	console.log("boobs", req.body);
+	//console.log(res);
+	const phone_number = req.body.phone_number;
 	db.query(
-		'SELECT FROM user WHERE username = ?', [username], (err, result) =>{
+		'SELECT username FROM user WHERE phone_number = ?', [phone_number], (err, result) =>{
 			if (err) throw err;
 			if (result[0]) {
-				db.query( 'DELETE FROM user WHERE username = ?', [username], (err, result) =>{
+				db.query( 'DELETE FROM user WHERE phone_number = ?', [phone_number], (err, result) =>{
 					if (err) {
 						res.send('deletion_failed');
 						throw err;
 					} else {
 						var dir = `/data/${phone_number}`;
-						if (!fs.existsSync(abs_dir)) {
+						if (!fs.existsSync(dir)) {
 							res.send('deletion_failed');
 						}
 						const absolute_path = `.${dir}`;
