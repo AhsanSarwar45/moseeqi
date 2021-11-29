@@ -56,8 +56,6 @@ app.post('/upload_music', (req, res) => {
 	const phone_number = req.body.ph;
 	const user_name = req.body.user_name;
 	const sname = req.body.sname;
-	const genre = req.body.genre;
-
 	if (req.files === null) {
 		console.log('no file');
 		return res.status(400).json({ msg: 'No File Uplaoded' });
@@ -82,7 +80,7 @@ app.post('/upload_music', (req, res) => {
 		console.log('ph#', phone_number);
 		db.query(
 			'INSERT INTO music (sname, phone_number, username, like_count, genre, music_path, promoted) VALUES (?,?,?,?,?,?,?)',
-			[ sname, phone_number, user_name, 0, genre, relative_path, 0 ],
+			[ sname, phone_number, user_name, 0, '', relative_path, 0 ],
 			(err) => {
 				if (err) {
 					if (err.errno === 1062) {
@@ -149,6 +147,7 @@ app.post('/delete_music', (req, res) => {
 	const phone_number = req.body.phone_number;
 	const sname = req.body.sname;
 	db.query('SELECT sname FROM music WHERE sname=? AND phone_number=?', [ sname, phone_number ], (err, result) => {
+		console.log('phone_NUMBER: ', phone_number);
 		if (err) throw err;
 		if (result[0]) {
 			//sql query result is not null
@@ -229,35 +228,39 @@ app.post('/get-music', (req, res) => {
 });
 
 app.post('/delete_account', (req, res) => {
-	const username = req.body.username;
-	db.query('SELECT FROM user WHERE username = ?', [ username ], (err, result) => {
-		if (err) throw err;
-		if (result[0]) {
-			db.query('DELETE FROM user WHERE username = ?', [ username ], (err, result) => {
-				if (err) {
-					res.send('deletion_failed');
-					throw err;
-				} else {
-					var dir = `/data/${phone_number}`;
-					if (!fs.existsSync(abs_dir)) {
+	console.log("boobs", req.body);
+	//console.log(res);
+	const phone_number = req.body.phone_number;
+	db.query(
+		'SELECT username FROM user WHERE phone_number = ?', [phone_number], (err, result) =>{
+			if (err) throw err;
+			if (result[0]) {
+				db.query( 'DELETE FROM user WHERE phone_number = ?', [phone_number], (err, result) =>{
+					if (err) {
 						res.send('deletion_failed');
-					}
-					const absolute_path = `.${dir}`;
-					fs.unlink(absolute_path, (err) => {
-						if (err) {
-							console.error(err);
+						throw err;
+					} else {
+						var dir = `/data/${phone_number}`;
+						if (!fs.existsSync(dir)) {
 							res.send('deletion_failed');
 						}
-					});
+						const absolute_path = `.${dir}`;
+						fs.unlink(absolute_path, (err) => {
+							if (err) {
+								console.error(err);
+								res.send('deletion_failed');
+							}
+						});
 
-					res.send('deletion_complete');
-				}
-			});
-		} else {
-			res.send('no_match');
+						res.send('deletion_complete');
+					}
+				})
+			} else {
+				res.send('no_match');
+			}
 		}
-	});
-});
+	)
+})
 
 app.listen(PORT, () => {
 	console.log(`Server listening on http://localhost:${PORT}`);
