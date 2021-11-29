@@ -7,7 +7,7 @@ import Axios from 'axios';
 
 export const Profile = () => {
 	// let data = sessionStorage.getItem('user-data');
-	// data = JSON.parse(data);
+	// data = JSON.parse(sessionStorage.getItem('user-data'));
 	const { phone_number } = useParams();
 	const [ data, setData ] = useState({ phone_number: '', username: '', follower_count: 0, earnings: 0 });
 

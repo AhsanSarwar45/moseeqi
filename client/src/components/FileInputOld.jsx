@@ -12,15 +12,15 @@ export const FileInputOld = () => {
 	const [ invalidFile, setInvalidFile ] = useState(false);
 
 	const onChange = (e) => {
-		if(e.target.files.length>0){
-		console.log('[0]:', e.target.files[0].type);
-		if (e.target.files[0].type === "audio/mpeg" || e.target.files[0].type === "audio/ogg"){
-			setFile(e.target.files[0]);
-			setFileName(e.target.files[0].name);
-			setInvalidFile(false);
-		} else {
-			setInvalidFile(true);
-			setIsDup(false);
+		if (e.target.files.length > 0) {
+			console.log('[0]:', e.target.files[0].type);
+			if (e.target.files[0].type === 'audio/mpeg' || e.target.files[0].type === 'audio/ogg') {
+				setFile(e.target.files[0]);
+				setFileName(e.target.files[0].name);
+				setInvalidFile(false);
+			} else {
+				setInvalidFile(true);
+				setIsDup(false);
 			}
 			setNoFile(false);
 		} else {
@@ -38,7 +38,7 @@ export const FileInputOld = () => {
 		// setInvalidFile(false);
 		setNoFile(false);
 		e.preventDefault();
-		if(file!==''){
+		if (file !== '') {
 			let data = sessionStorage.getItem('user-data');
 			data = JSON.parse(data);
 			var formData = new FormData();
@@ -49,38 +49,39 @@ export const FileInputOld = () => {
 				headers: {
 					'Content-Type': 'multipart/form-data'
 				}
-			}).then((response) => {
-				if (response.data === 'success') {
-					console.log('Sucess uploading image!');
-					setUploadedFile(true);
-					setIsDup(false);
-					setFile('');
-				} else if (response.data === 'duplicate-entry') {
-					setIsDup(true);
-					setNoFile(false);
-				}
-			}).catch((err) => {
-				if (err.response.status === 400) {
-					console.log('No File Uploaded.');
-					setNoFile(true);
-					setIsDup(false);
-				} else if (err.response.status === 500) {
-					console.log('Server Error');
-				} else {
-					console.log(err);
-				}
-			});
+			})
+				.then((response) => {
+					if (response.data === 'success') {
+						console.log('Sucess uploading image!');
+						setUploadedFile(true);
+						setIsDup(false);
+						setFile('');
+					} else if (response.data === 'duplicate-entry') {
+						setIsDup(true);
+						setNoFile(false);
+					}
+				})
+				.catch((err) => {
+					if (err.response.status === 400) {
+						console.log('No File Uploaded.');
+						setNoFile(true);
+						setIsDup(false);
+					} else if (err.response.status === 500) {
+						console.log('Server Error');
+					} else {
+						console.log(err);
+					}
+				});
 		} else {
 			setIsDup(false);
 			setUploadedFile(false);
-			if(!invalidFile)
-				setNoFile(true);
+			if (!invalidFile) setNoFile(true);
 		}
 	};
 
 	return (
 		<VStack padding={0} spacing={10}>
-			<Input type="file" id="customFile" bgColor="gray.100" padding={2} onChange={onChange} />
+			<Input type="file" id="customFile" accept="audio/*" bgColor="gray.100" padding={2} onChange={onChange} />
 			<Button type="submit" value="UPLOAD" w={200} colorScheme="green" onClick={onSubmit}>
 				Upload
 			</Button>

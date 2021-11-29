@@ -4,6 +4,8 @@ import { Spacer, Image, HStack, Button, VStack, Heading, Text, Box, StackDivider
 import { useParams } from 'react-router';
 import { useEffect, useState } from 'react';
 import Axios from 'axios';
+import { MusicPlayer } from '../components/MusicPlayer';
+import { saveAs } from 'file-saver';
 
 export const Music = () => {
 	// let data = sessionStorage.getItem('user-data');
@@ -12,13 +14,12 @@ export const Music = () => {
 	const [ data, setData ] = useState({ sname: '', username: '', genre: '', music_path: '', like_count: 0 });
 
 	useEffect(() => {
-		console.log('phone', phone_number);
 		Axios.post('http://localhost:3001/get-music', {
 			phone_number: phone_number,
 			sname: sname
 		}).then((response) => {
 			setData(response.data[0]);
-			console.log(response.data[0]);
+			console.log('music info received');
 		});
 	}, []);
 
@@ -55,6 +56,8 @@ export const Music = () => {
 					<Text> Genre: {data.genre} </Text>
 				</Box>
 				<Spacer />
+
+				<MusicPlayer source={`http://localhost:3001/${phone_number}/music/${sname}`} />
 			</VStack>
 		</div>
 	);
