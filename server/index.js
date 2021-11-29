@@ -231,8 +231,7 @@ app.post('/delete_account', (req, res) => {
 	console.log("boobs", req.body);
 	//console.log(res);
 	const phone_number = req.body.phone_number;
-	db.query(
-		'SELECT username FROM user WHERE phone_number = ?', [phone_number], (err, result) =>{
+	db.query('SELECT username FROM user WHERE phone_number = ?', [phone_number], (err, result) =>{
 			if (err) throw err;
 			if (result[0]) {
 				db.query( 'DELETE FROM user WHERE phone_number = ?', [phone_number], (err, result) =>{
@@ -260,6 +259,14 @@ app.post('/delete_account', (req, res) => {
 			}
 		}
 	)
+})
+
+app.post('/follow_user', (req, res) => {
+	console.log("vageen", req.body)
+	const phone_number_follower = req.body.phone_number_follower;
+	const phone_number_followed = req.body.phone_number_followed;
+
+	db.query()
 })
 
 app.listen(PORT, () => {

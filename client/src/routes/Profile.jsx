@@ -11,6 +11,7 @@ export const Profile = () => {
 	const { phone_number } = useParams();
 	const [ data, setData ] = useState({ phone_number: '', username: '', follower_count: 0, earnings: 0 });
 	const [ isSelfProfile, setSeltProfile] = useState (false);
+	const [ following , setFollowing ] = useState(false)
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -38,8 +39,20 @@ export const Profile = () => {
 	};
 
 	const followUser = () => {
+		setFollowing(true);
 		Axios.post('http://localhost:3001/follow_user', {
-			phone_number: phone_number
+			phone_number_follower: phone_number, 
+			phone_number_followed: JSON.parse(sessionStorage.getItem("user-data").phone_number)
+		}).then((response) => {
+
+		});
+	}
+
+	const unFollowUser = () => {
+		setFollowing(false)
+		Axios.post('http://localhost:3001/unfollow_user', {
+			phone_number_follower: phone_number, 
+			phone_number_followed: JSON.parse(sessionStorage.getItem("user-data").phone_number),
 		}).then((response) => {
 
 		});
@@ -58,8 +71,11 @@ export const Profile = () => {
 					<Button colorScheme="red" textColor="white" size="sm" onClick={deleteAccount}>
 						Delete Account
 					</Button>
-				</Link>
-				: <Button colorScheme="red" textColor="white" size="sm" onClick={followUser}>Follow</Button>}
+				</Link> : null}
+
+				{isSelfProfile ? null : 
+				following ? <Button colorScheme="red" textColor="white" size="sm" onClick={unFollowUser}> Unfollow </Button> : <Button colorScheme="red" textColor="white" size="sm" onClick={followUser}> Follow </Button>}
+
 			</HStack>
 			<VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} pt={3} align="center">
 				<Image
