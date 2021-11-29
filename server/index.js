@@ -228,6 +228,7 @@ app.post('/get-music', (req, res) => {
 });
 
 app.post('/delete_account', (req, res) => {
+<<<<<<< Updated upstream
 	console.log("boobs", req.body);
 	//console.log(res);
 	const phone_number = req.body.phone_number;
@@ -235,6 +236,14 @@ app.post('/delete_account', (req, res) => {
 			if (err) throw err;
 			if (result[0]) {
 				db.query( 'DELETE FROM user WHERE phone_number = ?', [phone_number], (err, result) =>{
+=======
+	const phone_number = req.body.phone_number;
+	db.query(
+		'SELECT * FROM user WHERE username = ?', [phone_number], (err, result) =>{
+			if (err) throw err;
+			if (result[0]) {
+				db.query( 'DELETE FROM user WHERE username = ?', [phone_number], (err, result) =>{
+>>>>>>> Stashed changes
 					if (err) {
 						res.send('deletion_failed');
 						throw err;
