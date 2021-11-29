@@ -1,5 +1,5 @@
 // import { NavbarUser } from '../components/NavBarUser';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Spacer, Image, HStack, Button, VStack, Heading, Text, Box, StackDivider } from '@chakra-ui/react';
 import { useParams } from 'react-router';
 import { useEffect, useState } from 'react';
@@ -11,6 +11,7 @@ export const Profile = () => {
 	const { phone_number } = useParams();
 	const [ data, setData ] = useState({ phone_number: '', username: '', follower_count: 0, earnings: 0 });
 	const [ isSelfProfile, setSeltProfile] = useState (false);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		Axios.post('http://localhost:3001/get-user', {
@@ -33,17 +34,9 @@ export const Profile = () => {
 			{/* <NavbarUser /> */}
 			<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
 				<Spacer />
-				{ isSelfProfile? 
-				( <Link to="/user">
-					< Button colorScheme="blue" textColor="white" size="sm">
-						Back
-					</Button>
-				</Link>) : 
-				( <Link to="/search">
-					< Button colorScheme="blue" textColor="white" size="sm">
-						Back
-					</Button>
-				</Link>)}
+				< Button colorScheme="blue" textColor="white" size="sm" onClick={()=> navigate(-1)}>
+					Back
+				</Button>
 			</HStack>
 			<VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} pt={3} align="center">
 				<Image

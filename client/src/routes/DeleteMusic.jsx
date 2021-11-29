@@ -2,13 +2,14 @@ import { Spacer, Button, HStack, VStack, Heading, Container } from '@chakra-ui/r
 import { SimpleInput } from '../components/TextInput';
 import { useState } from 'react';
 import Axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { InvalidMessage } from '../components/InvalidMessage';
 
 export const DeleteMusic = () => {
 	const [ sname, getSongName ] = useState('');
 	const [ isNoMatch, setNoMatch ] = useState(false);
 	const [ isDeleted, setDeleted ] = useState(false);
+	const navigate = useNavigate();
 	const DeleteOnClick = () => {
 		setNoMatch(false);	
         
@@ -34,11 +35,9 @@ export const DeleteMusic = () => {
 		<div>
 		<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
             <Spacer />
-			<Link to="/user">
-				<Button colorScheme="blue" textColor="white" size="sm">
-                    Back   
-				</Button>
-			</Link>
+			<Button colorScheme="blue" textColor="white" size="sm" onClick={()=> navigate(-1)}>
+				Back   
+			</Button>
 		</HStack>
 		<Container maxWidth="full" pt="30px">
 			<VStack padding={0} spacing={5}>

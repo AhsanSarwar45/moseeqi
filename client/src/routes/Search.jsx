@@ -18,7 +18,7 @@ import {
 import { SimpleInput } from '../components/TextInput';
 import { useState } from 'react';
 import Axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { InvalidMessage } from '../components/InvalidMessage';
 
 const UserMatchMessage = ({ users }) => {
@@ -97,6 +97,8 @@ export const Search = () => {
 	const [ isNoMatch, setNoMatch ] = useState(false);
 	const [ isSongMatch, setSongMatch ] = useState(false);
 	const [ isUserMatch, setUserMatch ] = useState(false);
+	const navigate = useNavigate();
+
 	const SearchOnClick = () => {
 		setNoMatch(false);
 		if (value === 'user') {
@@ -168,11 +170,9 @@ export const Search = () => {
 		<div>
 			<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
 				<Spacer />
-				<Link to="/user">
-					<Button colorScheme="blue" textColor="white" size="sm">
-						Back
-					</Button>
-				</Link>
+				<Button colorScheme="blue" textColor="white" size="sm" onClick={()=> navigate(-1)}>
+					Back
+				</Button>
 			</HStack>
 			<Container maxWidth="full" pt="30px">
 				<VStack padding={0} spacing={5}>
