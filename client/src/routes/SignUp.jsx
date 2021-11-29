@@ -1,5 +1,4 @@
 import { Button, HStack, Spacer, VStack, Heading, Container, Text } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import validator from 'validator';
 import { TextInput, PasswordInput } from '../components/TextInput';
@@ -65,11 +64,9 @@ export const SignUp = () => {
         <div>
         <HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
             <Spacer />
-			<Link to="/">
-				<Button colorScheme="blue" textColor="white" size="sm">
-                    Back   
-				</Button>
-			</Link>
+			<Button colorScheme="blue" textColor="white" size="sm" onClick={()=> navigate(-1)}>
+				Back   
+			</Button>
 		</HStack>
 		<Container maxWidth="full" pt="30px">
 			<VStack padding={0} spacing={10}>
