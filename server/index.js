@@ -3,6 +3,7 @@ const mysql = require('mysql');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
+const path = require('path');
 
 // If enviromental variable does not exist, set port to 3001
 const PORT = process.env.PORT || 3001;
@@ -12,6 +13,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(fileUpload());
+app.use(express.static('data'));
 
 const db = mysql.createConnection({
 	host: 'localhost',
@@ -218,6 +220,33 @@ app.post('/get-music', (req, res) => {
 				console.log('query successful');
 				console.log(result);
 				res.send(result);
+			}
+		}
+	);
+});
+
+app.post('/get-music-file', (req, res) => {
+	console.log('get music file request recei', req.body);
+	db.query(
+		'SELECT * FROM music WHERE phone_number=? AND sname=?',
+		[ req.body.phone_number, req.body.sname ],
+		(err, result) => {
+			if (err) throw err;
+			if (result[0]) {
+				//sql query result is not null
+				console.log('query successful');
+
+				var options = {
+					root: path.join(__dirname)
+				};
+				const filePath = result[0].music_path;
+				res.sendFile(filePath, options, (err) => {
+					if (err) {
+						console.err(err);
+					} else {
+						console.log('Sent:', filePath);
+					}
+				});
 			}
 		}
 	);

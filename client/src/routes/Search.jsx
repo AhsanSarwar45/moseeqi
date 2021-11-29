@@ -97,41 +97,49 @@ export const Search = () => {
 	const [ isNoMatch, setNoMatch ] = useState(false);
 	const [ isSongMatch, setSongMatch ] = useState(false);
 	const [ isUserMatch, setUserMatch ] = useState(false);
+
 	const navigate = useNavigate();
+
+	const UserRequest = () => {
+		Axios.post('http://localhost:3001/search_user', {
+			username: username
+		}).then((response) => {
+			if (response.data === 'no_match') {
+				setNoMatch(true);
+				setSongMatch(false);
+				setUserMatch(false);
+			} else {
+				setUsers(response.data);
+				setNoMatch(false);
+				setUserMatch(true);
+				setSongMatch(false);
+			}
+		});
+	};
+
+	const SongRequest = () => {
+		Axios.post('http://localhost:3001/search_music', {
+			sname: username
+		}).then((response) => {
+			if (response.data === 'no_match') {
+				setNoMatch(true);
+				setSongMatch(false);
+				setUserMatch(false);
+			} else {
+				setSongs(response.data);
+				setNoMatch(false);
+				setSongMatch(true);
+				setUserMatch(false);
+			}
+		});
+	};
 
 	const SearchOnClick = () => {
 		setNoMatch(false);
 		if (value === 'user') {
-			Axios.post('http://localhost:3001/search_user', {
-				username: username
-			}).then((response) => {
-				if (response.data === 'no_match') {
-					setNoMatch(true);
-					setSongMatch(false);
-					setUserMatch(false);
-				} else {
-					setUsers(response.data);
-					setNoMatch(false);
-					setUserMatch(true);
-					setSongMatch(false);
-				}
-			});
+			UserRequest();
 		} else if (value === 'song') {
-			console.log('song search');
-			Axios.post('http://localhost:3001/search_music', {
-				sname: username
-			}).then((response) => {
-				if (response.data === 'no_match') {
-					setNoMatch(true);
-					setSongMatch(false);
-					setUserMatch(false);
-				} else {
-					setSongs(response.data);
-					setNoMatch(false);
-					setSongMatch(true);
-					setUserMatch(false);
-				}
-			});
+			SongRequest();
 		} else if (value === 'both') {
 			console.log('both search');
 			setNoMatch(true);
@@ -170,7 +178,7 @@ export const Search = () => {
 		<div>
 			<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
 				<Spacer />
-				<Button colorScheme="blue" textColor="white" size="sm" onClick={()=> navigate(-1)}>
+				<Button colorScheme="blue" textColor="white" size="sm" onClick={() => navigate(-1)}>
 					Back
 				</Button>
 			</HStack>
