@@ -11,6 +11,11 @@ export const NavbarUser = () => {
 	return (
 		<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
 			<Spacer />
+			<Link to="/create_playlist">
+				<Button colorScheme="primary" textColor="white" size="sm">
+					CREATE PLAYLIST
+				</Button>
+			</Link>
 			<Link to="/upload_music">
 				<Button colorScheme="primary" textColor="white" size="sm">
 					UPLOAD MUSIC

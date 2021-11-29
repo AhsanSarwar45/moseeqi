@@ -42,17 +42,17 @@ export const Profile = () => {
 		setFollowing(true);
 		Axios.post('http://localhost:3001/follow_user', {
 			phone_number_follower: phone_number, 
-			phone_number_followed: JSON.parse(sessionStorage.getItem("user-data").phone_number)
+			phone_number_followed: JSON.parse(sessionStorage.getItem("user-data")).phone_number
 		}).then((response) => {
 
 		});
 	}
 
 	const unFollowUser = () => {
-		setFollowing(false)
+		setFollowing(false);
 		Axios.post('http://localhost:3001/unfollow_user', {
 			phone_number_follower: phone_number, 
-			phone_number_followed: JSON.parse(sessionStorage.getItem("user-data").phone_number),
+			phone_number_followed: JSON.parse(sessionStorage.getItem("user-data")).phone_number,
 		}).then((response) => {
 
 		});

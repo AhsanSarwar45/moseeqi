@@ -266,8 +266,27 @@ app.post('/follow_user', (req, res) => {
 	const phone_number_follower = req.body.phone_number_follower;
 	const phone_number_followed = req.body.phone_number_followed;
 
-	db.query()
+	db.query('INSERT INTO follows')
 })
+
+app.post('/create_playlist', (req, res) => {
+	console.log(req.body);
+	const pname = req.body.playlistName
+	const phone_number = req.body.phone_number
+	db.query(
+		'INSERT INTO playlist (pname, creator_phone_number) VALUES (?,?)',
+		[ pname, phone_number ],
+		(err, result) => {
+			if (err) {
+				if (err.errno === 1062) {
+					res.send('duplicate-entry');
+				}
+			} else {
+				res.send('playlist-added');
+			}
+		}
+	);
+});
 
 app.listen(PORT, () => {
 	console.log(`Server listening on http://localhost:${PORT}`);

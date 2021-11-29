@@ -10,6 +10,8 @@ import { Profile } from './routes/Profile';
 import { Music } from './routes/Music';
 import { UploadMusic } from './routes/UploadMusic';
 import { DeleteMusic } from './routes/DeleteMusic';
+import { CreatePlaylist } from './routes/CreatePlaylist';
+
 
 export const Main = () => (
 	<Routes>
@@ -24,5 +26,6 @@ export const Main = () => (
 		<Route path="/music/:phone_number/:sname" element={<Music />} />
 		<Route path="/upload_music" element={<UploadMusic />} />
 		<Route path="/delete_music" element={<DeleteMusic />} />
+		<Route path="/create_playlist" element={<CreatePlaylist />} />
 	</Routes>
 );
