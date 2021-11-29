@@ -228,22 +228,36 @@ app.post('/get-music', (req, res) => {
 
 app.post('/delete_account', (req, res) => {
 	const username = req.body.username;
-	db.query('SELECT FROM user WHERE username = ?', [ username ], (err, result) => {
-		if (err) throw err;
-		if (result[0]) {
-			db.query('DELETE FROM user WHERE username = ?', [ username ], (err, result) => {
-				if (err) {
-					res.send('deletion_failed');
-					throw err;
-				} else {
-					res.send('deletion_complete');
-				}
-			});
-		} else {
-			res.send('no_match');
+	db.query(
+		'SELECT FROM user WHERE username = ?', [username], (err, result) =>{
+			if (err) throw err;
+			if (result[0]) {
+				db.query( 'DELETE FROM user WHERE username = ?', [username], (err, result) =>{
+					if (err) {
+						res.send('deletion_failed');
+						throw err;
+					} else {
+						var dir = `/data/${phone_number}`;
+						if (!fs.existsSync(abs_dir)) {
+							res.send('deletion_failed');
+						}
+						const absolute_path = `.${dir}`;
+						fs.unlink(absolute_path, (err) => {
+							if (err) {
+								console.error(err);
+								res.send('deletion_failed');
+							}
+						});
+
+						res.send('deletion_complete');
+					}
+				})
+			} else {
+				res.send('no_match');
+			}
 		}
-	});
-});
+	)
+})
 
 app.listen(PORT, () => {
 	console.log(`Server listening on http://localhost:${PORT}`);
