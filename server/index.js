@@ -55,6 +55,7 @@ app.post('/upload_music', (req, res) => {
 	console.log(req.body);
 	const phone_number = req.body.ph;
 	const user_name = req.body.user_name;
+	const sname = req.body.sname;
 	if (req.files === null) {
 		console.log('no file');
 		return res.status(400).json({ msg: 'No File Uplaoded' });
@@ -68,8 +69,8 @@ app.post('/upload_music', (req, res) => {
 		fs.mkdirSync(abs_dir, { recursive: true });
 	}
 
-	const absolute_path = `${abs_dir}/${file.name}`;
-	const relative_path = `${dir}/${file.name}`;
+	const absolute_path = `${abs_dir}/${sname}`;
+	const relative_path = `${dir}/${sname}`;
 
 	file.mv(absolute_path, (err) => {
 		if (err) {
@@ -79,7 +80,7 @@ app.post('/upload_music', (req, res) => {
 		console.log('ph#', phone_number);
 		db.query(
 			'INSERT INTO music (sname, phone_number, username, like_count, genre, music_path, promoted) VALUES (?,?,?,?,?,?,?)',
-			[ file.name, phone_number, user_name, 0, '', relative_path, 0 ],
+			[ sname, phone_number, user_name, 0, '', relative_path, 0 ],
 			(err) => {
 				if (err) {
 					if (err.errno === 1062) {
@@ -220,33 +221,6 @@ app.post('/get-music', (req, res) => {
 				console.log('query successful');
 				console.log(result);
 				res.send(result);
-			}
-		}
-	);
-});
-
-app.post('/get-music-file', (req, res) => {
-	console.log('get music file request recei', req.body);
-	db.query(
-		'SELECT * FROM music WHERE phone_number=? AND sname=?',
-		[ req.body.phone_number, req.body.sname ],
-		(err, result) => {
-			if (err) throw err;
-			if (result[0]) {
-				//sql query result is not null
-				console.log('query successful');
-
-				var options = {
-					root: path.join(__dirname)
-				};
-				const filePath = result[0].music_path;
-				res.sendFile(filePath, options, (err) => {
-					if (err) {
-						console.err(err);
-					} else {
-						console.log('Sent:', filePath);
-					}
-				});
 			}
 		}
 	);

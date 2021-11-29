@@ -38,7 +38,7 @@ export const Music = () => {
 				<Image
 					borderRadius="full"
 					boxSize="150px"
-					src="https://i.pinimg.com/originals/3b/85/a0/3b85a067c5add90cba61445eec1a6945.jpg"
+					src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRikhddhHqZyLCxvwFFd1weIv6wQttST0z9q4MjTnLnyxv9cp1HEqvBNnzqm98IXfvWyFI&usqp=CAU"
 				/>
 				<Box h="20px">
 					<Heading size="md">Music Info:</Heading>

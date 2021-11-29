@@ -2,6 +2,7 @@ import Axios from 'axios';
 import { Button, VStack, Input } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { InvalidMessage } from './InvalidMessage';
+import { SimpleInput } from './TextInput';
 
 export const FileInputOld = () => {
 	const [ file, setFile ] = useState('');
@@ -10,6 +11,7 @@ export const FileInputOld = () => {
 	const [ noFile, setNoFile ] = useState(false);
 	const [ isDup, setIsDup ] = useState(false);
 	const [ invalidFile, setInvalidFile ] = useState(false);
+	const [ songName, setSongName ] = useState('');
 
 	const onChange = (e) => {
 		if (e.target.files.length > 0) {
@@ -45,6 +47,7 @@ export const FileInputOld = () => {
 			formData.append('file', file);
 			formData.append('ph', data.phone_number);
 			formData.append('user_name', data.username);
+			formData.append('sname', songName);
 			Axios.post('http://localhost:3001/upload_music', formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data'
@@ -82,6 +85,13 @@ export const FileInputOld = () => {
 	return (
 		<VStack padding={0} spacing={10}>
 			<Input type="file" id="customFile" accept="audio/*" bgColor="gray.100" padding={2} onChange={onChange} />
+			<SimpleInput
+				label="Song Name"
+				value={songName}
+				onChange={(event) => {
+					setSongName(event.target.value);
+				}}
+			/>
 			<Button type="submit" value="UPLOAD" w={200} colorScheme="green" onClick={onSubmit}>
 				Upload
 			</Button>
