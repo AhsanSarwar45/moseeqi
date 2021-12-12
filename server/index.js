@@ -228,7 +228,6 @@ app.post('/get-music', (req, res) => {
 });
 
 app.post('/delete_account', (req, res) => {
-	console.log("boobs", req.body);
 	//console.log(res);
 	const phone_number = req.body.phone_number;
 	db.query('SELECT username FROM user WHERE phone_number = ?', [phone_number], (err, result) =>{
