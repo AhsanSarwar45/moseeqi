@@ -179,16 +179,16 @@ app.post('/delete_music', (req, res) => {
 });
 
 app.post('/search_music', (req, res) => {
-	console.log(req.body);
+	console.log("sup",req.body);
 	const sname = req.body.sname;
 	db.query(
-		'SELECT sname, phone_number, username, like_count, genre, music_path FROM music WHERE sname LIKE ?',
-		[ '%' + sname + '%' ],
+		'SELECT sname, phone_number, username, like_count, genre, music_path FROM music WHERE (sname LIKE ?) or (username LIKE ?)',
+		[ ('%' + sname + '%'), ('%' + sname + '%') ],
 		(err, result) => {
 			if (err) throw err;
 			if (result[0]) {
 				//sql query result is not null
-				console.log('query successful');
+				console.log('query successful', result);
 				res.send(result);
 			} else {
 				res.send('no_match');
