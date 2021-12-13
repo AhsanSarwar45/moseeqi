@@ -12,6 +12,24 @@ export const Music = () => {
 	// data = JSON.parse(data);
 	const { sname, phone_number } = useParams();
 	const [ data, setData ] = useState({ sname: '', username: '', genre: '', music_path: '', like_count: 0 });
+	const [ isLiked, setIsLiked ] = useState(false);
+
+	const AddLike = () => {
+		setIsLiked(true);
+		Axios.post('http://localhost:3001/add_like', {
+			phone_number: phone_number,
+			sname: sname,
+			liker_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
+		}).then((response) => {
+			if (response.data === 'error') {
+				setIsLiked(false);
+				console.log('like invalid');
+			} else {
+				setIsLiked(true);
+				console.log('like sucess');
+			}
+		});
+	};
 
 	useEffect(() => {
 		Axios.post('http://localhost:3001/get-music', {
@@ -28,7 +46,10 @@ export const Music = () => {
 			{/* <NavbarUser /> */}
 			<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
 				<Spacer />
-				<Link to="/user">
+				<Button colorScheme="green" textColor="white" size="sm" onClick={AddLike}>
+					LIKE
+				</Button>
+				<Link to="/search">
 					<Button colorScheme="blue" textColor="white" size="sm">
 						Back
 					</Button>
@@ -57,7 +78,7 @@ export const Music = () => {
 				</Box>
 				<Spacer />
 
-				<MusicPlayer source={`http://localhost:3001/${phone_number}/music/${sname}`} />
+				<MusicPlayer source={`http://localhost:3001/${phone_number}/music/${sname}`} ph={phone_number} sn={sname} />
 			</VStack>
 		</div>
 	);

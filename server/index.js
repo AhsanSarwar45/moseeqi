@@ -227,6 +227,26 @@ app.post('/get-music', (req, res) => {
 	);
 });
 
+app.post('/add_like', (req, res) => {
+	console.log(req.body);
+	const phone_number = req.body.phone_number;
+	const sname = req.body.sname;
+	const liker_ph = req.body.liker_ph;
+	db.query(
+		'INSERT INTO likes (phone_number, sname, liker_ph) VALUES (?,?,?)',
+		[ phone_number, sname, liker_ph ],
+		(err) => {
+			if (err) {
+				console.log(err);
+				res.send('error');
+			} else {
+				console.log('like added sucessfully');
+				res.send('success');
+			}
+		}
+	);
+});
+
 app.post('/delete_account', (req, res) => {
 	//console.log(res);
 	const phone_number = req.body.phone_number;
