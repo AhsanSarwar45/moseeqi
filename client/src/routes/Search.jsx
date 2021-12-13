@@ -178,9 +178,11 @@ export const Search = () => {
 		<div>
 			<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
 				<Spacer />
-				<Button colorScheme="blue" textColor="white" size="sm" onClick={() => navigate(-1)}>
-					Back
-				</Button>
+				<Link to="/user">
+					<Button colorScheme="blue" textColor="white" size="sm">
+						Back
+					</Button>
+				</Link>
 			</HStack>
 			<Container maxWidth="full" pt="30px">
 				<VStack padding={0} spacing={5}>
