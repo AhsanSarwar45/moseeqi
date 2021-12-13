@@ -142,6 +142,25 @@ app.post('/search_user', (req, res) => {
 	);
 });
 
+app.post('/search_playlist', (req, res) => {
+	console.log(req.body);
+	const phone_number = req.body.phone_number;
+	db.query(
+		'SELECT pname FROM playlist WHERE creator_phone_number = ?',
+		[ phone_number ],
+		(err, result) => {
+			if (err) throw err;
+			if (result[0]) {
+				//sql query result is not null
+				console.log('query successful');
+				res.send(result);
+			} else {
+				res.send('no_match');
+			}
+		}
+	);
+});
+
 app.post('/delete_music', (req, res) => {
 	console.log(req.body);
 	const phone_number = req.body.phone_number;

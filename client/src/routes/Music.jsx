@@ -1,11 +1,11 @@
 // import { NavbarUser } from '../components/NavBarUser';
 import { Link } from 'react-router-dom';
-import { Spacer, Image, HStack, Button, VStack, Heading, Text, Box, StackDivider } from '@chakra-ui/react';
+import { Spacer, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Image, HStack, Button, VStack, Heading, Text, Box, StackDivider } from '@chakra-ui/react';
+import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useParams } from 'react-router';
 import { useEffect, useState } from 'react';
 import Axios from 'axios';
 import { MusicPlayer } from '../components/MusicPlayer';
-import { saveAs } from 'file-saver';
 
 export const Music = () => {
 	// let data = sessionStorage.getItem('user-data');
@@ -13,20 +13,16 @@ export const Music = () => {
 	const { sname, phone_number } = useParams();
 	const [ data, setData ] = useState({ sname: '', username: '', genre: '', music_path: '', like_count: 0 });
 	const [ isLiked, setIsLiked ] = useState(false);
-	Axios.post('http://localhost:3001/add_like', {
-		check: true,
-		phone_number: phone_number,
-		sname: sname,
-		liker_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
-	}).then((response) => {
-		if (response.data === 'liked') {
-			setIsLiked(true);
-			console.log('liked alredaugs');
-		} else if (response.data === 'not_liked') {
-			setIsLiked(false);
-			console.log('not yet liked');
-		}
-	});
+	const [ noPlaylist, setNoPlaylist ] = useState(false);
+	const [ playlists, setPlaylists ] = useState([]);
+
+	const AddSongToPlaylist = () => {
+		console.log('adding to p:');
+		// same as AddLike and /add_like below
+		// change the 'added' table to added( p_name, p_ph, s_name, s_ph)
+		// p_ph = ph of person who made playlist
+		// s_ph = person who made song
+	};
 
 	const AddLike = () => {
 		setIsLiked(true);
@@ -48,6 +44,20 @@ export const Music = () => {
 		});
 	};
 
+	const GetPlaylist = () => {
+		console.log('here');
+		Axios.post('http://localhost:3001/search_playlist', {
+				phone_number: JSON.parse(sessionStorage.getItem("user-data")).phone_number
+			}).then((response) => {
+				if (response.data === 'no_match') {
+					setNoPlaylist(true);
+				} else {
+					setPlaylists(response.data);
+					setNoPlaylist(false);
+				}
+			});
+	};
+
 	useEffect(() => {
 		Axios.post('http://localhost:3001/get-music', {
 			phone_number: phone_number,
@@ -56,6 +66,21 @@ export const Music = () => {
 			setData(response.data[0]);
 			console.log('music info received');
 		});
+		//to check if user has already liked this song
+		Axios.post('http://localhost:3001/add_like', {
+		check: true,
+		phone_number: phone_number,
+		sname: sname,
+		liker_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
+		}).then((response) => {
+			if (response.data === 'liked') {
+				setIsLiked(true);
+				console.log('liked alredaugs');
+			} else if (response.data === 'not_liked') {
+				setIsLiked(false);
+				console.log('not yet liked');
+			}
+		});
 	}, []);
 
 	return (
@@ -63,8 +88,39 @@ export const Music = () => {
 			{/* <NavbarUser /> */}
 			<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
 				<Spacer />
+				<Menu>
+				<MenuButton
+					px={3}
+					py={1}
+					transition='all 0.2s'
+					// borderWidth='1px'
+					borderRadius='full'
+					textColor='white'
+					_hover={{ bg: 'gray.400' }}
+					_expanded={{ bg: 'green.500' }}
+					_focus={{ boxShadow: 'outline' }}
+					onClick={GetPlaylist}
+				>
+					Add to Playlist <ChevronDownIcon />
+				</MenuButton>
+				<MenuList>
+					<Link to="/create_playlist">
+						<MenuItem>New Playlist</MenuItem>
+					</Link>
+					<MenuDivider />
+					{ noPlaylist ? 
+					<MenuItem>
+						No Playlist Found
+					</MenuItem>
+					: playlists.map((p) => (
+						<MenuItem key={p.pname} onClick={AddSongToPlaylist}>
+							{p.pname}
+						</MenuItem>
+					))}	
+				</MenuList>
+				</Menu>
 				{!isLiked? 
-				<Button colorScheme="blue" textColor="white" size="sm" onClick={AddLike}> 
+				<Button colorScheme="pink" textColor="white" size="sm" onClick={AddLike}> 
 					LIKE 
 				</Button> : 
 				<Button colorScheme="green" textColor="white" size="sm"> 
