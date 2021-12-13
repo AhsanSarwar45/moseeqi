@@ -13,10 +13,25 @@ export const Music = () => {
 	const { sname, phone_number } = useParams();
 	const [ data, setData ] = useState({ sname: '', username: '', genre: '', music_path: '', like_count: 0 });
 	const [ isLiked, setIsLiked ] = useState(false);
+	Axios.post('http://localhost:3001/add_like', {
+		check: true,
+		phone_number: phone_number,
+		sname: sname,
+		liker_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
+	}).then((response) => {
+		if (response.data === 'liked') {
+			setIsLiked(true);
+			console.log('liked alredaugs');
+		} else if (response.data === 'not_liked') {
+			setIsLiked(false);
+			console.log('not yet liked');
+		}
+	});
 
 	const AddLike = () => {
 		setIsLiked(true);
 		Axios.post('http://localhost:3001/add_like', {
+			check: false,
 			phone_number: phone_number,
 			sname: sname,
 			liker_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
@@ -24,7 +39,9 @@ export const Music = () => {
 			if (response.data === 'error') {
 				setIsLiked(false);
 				console.log('like invalid');
-			} else {
+			} else if (response.data === 'duplicate_entry') {
+				console.log('you already liked it!');
+			} else if (response.data === 'success') {
 				setIsLiked(true);
 				console.log('like sucess');
 			}
@@ -46,9 +63,13 @@ export const Music = () => {
 			{/* <NavbarUser /> */}
 			<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
 				<Spacer />
-				<Button colorScheme="green" textColor="white" size="sm" onClick={AddLike}>
-					LIKE
-				</Button>
+				{!isLiked? 
+				<Button colorScheme="blue" textColor="white" size="sm" onClick={AddLike}> 
+					LIKE 
+				</Button> : 
+				<Button colorScheme="green" textColor="white" size="sm"> 
+					LIKED 
+				</Button>}
 				<Link to="/search">
 					<Button colorScheme="blue" textColor="white" size="sm">
 						Back

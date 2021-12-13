@@ -232,19 +232,42 @@ app.post('/add_like', (req, res) => {
 	const phone_number = req.body.phone_number;
 	const sname = req.body.sname;
 	const liker_ph = req.body.liker_ph;
-	db.query(
-		'INSERT INTO likes (phone_number, sname, liker_ph) VALUES (?,?,?)',
-		[ phone_number, sname, liker_ph ],
-		(err) => {
-			if (err) {
-				console.log(err);
-				res.send('error');
-			} else {
-				console.log('like added sucessfully');
-				res.send('success');
+	const check = req.body.check;
+	if (check){
+		db.query(
+			'SELECT s_ph FROM likes WHERE s_name=? AND s_ph=? AND liker_ph=?',
+			[ sname, phone_number, liker_ph ],
+			(err, result) => {
+				if (err) throw err;
+				if (result[0]) {
+					//sql query result is not null
+					console.log('like found');
+					res.send('liked');
+				}
+				else {
+					res.send('not_liked');
+				}
 			}
-		}
-	);
+		);
+	} else {
+		db.query(
+			'INSERT INTO likes (s_name, s_ph, liker_ph) VALUES (?,?,?)',
+			[ sname, phone_number, liker_ph ],
+			(err) => {
+				if (err) {
+					if (err.errno === 1062) {
+						res.send('duplicate_entry');
+					} else {
+						console.log(err);
+						res.send('error');
+					}
+				} else {
+					console.log('like added sucessfully');
+					res.send('success');
+				}
+			}
+		);
+	}
 });
 
 app.post('/delete_account', (req, res) => {
