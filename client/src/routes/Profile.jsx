@@ -14,6 +14,21 @@ export const Profile = () => {
 	const [ following , setFollowing ] = useState(false)
 	const navigate = useNavigate();
 
+	Axios.post('http://localhost:3001/follow_user', {
+		check: true,
+		phone_number: phone_number,
+		sname: sname,
+		liker_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
+	}).then((response) => {
+		if (response.data === 'liked') {
+			setIsLiked(true);
+			console.log('liked alredaugs');
+		} else if (response.data === 'not_liked') {
+			setIsLiked(false);
+			console.log('not yet liked');
+		}
+	});
+
 	useEffect(() => {
 		Axios.post('http://localhost:3001/get-user', {
 			phone_number: phone_number
@@ -48,15 +63,15 @@ export const Profile = () => {
 		});
 	}
 
-	const unFollowUser = () => {
-		setFollowing(false);
-		Axios.post('http://localhost:3001/unfollow_user', {
-			phone_number_follower: phone_number, 
-			phone_number_followed: JSON.parse(sessionStorage.getItem("user-data")).phone_number,
-		}).then((response) => {
+	// const unFollowUser = () => {
+	// 	setFollowing(false);
+	// 	Axios.post('http://localhost:3001/unfollow_user', {
+	// 		phone_number_follower: phone_number, 
+	// 		phone_number_followed: JSON.parse(sessionStorage.getItem("user-data")).phone_number,
+	// 	}).then((response) => {
 
-		});
-	}
+	// 	});
+	// }
 
 	return (
 		<div>
@@ -74,7 +89,7 @@ export const Profile = () => {
 				</Link> : null}
 
 				{isSelfProfile ? null : 
-				following ? <Button colorScheme="red" textColor="white" size="sm" onClick={unFollowUser}> Unfollow </Button> : <Button colorScheme="red" textColor="white" size="sm" onClick={followUser}> Follow </Button>}
+				following ? <Button colorScheme="red" textColor="white" size="sm" > Following </Button> : <Button colorScheme="red" textColor="white" size="sm" onClick={followUser}> Follow </Button>}
 
 			</HStack>
 			<VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} pt={3} align="center">
