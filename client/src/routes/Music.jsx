@@ -19,16 +19,10 @@ export const Music = () => {
 	const AddSongToPlaylist = (playlistName, sname, s_ph, p_ph) => {
 		console.log('adding to p:');
 		Axios.post('http://localhost:3001/add_song_to_playlist',{
+		
+		}).then((response) => {
 
-		}
-		
-		
-		
-		
-		
-		
-		
-		)
+		})
 		// same as AddLike and /add_like below
 		// change the 'added' table to added( p_name, p_ph, s_name, s_ph)
 		// p_ph = ph of person who made playlist
