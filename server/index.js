@@ -16,214 +16,22 @@ app.use(express.json());
 app.use(fileUpload());
 app.use(express.static('data'));
 
-const InitializeTables = `
-DROP TABLE IF EXISTS 'added';
 
-CREATE TABLE 'added' (
-  'p_name' varchar(45) NOT NULL,
-  's_name' varchar(45) NOT NULL,
-  'p_ph' varchar(45) NOT NULL,
-  's_ph' varchar(45) NOT NULL,
-  PRIMARY KEY ('p_name','s_name','p_ph','s_ph'),
-  KEY 'creator_number_idx' ('p_ph'),
-  KEY 'added_sname_idx' ('s_name'),
-  CONSTRAINT 'added_pname' FOREIGN KEY ('p_name') REFERENCES 'playlist' ('pname'),
-  CONSTRAINT 'added_sname' FOREIGN KEY ('s_name') REFERENCES 'music' ('sname'),
-  CONSTRAINT 'creator_number' FOREIGN KEY ('p_ph') REFERENCES 'playlist' ('creator_phone_number')
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+// const initiliazeTables = `
 
+// CREATE TABLE added (p_name VARCHAR(45) NOT NULL, s_name VARCHAR(45) NOT NULL, p_ph VARCHAR(45)NOT NULL, s_ph VARCHAR(45) NOT NULL, PRIMARY KEY(p_name, s_name, p_ph, s_ph))
+// `
 
+const InitializeTables = 
+`CREATE TABLE added (p_name varchar(45) NOT NULL, s_name varchar(45) NOT NULL, p_ph varchar(45) NOT NULL, s_ph varchar(45) NOT NULL, PRIMARY KEY (p_name,s_name,p_ph,s_ph));
+CREATE TABLE follows (follower_phone_number varchar(45) NOT NULL, followed_phone_number varchar(45) NOT NULL, PRIMARY KEY (follower_phone_number,followed_phone_number));
+CREATE TABLE likes (s_name varchar(45) NOT NULL, s_ph varchar(45) NOT NULL, liker_ph varchar(45) NOT NULL, PRIMARY KEY (s_name,s_ph,liker_ph));
+CREATE TABLE listens (s_ph varchar(45) NOT NULL, s_name varchar(45) NOT NULL, listener_ph varchar(45) NOT NULL, listen_counts int unsigned DEFAULT 0, PRIMARY KEY (s_ph,s_name,listener_ph));
+CREATE TABLE music (sname varchar(45) NOT NULL, phone_number varchar(45) NOT NULL, username varchar(45) DEFAULT NULL, like_count int(10) unsigned zerofill DEFAULT NULL, genre varchar(45) DEFAULT NULL, music_path varchar(300) DEFAULT NULL, promoted tinyint DEFAULT NULL, PRIMARY KEY (sname,phone_number));
+CREATE TABLE playlist (pname varchar(45) NOT NULL, creator_phone_number varchar(45) NOT NULL, creator_username varchar(45) DEFAULT NULL, PRIMARY KEY (pname,creator_phone_number));
+CREATE TABLE user (phone_number varchar(45) NOT NULL, email varchar(45) NOT NULL, username varchar(45) NOT NULL, password varchar(45) NOT NULL, follower_count int unsigned NOT NULL DEFAULT 0, profile_picture blob, type varchar(45) DEFAULT 1, earnings int DEFAULT 0, PRIMARY KEY (phone_number), UNIQUE KEY email_UNIQUE (email), UNIQUE KEY phone_number_UNIQUE (phone_number));
+CREATE TABLE views (pname varchar(45) NOT NULL, username varchar(45) DEFAULT NULL, user_number varchar(45) NOT NULL, PRIMARY KEY (pname,user_number));`;
 
-
-LOCK TABLES 'added' WRITE;
-
-UNLOCK TABLES;
-
-
-
-DROP TABLE IF EXISTS 'follows';
-
-CREATE TABLE 'follows' (
-  'follower_phone_number' varchar(45) NOT NULL,
-  'followed_phone_number' varchar(45) NOT NULL,
-  PRIMARY KEY ('follower_phone_number','followed_phone_number'),
-  KEY 'followed_phone_number_idx' ('followed_phone_number'),
-  CONSTRAINT 'followed_phone_number' FOREIGN KEY ('followed_phone_number') REFERENCES 'user' ('phone_number'),
-  CONSTRAINT 'follower_phone_number' FOREIGN KEY ('follower_phone_number') REFERENCES 'user' ('phone_number')
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-LOCK TABLES 'follows' WRITE;
-
-INSERT INTO 'follows' VALUES ('03131462111','03131462112'),('03131462111','0313146233'),('03131462111','0327462112'),('03131462111','123454527'),('03131462111','8914961');
-
-UNLOCK TABLES;
-
-
-
-DROP TABLE IF EXISTS 'likes';
-
-CREATE TABLE 'likes' (
-  's_name' varchar(45) NOT NULL,
-  's_ph' varchar(45) NOT NULL,
-  'liker_ph' varchar(45) NOT NULL,
-  PRIMARY KEY ('s_name','s_ph','liker_ph'),
-  KEY 's_ph_idx' ('s_ph'),
-  KEY 'liker_ph_idx' ('liker_ph'),
-  CONSTRAINT 'liker_ph' FOREIGN KEY ('liker_ph') REFERENCES 'user' ('phone_number') ON DELETE RESTRICT,
-  CONSTRAINT 's_name' FOREIGN KEY ('s_name') REFERENCES 'music' ('sname') ON DELETE CASCADE,
-  CONSTRAINT 's_ph' FOREIGN KEY ('s_ph') REFERENCES 'music' ('phone_number') ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-
-
-LOCK TABLES 'likes' WRITE;
-
-UNLOCK TABLES;
-
-
-
-DROP TABLE IF EXISTS 'listens';
-
-CREATE TABLE 'listens' (
-  's_ph' varchar(45) NOT NULL,
-  's_name' varchar(45) NOT NULL,
-  'listener_ph' varchar(45) NOT NULL,
-  'listen_counts' int unsigned DEFAULT '0',
-  PRIMARY KEY ('s_ph','s_name','listener_ph')
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-
-
-LOCK TABLES 'listens' WRITE;
-
-UNLOCK TABLES;
-
-
-
-DROP TABLE IF EXISTS 'music';
-
-CREATE TABLE 'music' (
-  'sname' varchar(45) NOT NULL,
-  'phone_number' varchar(45) NOT NULL,
-  'username' varchar(45) DEFAULT NULL,
-  'like_count' int(10) unsigned zerofill DEFAULT NULL,
-  'genre' varchar(45) DEFAULT NULL,
-  'music_path' varchar(300) DEFAULT NULL,
-  'promoted' tinyint DEFAULT NULL,
-  PRIMARY KEY ('sname','phone_number'),
-  KEY 'phone_number_idx' ('phone_number'),
-  CONSTRAINT 'phone_number' FOREIGN KEY ('phone_number') REFERENCES 'user' ('phone_number')
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-
-
-LOCK TABLES 'music' WRITE;
-
-INSERT INTO 'music' VALUES ('','01234','okb',0000000000,'','/data/01234/music/',0),('2002','03131462112','ahmad',0000000000,'','/data/03131462112/music/2002',0),('anime-music-box_aoi-shiori.mp3','03131462112','ahmad',0000000000,'','/data/03131462112/music/anime-music-box_aoi-shiori.mp3',0),('Fall-2021 (2).png','03131462112','ahmad',0000000000,'','${__dirname}/uploads/music/${file.name}',0),('Heather','03131462112','ahmad',0000000000,'','/data/03131462112/music/Heather',0),('Out of Touch','03131462112','ahmad',0000000000,'','/data/03131462112/music/Out of Touch',0),('OwO','03131462112','ahmad',0000000000,'','/data/03131462112/music/OwO',0),('parhlekuch.mp3','0321','okb',0000000000,'','/data/0321/music/parhlekuch.mp3',0);
-
-UNLOCK TABLES;
-
-
-DROP TABLE IF EXISTS 'playlist';
-
-CREATE TABLE 'playlist' (
-  'pname' varchar(45) NOT NULL,
-  'creator_phone_number' varchar(45) NOT NULL,
-  'creator_username' varchar(45) DEFAULT NULL,
-  PRIMARY KEY ('pname','creator_phone_number'),
-  KEY 'creator_username_idx' ('creator_phone_number'),
-  CONSTRAINT 'creator_username' FOREIGN KEY ('creator_phone_number') REFERENCES 'user' ('phone_number')
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-
-
-LOCK TABLES 'playlist' WRITE;
-
-INSERT INTO 'playlist' VALUES ('abcd','03131462112',NULL),('Playlist01','03131462112',NULL);
-
-UNLOCK TABLES;
-
-
-
-DROP TABLE IF EXISTS 'supports';
-
-CREATE TABLE 'supports' (
-  'supporter_phone_number' varchar(45) NOT NULL,
-  'supportee_phone_number' varchar(45) NOT NULL,
-  'supporter_username' varchar(45) NOT NULL,
-  'supportee_username' varchar(45) NOT NULL,
-  'amount' int DEFAULT NULL,
-  PRIMARY KEY ('supporter_phone_number','supportee_phone_number'),
-  KEY 'supportee_phone_number_idx' ('supportee_phone_number'),
-  KEY 'supporter_username_idx' ('supporter_username'),
-  KEY 'supportee_username_idx' ('supportee_username'),
-  CONSTRAINT 'supportee_phone_number' FOREIGN KEY ('supportee_phone_number') REFERENCES 'user' ('phone_number'),
-  CONSTRAINT 'supportee_username' FOREIGN KEY ('supportee_username') REFERENCES 'user' ('username'),
-  CONSTRAINT 'supporter_phone_number' FOREIGN KEY ('supporter_phone_number') REFERENCES 'user' ('phone_number'),
-  CONSTRAINT 'supporter_username' FOREIGN KEY ('supporter_username') REFERENCES 'user' ('username')
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-
-LOCK TABLES 'supports' WRITE;
-
-UNLOCK TABLES;
-
-
-DROP TABLE IF EXISTS 'user';
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE 'user' (
-  'phone_number' varchar(45) NOT NULL,
-  'email' varchar(45) NOT NULL,
-  'username' varchar(45) NOT NULL,
-  'password' varchar(45) NOT NULL,
-  'follower_count' int unsigned NOT NULL DEFAULT '0',
-  'profile_picture' blob,
-  'type' varchar(45) DEFAULT '1',
-  'earnings' int DEFAULT '0',
-  PRIMARY KEY ('phone_number'),
-  UNIQUE KEY 'email_UNIQUE' ('email'),
-  UNIQUE KEY 'phone_number_UNIQUE' ('phone_number'),
-  KEY 'username_idx' ('username')
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-
-LOCK TABLES 'user' WRITE;
-
-INSERT INTO 'user' VALUES ('03131462111','test1@l.com','test1','1',0,NULL,'1',0),('03131462112','abc@xyz.com','ahmad','abc',0,NULL,'1',0),('03131462115','2@lums.edu.pk','ahmad','abc',0,NULL,'1',0),('0313146233','asd@fgh.com','asd','abc',0,NULL,'1',0),('0327462112','2222@lums.edu.pk','031314','abc',0,NULL,'1',0),('121231134','ashd@sd.com','msamadbkj','abc',0,NULL,'1',0),('123454527','exp@xom.com','saad','abc',0,NULL,'1',0),('1234567','saloo@gmail.com','saloo','123',0,NULL,'1',0),('89134961376','23100@lums.edu.pk','zinkon_123','123',0,NULL,'1',0),('8914961','23100@lums.edu.com','z','123',0,NULL,'1',0);
-
-UNLOCK TABLES;
-
-
-
-DROP TABLE IF EXISTS 'views';
-
-CREATE TABLE 'views' (
-  'pname' varchar(45) NOT NULL,
-  'username' varchar(45) DEFAULT NULL,
-  'user_number' varchar(45) NOT NULL,
-  PRIMARY KEY ('pname','user_number'),
-  KEY 'user_number_idx' ('user_number'),
-  CONSTRAINT 'user_number' FOREIGN KEY ('user_number') REFERENCES 'user' ('phone_number'),
-  CONSTRAINT 'views_pname' FOREIGN KEY ('pname') REFERENCES 'playlist' ('pname')
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-
-
-LOCK TABLES 'views' WRITE;
-
-UNLOCK TABLES;
-
-
-`;
 
 function initialize()
 {
@@ -232,13 +40,15 @@ function initialize()
 		InitializeTables,
 		(err) => {
 			if (err) {
-				throw err;
+				throw (err);
 			} else {
 				console.log('success');
 			}
 		}
 	);
 }
+
+
 
 const db = mysql.createConnection({
 	// host: 'localhost',
@@ -262,7 +72,7 @@ app.get('/', (req, res) => {
 	res.send("server is running");
 })
 
-app.get(    )
+
 
 app.get('/check-db', (req, res) => {
 	db.query(`SELECT * FROM user`, (req, res) => {
