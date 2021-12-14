@@ -30,6 +30,10 @@ db.connect(function(err) {
 	console.log(`Connected to database as id ${db.threadId}`);
 });
 
+app.get('/', (req, res) => {
+	console.log("server is running");
+})
+
 app.post('/create_user', (req, res) => {
 	console.log(req.body);
 	const phone_number = req.body.phone_number;
