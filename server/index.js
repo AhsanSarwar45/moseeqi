@@ -518,18 +518,21 @@ app.post('/create_playlist', (req, res) => {
 });
 
 app.post('/add_song_to_playlist', (req, res) =>{
-	const pname = req.body.playlistName
-	const sname = req.body.sname
-	const p_ph = req.body.p_ph
-	const s_ph = req.body.s_ph
+	console.log(req.body);
+	const pname = req.body.pname;
+	const sname = req.body.sname;
+	const p_ph = req.body.p_ph;
+	const s_ph = req.body.s_ph;
 
 	db.query(
-		'INSERT INTO added (p_name, s_name, p_ph, s_ph) VALUES (?,?,?,)',
+		'INSERT INTO added (p_name, s_name, p_ph, s_ph) VALUES (?,?,?,?)',
 		[ pname, sname, p_ph, s_ph],
-		(err, result) => {
+		(err) => {
 			if(err) {
 				if (err.errno === 1062) {
 					res.send('duplicate-entry');
+				} else {
+					throw err;
 				}
 			} else {
 				res.send('song-added-to-playlist');

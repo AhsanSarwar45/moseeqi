@@ -16,17 +16,21 @@ export const Music = () => {
 	const [ noPlaylist, setNoPlaylist ] = useState(false);
 	const [ playlists, setPlaylists ] = useState([]);
 
-	const AddSongToPlaylist = (playlistName, sname, s_ph, p_ph) => {
+	const AddSongToPlaylist = (playlistName, p_ph) => {
 		console.log('adding to p:');
 		Axios.post('http://localhost:3001/add_song_to_playlist',{
-		
+			pname: playlistName,
+			sname: sname,
+			p_ph: p_ph,
+			s_ph: phone_number
 		}).then((response) => {
-
-		})
-		// same as AddLike and /add_like below
-		// change the 'added' table to added( p_name, p_ph, s_name, s_ph)
-		// p_ph = ph of person who made playlist
-		// s_ph = person who made song
+			if (response.data === 'song-added-to-playlist') {
+				console.log('song added playlist Sucess!');
+			} else if (response.data === 'duplicate-entry') {
+				//update page
+				console.log("dup entry");
+			}
+		});
 	};
 
 	const AddLike = () => {
