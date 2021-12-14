@@ -203,11 +203,11 @@ export const Search = () => {
 								colorScheme="green"
 								onChange={setValue}
 								value={value}
-								defaultValue="user"
+								defaultValue="song"
 							>
 								<HStack spacing="40px" pt={1}>
-									<Radio value="user">User</Radio>
 									<Radio value="song">Song</Radio>
+									<Radio value="user">User</Radio>
 									<Radio value="both">Both</Radio>
 								</HStack>
 							</RadioGroup>

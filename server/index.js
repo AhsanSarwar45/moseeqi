@@ -170,11 +170,46 @@ app.post('/delete_music', (req, res) => {
 		if (err) throw err;
 		if (result[0]) {
 			//sql query result is not null
+			// DELETE ChildTable
+			// FROM ChildTable inner join ChildTable on PParentTable.ID=ChildTable.ParentTableID
+			// WHERE <WHERE CONDITION> 
+			db.query('DELETE FROM likes WHERE s_name=? AND s_ph=?', [ sname, phone_number ], (err) => {
+				if (err) {
+					console.log('likes deletion_failed');
+					throw err;
+				} else {
+					console.log('likes deletion_complete');
+				}
+			});
+			db.query('SET FOREIGN_KEY_CHECKS=0;', (err) => {
+				if (err) {
+					console.log('foreign key drop check failed');
+					throw err;
+				} else {
+					console.log('foreign key dropped check');
+				}
+			});
 			db.query('DELETE FROM music WHERE sname=? AND phone_number=?', [ sname, phone_number ], (err) => {
 				if (err) {
+					db.query('SET FOREIGN_KEY_CHECKS=1;', (err) => {
+						if (err) {
+							console.log('foreign key back-on failed');
+							throw err;
+						} else {
+							console.log('foreign key back on full party mode');
+						}
+					});
 					res.send('deletion_failed');
 					throw err;
 				} else {
+					db.query('SET FOREIGN_KEY_CHECKS=1;', (err) => {
+						if (err) {
+							console.log('foreign key back-on failed');
+							throw err;
+						} else {
+							console.log('foreign key back on full party mode');
+						}
+					});
 					var dir = `/data/${phone_number}/music`;
 					var abs_dir = `./data/${phone_number}/music`;
 
