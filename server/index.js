@@ -267,6 +267,30 @@ app.post('/get-user', (req, res) => {
 app.post('/get-music', (req, res) => {
 	console.log('get music request recei', req.body);
 	db.query(
+		'SELECT count(liker_ph) as tot_likes FROM likes WHERE s_ph=? AND s_name=?',
+		[ req.body.phone_number, req.body.sname],
+		(err, result) => {
+			if (err) throw err;
+			if (result[0]) {
+				//sql query result is not null
+				console.log('count successful');
+				console.log('likes:', result[0].tot_likes);
+				db.query(
+					'UPDATE music SET like_count=? WHERE sname=? AND phone_number=?',
+					[ result[0].tot_likes, req.body.sname, req.body.phone_number ],
+					(err) => {
+						if (err) {
+							throw err;
+						} else {
+							console.log('like count added in music successful');
+						}
+					}
+				);
+			}
+		}
+	);
+	
+	db.query(
 		'SELECT * FROM music WHERE phone_number=? AND sname=?',
 		[ req.body.phone_number, req.body.sname ],
 		(err, result) => {
