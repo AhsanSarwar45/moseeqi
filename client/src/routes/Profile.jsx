@@ -1,7 +1,8 @@
 // import { NavbarUser } from '../components/NavBarUser';
 import { Link, useNavigate } from 'react-router-dom';
-import { Spacer, Image, HStack, Button, VStack, Heading, Text, Box, StackDivider } from '@chakra-ui/react';
+import { Spacer,  Menu, MenuButton, MenuDivider, MenuItem, MenuList, Image, HStack, Button, VStack, Heading, Text, Box, StackDivider } from '@chakra-ui/react';
 import { useParams } from 'react-router';
+import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useEffect, useState } from 'react';
 import Axios from 'axios';
 
@@ -11,7 +12,9 @@ export const Profile = () => {
 	const { phone_number } = useParams();
 	const [ data, setData ] = useState({ phone_number: '', username: '', follower_count: 0, earnings: 0 });
 	const [ isSelfProfile, setSeltProfile] = useState (false);
-	const [ following , setFollowing ] = useState(false)
+	const [ following , setFollowing ] = useState(false);
+	const [ noPlaylist, setNoPlaylist ] = useState(false);
+	const [ playlists, setPlaylists ] = useState([]);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -55,6 +58,20 @@ export const Profile = () => {
 		});
 	};
 
+	const GetPlaylist = () => {
+		console.log('here');
+		Axios.post('http://localhost:3001/search_playlist', {
+				phone_number: JSON.parse(sessionStorage.getItem("user-data")).phone_number
+			}).then((response) => {
+				if (response.data === 'no_match') {
+					setNoPlaylist(true);
+				} else {
+					setPlaylists(response.data);
+					setNoPlaylist(false);
+				}
+			});
+	};
+
 	const followUser = () => {
 		setFollowing(true);
 		Axios.post('https://sharkbit-111.uc.r.appspot.com/follow_user', {
@@ -77,6 +94,37 @@ export const Profile = () => {
 			{/* <NavbarUser /> */}
 			<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
 				<Spacer />
+				<Menu>
+				<MenuButton
+					px={3}
+					py={1}
+					transition='all 0.2s'
+					// borderWidth='1px'
+					borderRadius='full'
+					textColor='white'
+					_hover={{ bg: 'gray.400' }}
+					_expanded={{ bg: 'green.500' }}
+					_focus={{ boxShadow: 'outline' }}
+					onClick={GetPlaylist}
+				>
+					My Playlists <ChevronDownIcon />
+				</MenuButton>
+				<MenuList>
+					<Link to="/create_playlist">
+						<MenuItem>New Playlist</MenuItem>
+					</Link>
+					<MenuDivider />
+					{ noPlaylist ? 
+					<MenuItem>
+						No Playlist Found
+					</MenuItem>
+					: playlists.map((p) => (
+						<MenuItem key={p.pname}>
+							{p.pname}
+						</MenuItem>
+					))}	
+				</MenuList>
+				</Menu>
 				< Button colorScheme="blue" textColor="white" size="sm" onClick={()=> navigate(-1)}>
 					Back
 				</Button>

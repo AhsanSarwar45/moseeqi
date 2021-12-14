@@ -16,17 +16,21 @@ export const Music = () => {
 	const [ noPlaylist, setNoPlaylist ] = useState(false);
 	const [ playlists, setPlaylists ] = useState([]);
 
-	const AddSongToPlaylist = (playlistName, sname, s_ph, p_ph) => {
+	const AddSongToPlaylist = (playlistName, p_ph) => {
 		console.log('adding to p:');
 		Axios.post('https://sharkbit-111.uc.r.appspot.com/add_song_to_playlist',{
-		
+			pname: playlistName,
+			sname: sname,
+			p_ph: p_ph,
+			s_ph: phone_number
 		}).then((response) => {
-
-		})
-		// same as AddLike and /add_like below
-		// change the 'added' table to added( p_name, p_ph, s_name, s_ph)
-		// p_ph = ph of person who made playlist
-		// s_ph = person who made song
+			if (response.data === 'song-added-to-playlist') {
+				console.log('song added playlist Sucess!');
+			} else if (response.data === 'duplicate-entry') {
+				//update page
+				console.log("dup entry");
+			}
+		});
 	};
 
 	const AddLike = () => {
@@ -156,8 +160,11 @@ export const Music = () => {
 					<Text> Likes: {parseInt(data.like_count)} </Text>
 				</Box>
 				<Box h="20px">
-					<Text> Genre: {data.genre} </Text>
+					<Text> Streams: {parseInt(data.listen_count)} </Text>
 				</Box>
+				{/* <Box h="20px">
+					<Text> Genre: {data.genre} </Text>
+				</Box> */}
 				<Spacer />
 
 				<MusicPlayer source={`https://sharkbit-111.uc.r.appspot.com/${phone_number}/music/${sname}`} ph={phone_number} sn={sname} />
