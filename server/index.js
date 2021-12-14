@@ -31,7 +31,7 @@ db.connect(function(err) {
 });
 
 app.post('/', (req, res) => {
-	console.log("server is running");
+	res.send("server is running");
 })
 
 app.post('/create_user', (req, res) => {
