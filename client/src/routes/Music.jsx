@@ -156,8 +156,11 @@ export const Music = () => {
 					<Text> Likes: {parseInt(data.like_count)} </Text>
 				</Box>
 				<Box h="20px">
-					<Text> Genre: {data.genre} </Text>
+					<Text> Streams: {parseInt(data.listen_count)} </Text>
 				</Box>
+				{/* <Box h="20px">
+					<Text> Genre: {data.genre} </Text>
+				</Box> */}
 				<Spacer />
 
 				<MusicPlayer source={`http://localhost:3001/${phone_number}/music/${sname}`} ph={phone_number} sn={sname} />

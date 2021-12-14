@@ -296,6 +296,30 @@ app.post('/get-music', (req, res) => {
 	);
 	
 	db.query(
+		'SELECT SUM(listen_counts) as tot_listens FROM listens WHERE s_ph=? AND s_name=?',
+		[ req.body.phone_number, req.body.sname],
+		(err, result) => {
+			if (err) throw err;
+			if (result[0]) {
+				//sql query result is not null
+				console.log('view count successful');
+				console.log('views:', result[0].tot_likes);
+				db.query(
+					'UPDATE music SET listen_count=? WHERE sname=? AND phone_number=?',
+					[ result[0].tot_listens, req.body.sname, req.body.phone_number ],
+					(err) => {
+						if (err) {
+							throw err;
+						} else {
+							console.log('listen count added in music successful');
+						}
+					}
+				);
+			}
+		}
+	);
+
+	db.query(
 		'SELECT * FROM music WHERE phone_number=? AND sname=?',
 		[ req.body.phone_number, req.body.sname ],
 		(err, result) => {
@@ -351,6 +375,48 @@ app.post('/add_like', (req, res) => {
 			}
 		);
 	}
+});
+
+
+app.post('/add_listen', (req, res) => {
+	const s_ph = req.body.s_ph;
+	const s_name = req.body.s_name;
+	const listener_ph = req.body.listener_ph;
+	db.query(
+		'SELECT listen_counts FROM listens WHERE s_name=? AND s_ph=? AND listener_ph=?',
+		[ s_name, s_ph, listener_ph ],
+		(err, result) => {
+			if (err) throw err;
+			if (result[0]) {
+				//sql query result is not null
+				db.query(
+					'UPDATE listens SET listen_counts=listen_counts+1 WHERE s_name=? AND s_ph=? AND listener_ph=?',
+					[ s_name, s_ph, listener_ph ],
+					(err) => {
+						if (err) {
+							throw err;
+						} else {
+							console.log('like count added in music successful');
+						}
+					}
+				);
+			} else {
+				db.query(
+					'INSERT INTO listens ( s_ph, s_name, listener_ph, listen_counts) VALUES (?,?,?,?)',
+					[ s_ph, s_name, listener_ph, 1 ],
+					(err) => {
+						if (err) {
+							console.log(err);
+						} else {
+							console.log('like added sucessfully');
+							res.send('success');
+						}
+					}
+				);
+			}
+		}
+	);
+		
 });
 
 app.post('/delete_account', (req, res) => {

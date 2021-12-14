@@ -98,6 +98,7 @@ CREATE TABLE `likes` (
 
 LOCK TABLES `likes` WRITE;
 /*!40000 ALTER TABLE `likes` DISABLE KEYS */;
+INSERT INTO `likes` VALUES ('Heather','03131462112','03131462112');
 /*!40000 ALTER TABLE `likes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -123,6 +124,7 @@ CREATE TABLE `listens` (
 
 LOCK TABLES `listens` WRITE;
 /*!40000 ALTER TABLE `listens` DISABLE KEYS */;
+INSERT INTO `listens` VALUES ('03131462112','Heather','03131462112',6);
 /*!40000 ALTER TABLE `listens` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -137,7 +139,8 @@ CREATE TABLE `music` (
   `sname` varchar(45) NOT NULL,
   `phone_number` varchar(45) NOT NULL,
   `username` varchar(45) DEFAULT NULL,
-  `like_count` int(10) unsigned zerofill DEFAULT NULL,
+  `like_count` int(10) unsigned zerofill DEFAULT '0000000000',
+  `listen_count` int unsigned DEFAULT '0',
   `genre` varchar(45) DEFAULT NULL,
   `music_path` varchar(300) DEFAULT NULL,
   `promoted` tinyint DEFAULT NULL,
@@ -153,7 +156,7 @@ CREATE TABLE `music` (
 
 LOCK TABLES `music` WRITE;
 /*!40000 ALTER TABLE `music` DISABLE KEYS */;
-INSERT INTO `music` VALUES ('','01234','okb',0000000000,'','/data/01234/music/',0),('2002','03131462112','ahmad',0000000000,'','/data/03131462112/music/2002',0),('anime-music-box_aoi-shiori.mp3','03131462112','ahmad',0000000000,'','/data/03131462112/music/anime-music-box_aoi-shiori.mp3',0),('Fall-2021 (2).png','03131462112','ahmad',0000000000,'','${__dirname}/uploads/music/${file.name}',0),('Heather','03131462112','ahmad',0000000000,'','/data/03131462112/music/Heather',0),('Out of Touch','03131462112','ahmad',0000000000,'','/data/03131462112/music/Out of Touch',0),('OwO','03131462112','ahmad',0000000000,'','/data/03131462112/music/OwO',0),('parhlekuch.mp3','0321','okb',0000000000,'','/data/0321/music/parhlekuch.mp3',0);
+INSERT INTO `music` VALUES ('','01234','okb',0000000000,0,'','/data/01234/music/',0),('2002','03131462112','ahmad',0000000000,0,'','/data/03131462112/music/2002',0),('anime-music-box_aoi-shiori.mp3','03131462112','ahmad',0000000000,0,'','/data/03131462112/music/anime-music-box_aoi-shiori.mp3',0),('Fall-2021 (2).png','03131462112','ahmad',0000000000,0,'','${__dirname}/uploads/music/${file.name}',0),('Heather','03131462112','ahmad',0000000001,6,'','/data/03131462112/music/Heather',0),('Out of Touch','03131462112','ahmad',0000000000,0,'','/data/03131462112/music/Out of Touch',0),('OwO','03131462112','ahmad',0000000000,0,'','/data/03131462112/music/OwO',0),('parhlekuch.mp3','0321','okb',0000000000,0,'','/data/0321/music/parhlekuch.mp3',0);
 /*!40000 ALTER TABLE `music` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -286,4 +289,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-14 19:15:06
+-- Dump completed on 2021-12-14 20:38:58
