@@ -30,7 +30,7 @@ db.connect(function(err) {
 	console.log(`Connected to database as id ${db.threadId}`);
 });
 
-app.get('/', (req, res) => {
+app.post('/', (req, res) => {
 	console.log("server is running");
 })
 
