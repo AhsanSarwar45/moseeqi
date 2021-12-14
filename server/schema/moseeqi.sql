@@ -23,18 +23,18 @@ DROP TABLE IF EXISTS `added`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `added` (
-  `p_name` varchar(45) NOT NULL,
-  `s_name` varchar(45) NOT NULL,
-  `p_ph` varchar(45) NOT NULL,
-  `s_ph` varchar(45) NOT NULL,
-  PRIMARY KEY (`p_name`,`s_name`,`p_ph`,`s_ph`),
-  KEY `creator_number_idx` (`p_ph`),
-  KEY `added_sname_idx` (`s_name`),
-  KEY `creator_username_idx` (`s_ph`),
-  CONSTRAINT `added_creator_username` FOREIGN KEY (`s_ph`) REFERENCES `user` (`username`),
-  CONSTRAINT `added_pname` FOREIGN KEY (`p_name`) REFERENCES `playlist` (`pname`),
-  CONSTRAINT `added_sname` FOREIGN KEY (`s_name`) REFERENCES `music` (`sname`),
-  CONSTRAINT `creator_number` FOREIGN KEY (`p_ph`) REFERENCES `playlist` (`creator_phone_number`)
+  `pname` varchar(45) NOT NULL,
+  `sname` varchar(45) NOT NULL,
+  `creator_number` varchar(45) NOT NULL,
+  `creator_username` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`pname`,`sname`,`creator_number`),
+  KEY `creator_number_idx` (`creator_number`),
+  KEY `added_sname_idx` (`sname`),
+  KEY `creator_username_idx` (`creator_username`),
+  CONSTRAINT `added_creator_username` FOREIGN KEY (`creator_username`) REFERENCES `user` (`username`),
+  CONSTRAINT `added_pname` FOREIGN KEY (`pname`) REFERENCES `playlist` (`pname`),
+  CONSTRAINT `added_sname` FOREIGN KEY (`sname`) REFERENCES `music` (`sname`),
+  CONSTRAINT `creator_number` FOREIGN KEY (`creator_number`) REFERENCES `playlist` (`creator_phone_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -56,17 +56,11 @@ DROP TABLE IF EXISTS `follows`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `follows` (
   `follower_phone_number` varchar(45) NOT NULL,
-  `follower_username` varchar(45) DEFAULT NULL,
   `followed_phone_number` varchar(45) NOT NULL,
-  `followed_username` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`follower_phone_number`,`followed_phone_number`),
-  KEY `follower_username_idx` (`follower_username`),
   KEY `followed_phone_number_idx` (`followed_phone_number`),
-  KEY `followed_username_idx` (`followed_username`),
   CONSTRAINT `followed_phone_number` FOREIGN KEY (`followed_phone_number`) REFERENCES `user` (`phone_number`),
-  CONSTRAINT `followed_username` FOREIGN KEY (`followed_username`) REFERENCES `user` (`username`),
-  CONSTRAINT `follower_phone_number` FOREIGN KEY (`follower_phone_number`) REFERENCES `user` (`phone_number`),
-  CONSTRAINT `follower_username` FOREIGN KEY (`follower_username`) REFERENCES `user` (`username`)
+  CONSTRAINT `follower_phone_number` FOREIGN KEY (`follower_phone_number`) REFERENCES `user` (`phone_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -76,6 +70,7 @@ CREATE TABLE `follows` (
 
 LOCK TABLES `follows` WRITE;
 /*!40000 ALTER TABLE `follows` DISABLE KEYS */;
+INSERT INTO `follows` VALUES ('03131462111','03131462112'),('03131462111','0313146233'),('03131462111','0327462112'),('03131462111','123454527'),('03131462111','8914961');
 /*!40000 ALTER TABLE `follows` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -188,7 +183,7 @@ CREATE TABLE `playlist` (
 
 LOCK TABLES `playlist` WRITE;
 /*!40000 ALTER TABLE `playlist` DISABLE KEYS */;
-INSERT INTO `playlist` VALUES ('abcd','03131462112',NULL),('ahmad smex','123456',NULL),('Playlist01','03131462112',NULL);
+INSERT INTO `playlist` VALUES ('abcd','03131462112',NULL),('Playlist01','03131462112',NULL);
 /*!40000 ALTER TABLE `playlist` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -254,7 +249,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('03131462111','test1@l.com','test1','1',0,NULL,'1',0),('03131462112','abc@xyz.com','ahmad','abc',0,NULL,'1',0),('03131462115','2@lums.edu.pk','ahmad','abc',0,NULL,'1',0),('0313146233','asd@fgh.com','asd','abc',0,NULL,'1',0),('0327462112','2222@lums.edu.pk','031314','abc',0,NULL,'1',0),('121231134','ashd@sd.com','msamadbkj','abc',0,NULL,'1',0),('123454527','exp@xom.com','saad','abc',0,NULL,'1',0),('123456','demonspark0@gmail.com','omer','123',0,NULL,'1',0),('1234567','saloo@gmail.com','saloo','123',0,NULL,'1',0),('89134961376','23100@lums.edu.pk','zinkon_123','123',0,NULL,'1',0),('8914961','23100@lums.edu.com','z','123',0,NULL,'1',0);
+INSERT INTO `user` VALUES ('03131462111','test1@l.com','test1','1',0,NULL,'1',0),('03131462112','abc@xyz.com','ahmad','abc',0,NULL,'1',0),('03131462115','2@lums.edu.pk','ahmad','abc',0,NULL,'1',0),('0313146233','asd@fgh.com','asd','abc',0,NULL,'1',0),('0327462112','2222@lums.edu.pk','031314','abc',0,NULL,'1',0),('121231134','ashd@sd.com','msamadbkj','abc',0,NULL,'1',0),('123454527','exp@xom.com','saad','abc',0,NULL,'1',0),('1234567','saloo@gmail.com','saloo','123',0,NULL,'1',0),('89134961376','23100@lums.edu.pk','zinkon_123','123',0,NULL,'1',0),('8914961','23100@lums.edu.com','z','123',0,NULL,'1',0);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -294,4 +289,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-14 16:53:11
+-- Dump completed on 2021-12-14 18:38:24
