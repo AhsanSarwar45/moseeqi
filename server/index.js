@@ -4,6 +4,7 @@ const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
 const path = require('path');
+const { devNull } = require('os');
 
 // If enviromental variable does not exist, set port to 3001
 const PORT = process.env.PORT || 3001;
@@ -146,7 +147,7 @@ app.post('/search_playlist', (req, res) => {
 	console.log(req.body);
 	const phone_number = req.body.phone_number;
 	db.query(
-		'SELECT pname FROM playlist WHERE creator_phone_number = ?',
+		'SELECT pname, creator_phone_number FROM playlist WHERE creator_phone_number = ?',
 		[ phone_number ],
 		(err, result) => {
 			if (err) throw err;
@@ -407,6 +408,28 @@ app.post('/create_playlist', (req, res) => {
 		}
 	);
 });
+
+app.post('/add_song_to_playlist', (req, res) =>{
+	const pname = req.body.playlistName
+	const sname = req.body.sname
+	const p_ph = req.body.p_ph
+	const s_ph = req.body.s_ph
+
+	db.query(
+		'INSERT INTO added (p_name, s_name, p_ph, s_ph) VALUES (?,?,?,)',
+		[ pname, sname, p_ph, s_ph],
+		(err, result) => {
+			if(err) {
+				if (err.errno === 1062) {
+					res.send('duplicate-entry');
+				}
+			} else {
+				res.send('song-added-to-playlist');
+			}
+		}
+	);
+});
+
 
 app.listen(PORT, () => {
 	console.log(`Server listening on http://localhost:${PORT}`);

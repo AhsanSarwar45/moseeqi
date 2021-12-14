@@ -16,8 +16,19 @@ export const Music = () => {
 	const [ noPlaylist, setNoPlaylist ] = useState(false);
 	const [ playlists, setPlaylists ] = useState([]);
 
-	const AddSongToPlaylist = () => {
+	const AddSongToPlaylist = (playlistName, sname, s_ph, p_ph) => {
 		console.log('adding to p:');
+		Axios.post('http://localhost:3001/add_song_to_playlist',{
+
+		}
+		
+		
+		
+		
+		
+		
+		
+		)
 		// same as AddLike and /add_like below
 		// change the 'added' table to added( p_name, p_ph, s_name, s_ph)
 		// p_ph = ph of person who made playlist
@@ -113,7 +124,7 @@ export const Music = () => {
 						No Playlist Found
 					</MenuItem>
 					: playlists.map((p) => (
-						<MenuItem key={p.pname} onClick={AddSongToPlaylist}>
+						<MenuItem key={p.pname} onClick={()=>AddSongToPlaylist(p.pname, p.creator_phone_number)}>
 							{p.pname}
 						</MenuItem>
 					))}	
