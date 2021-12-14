@@ -14,20 +14,6 @@ export const Profile = () => {
 	const [ following , setFollowing ] = useState(false)
 	const navigate = useNavigate();
 
-	Axios.post('http://localhost:3001/follow_user', {
-		check: true,
-		phone_number: phone_number,
-		liker_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
-	}).then((response) => {
-		if (response.data === 'liked') {
-			setFollowing(true);
-			console.log('liked alredaugs');
-		} else if (response.data === 'not_liked') {
-			setFollowing(false);
-			console.log('not yet liked');
-		}
-	});
-
 	useEffect(() => {
 		Axios.post('http://localhost:3001/get-user', {
 			phone_number: phone_number
@@ -42,23 +28,47 @@ export const Profile = () => {
 				setSeltProfile(false);
 			}
 		});
+
+		Axios.post('http://localhost:3001/follow_user', {
+			check: true,
+			followed_ph: phone_number,
+			follower_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
+		}).then((response) => {
+			//console.log(response)
+			console.log("RES: ", response)
+			if (response.data === 'following') {
+				setFollowing(true);
+				console.log('following already');
+			} else if (response.data === 'not_following') {
+				setFollowing(false);
+				console.log('not following already');
+			}
+		});
+
 	}, []);
 
 	const deleteAccount = () => {
 		Axios.post('http://localhost:3001/delete_account', {
 			phone_number: phone_number
 		}).then((response) => {
-
+			//TODO: create a page 
 		});
 	};
 
 	const followUser = () => {
 		setFollowing(true);
 		Axios.post('http://localhost:3001/follow_user', {
-			phone_number_follower: phone_number, 
-			phone_number_followed: JSON.parse(sessionStorage.getItem("user-data")).phone_number
+			check: false,
+			followed_ph: phone_number,
+			follower_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
 		}).then((response) => {
-
+			if (response.data === 'duplicate_entry'){
+				console.log("already following")
+			} else if (response.data === 'error'){
+				console.log("some error");
+			} else if (response.data === 'success'){
+				console.log("follow added succ");
+			}
 		});
 	}
 
