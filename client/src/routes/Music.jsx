@@ -153,7 +153,7 @@ export const Music = () => {
 					<Text> Song Name: {data.sname} </Text>
 				</Box>
 				<Box h="20px">
-					<Text> Likes: {data.like_count} </Text>
+					<Text> Likes: {parseInt(data.like_count)} </Text>
 				</Box>
 				<Box h="20px">
 					<Text> Genre: {data.genre} </Text>

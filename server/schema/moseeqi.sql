@@ -109,12 +109,11 @@ DROP TABLE IF EXISTS `listens`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `listens` (
-  `phone_number` varchar(45) NOT NULL,
-  `sname` varchar(45) NOT NULL,
-  PRIMARY KEY (`phone_number`,`sname`),
-  KEY `sname_idx` (`sname`),
-  CONSTRAINT `phonenumber` FOREIGN KEY (`phone_number`) REFERENCES `user` (`phone_number`),
-  CONSTRAINT `sname` FOREIGN KEY (`sname`) REFERENCES `music` (`sname`)
+  `s_ph` varchar(45) NOT NULL,
+  `s_name` varchar(45) NOT NULL,
+  `listener_ph` varchar(45) NOT NULL,
+  `listen_counts` int unsigned DEFAULT '0',
+  PRIMARY KEY (`s_ph`,`s_name`,`listener_ph`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -287,4 +286,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-14 18:47:36
+-- Dump completed on 2021-12-14 19:15:06
