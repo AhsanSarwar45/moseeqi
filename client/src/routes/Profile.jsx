@@ -15,7 +15,7 @@ export const Profile = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		Axios.post('http://localhost:3001/get-user', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/get-user', {
 			phone_number: phone_number
 		}).then((response) => {
 			let selfData = sessionStorage.getItem("user-data");
@@ -29,7 +29,7 @@ export const Profile = () => {
 			}
 		});
 
-		Axios.post('http://localhost:3001/follow_user', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/follow_user', {
 			check: true,
 			followed_ph: phone_number,
 			follower_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
@@ -48,7 +48,7 @@ export const Profile = () => {
 	}, []);
 
 	const deleteAccount = () => {
-		Axios.post('http://localhost:3001/delete_account', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/delete_account', {
 			phone_number: phone_number
 		}).then((response) => {
 			//TODO: create a page 
@@ -57,7 +57,7 @@ export const Profile = () => {
 
 	const followUser = () => {
 		setFollowing(true);
-		Axios.post('http://localhost:3001/follow_user', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/follow_user', {
 			check: false,
 			followed_ph: phone_number,
 			follower_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
@@ -71,16 +71,6 @@ export const Profile = () => {
 			}
 		});
 	}
-
-	// const unFollowUser = () => {
-	// 	setFollowing(false);
-	// 	Axios.post('http://localhost:3001/unfollow_user', {
-	// 		phone_number_follower: phone_number, 
-	// 		phone_number_followed: JSON.parse(sessionStorage.getItem("user-data")).phone_number,
-	// 	}).then((response) => {
-
-	// 	});
-	// }
 
 	return (
 		<div>

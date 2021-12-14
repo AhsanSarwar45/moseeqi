@@ -11,7 +11,7 @@ export const CreatePlaylist = () => {
     const [playlistAdded, setPLAdded] = useState(false);
 
     const createPL = () => {
-        Axios.post('http://localhost:3001/create_playlist', {
+        Axios.post('https://sharkbit-111.uc.r.appspot.com/create_playlist', {
 			playlistName: playlistName,
             phone_number: JSON.parse(sessionStorage.getItem("user-data")).phone_number
 

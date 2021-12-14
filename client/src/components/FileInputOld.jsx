@@ -50,7 +50,7 @@ export const FileInputOld = () => {
 			formData.append('user_name', data.username);
 			formData.append('sname', songName);
 			formData.append('genre', genre);
-			Axios.post('http://localhost:3001/upload_music', formData, {
+			Axios.post('https://sharkbit-111.uc.r.appspot.com/', formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data'
 				}

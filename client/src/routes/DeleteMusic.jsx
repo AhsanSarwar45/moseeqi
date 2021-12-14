@@ -17,7 +17,7 @@ export const DeleteMusic = () => {
 		data = JSON.parse(data);
         console.log('song delete');
 
-        Axios.post('http://localhost:3001/delete_music', {
+        Axios.post('https://sharkbit-111.uc.r.appspot.com/delete_music', {
         sname: sname,
         phone_number: data.phone_number
         }).then((response) => {

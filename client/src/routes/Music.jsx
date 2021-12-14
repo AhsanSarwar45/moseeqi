@@ -18,7 +18,7 @@ export const Music = () => {
 
 	const AddSongToPlaylist = (playlistName, sname, s_ph, p_ph) => {
 		console.log('adding to p:');
-		Axios.post('http://localhost:3001/add_song_to_playlist',{
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/add_song_to_playlist',{
 		
 		}).then((response) => {
 
@@ -31,7 +31,7 @@ export const Music = () => {
 
 	const AddLike = () => {
 		setIsLiked(true);
-		Axios.post('http://localhost:3001/add_like', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/add_like', {
 			check: false,
 			phone_number: phone_number,
 			sname: sname,
@@ -51,7 +51,7 @@ export const Music = () => {
 
 	const GetPlaylist = () => {
 		console.log('here');
-		Axios.post('http://localhost:3001/search_playlist', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/search_playlist', {
 				phone_number: JSON.parse(sessionStorage.getItem("user-data")).phone_number
 			}).then((response) => {
 				if (response.data === 'no_match') {
@@ -64,7 +64,7 @@ export const Music = () => {
 	};
 
 	useEffect(() => {
-		Axios.post('http://localhost:3001/get-music', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/get-music', {
 			phone_number: phone_number,
 			sname: sname
 		}).then((response) => {
@@ -72,7 +72,7 @@ export const Music = () => {
 			console.log('music info received');
 		});
 		//to check if user has already liked this song
-		Axios.post('http://localhost:3001/add_like', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/add_like', {
 		check: true,
 		phone_number: phone_number,
 		sname: sname,
@@ -160,7 +160,7 @@ export const Music = () => {
 				</Box>
 				<Spacer />
 
-				<MusicPlayer source={`http://localhost:3001/${phone_number}/music/${sname}`} ph={phone_number} sn={sname} />
+				<MusicPlayer source={`https://sharkbit-111.uc.r.appspot.com/${phone_number}/music/${sname}`} ph={phone_number} sn={sname} />
 			</VStack>
 		</div>
 	);
