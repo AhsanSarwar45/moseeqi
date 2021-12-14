@@ -518,7 +518,6 @@ app.post('/create_playlist', (req, res) => {
 });
 
 app.post('/add_song_to_playlist', (req, res) =>{
-	console.log(req.body);
 	const pname = req.body.pname;
 	const sname = req.body.sname;
 	const p_ph = req.body.p_ph;
