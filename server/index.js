@@ -382,11 +382,49 @@ app.post('/delete_account', (req, res) => {
 })
 
 app.post('/follow_user', (req, res) => {
-	console.log("vageen", req.body)
-	const phone_number_follower = req.body.phone_number_follower;
-	const phone_number_followed = req.body.phone_number_followed;
+	const followed_ph = req.body.followed_ph;
+	const follower_ph = req.body.follower_ph;
+	const check = req.body.check;
 
-	db.query('INSERT INTO follows')
+	if (check){
+		console.log("sent result", {followed_ph, follower_ph})
+		db.query(
+			'SELECT follower_phone_number, followed_phone_number FROM follows WHERE follower_phone_number = ? AND followed_phone_number = ?',
+			[ follower_ph, followed_ph ],
+			(err, result) => {
+				console.log("RES: ", result);
+				if (err) throw err;
+				if (result[0]) {
+
+					//sql query result is not null
+					console.log('like found');
+					res.send('following');
+				}
+				else {
+					res.send('not_following');
+				}
+			}
+		);
+	} else {
+		db.query(
+			'INSERT INTO follows (followed_phone_number, follower_phone_number) VALUES (?,?)',
+			[ followed_ph, follower_ph ],
+			(err) => {
+				if (err) {
+					console.log(err)
+					if (err.errno === 1062) {
+						res.send('duplicate_entry');
+					} else {
+						console.log(err);
+						res.send('error');
+					}
+				} else {
+					console.log('follow added');
+					res.send('success');
+				}
+			}
+		);
+	}
 })
 
 app.post('/create_playlist', (req, res) => {
