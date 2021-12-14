@@ -17,14 +17,13 @@ export const Profile = () => {
 	Axios.post('http://localhost:3001/follow_user', {
 		check: true,
 		phone_number: phone_number,
-		sname: sname,
 		liker_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
 	}).then((response) => {
 		if (response.data === 'liked') {
-			setIsLiked(true);
+			setFollowing(true);
 			console.log('liked alredaugs');
 		} else if (response.data === 'not_liked') {
-			setIsLiked(false);
+			setFollowing(false);
 			console.log('not yet liked');
 		}
 	});
