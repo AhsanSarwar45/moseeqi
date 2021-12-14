@@ -23,18 +23,16 @@ DROP TABLE IF EXISTS `added`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `added` (
-  `pname` varchar(45) NOT NULL,
-  `sname` varchar(45) NOT NULL,
-  `creator_number` varchar(45) NOT NULL,
-  `creator_username` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`pname`,`sname`,`creator_number`),
-  KEY `creator_number_idx` (`creator_number`),
-  KEY `added_sname_idx` (`sname`),
-  KEY `creator_username_idx` (`creator_username`),
-  CONSTRAINT `added_creator_username` FOREIGN KEY (`creator_username`) REFERENCES `user` (`username`),
-  CONSTRAINT `added_pname` FOREIGN KEY (`pname`) REFERENCES `playlist` (`pname`),
-  CONSTRAINT `added_sname` FOREIGN KEY (`sname`) REFERENCES `music` (`sname`),
-  CONSTRAINT `creator_number` FOREIGN KEY (`creator_number`) REFERENCES `playlist` (`creator_phone_number`)
+  `p_name` varchar(45) NOT NULL,
+  `s_name` varchar(45) NOT NULL,
+  `p_ph` varchar(45) NOT NULL,
+  `s_ph` varchar(45) NOT NULL,
+  PRIMARY KEY (`p_name`,`s_name`,`p_ph`,`s_ph`),
+  KEY `creator_number_idx` (`p_ph`),
+  KEY `added_sname_idx` (`s_name`),
+  CONSTRAINT `added_pname` FOREIGN KEY (`p_name`) REFERENCES `playlist` (`pname`),
+  CONSTRAINT `added_sname` FOREIGN KEY (`s_name`) REFERENCES `music` (`sname`),
+  CONSTRAINT `creator_number` FOREIGN KEY (`p_ph`) REFERENCES `playlist` (`creator_phone_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -289,4 +287,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-12-14 18:38:24
+-- Dump completed on 2021-12-14 18:47:36
