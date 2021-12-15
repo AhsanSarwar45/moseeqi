@@ -18,8 +18,10 @@ export const Profile = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		Axios.post(process.env.URL+'/get-user', {headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }},{
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/get-user', {headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }},{
 			phone_number: phone_number
+		}, {
+			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 		}).then((response) => {
 			let selfData = sessionStorage.getItem("user-data");
 			selfData = JSON.parse(selfData);
@@ -32,10 +34,12 @@ export const Profile = () => {
 			}
 		});
 
-		Axios.post(process.env.URL+'/follow_user', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/follow_user', {
 			check: true,
 			followed_ph: phone_number,
 			follower_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
+		}, {
+			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 		}).then((response) => {
 			//console.log(response)
 			console.log("RES: ", response)
@@ -51,8 +55,10 @@ export const Profile = () => {
 	}, []);
 
 	const deleteAccount = () => {
-		Axios.post(process.env.URL+'/delete_account', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/delete_account', {
 			phone_number: phone_number
+		}, {
+			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 		}).then((response) => {
 			//TODO: create a page 
 		});
@@ -60,8 +66,10 @@ export const Profile = () => {
 
 	const GetPlaylist = () => {
 		console.log('here');
-		Axios.post('http://localhost:3001/search_playlist', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/search_playlist', {
 				phone_number: JSON.parse(sessionStorage.getItem("user-data")).phone_number
+			}, {
+				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 			}).then((response) => {
 				if (response.data === 'no_match') {
 					setNoPlaylist(true);
@@ -74,10 +82,12 @@ export const Profile = () => {
 
 	const followUser = () => {
 		setFollowing(true);
-		Axios.post(process.env.URL+'/follow_user', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/follow_user', {
 			check: false,
 			followed_ph: phone_number,
 			follower_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
+		}, {
+			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 		}).then((response) => {
 			if (response.data === 'duplicate_entry'){
 				console.log("already following")

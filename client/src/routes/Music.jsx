@@ -18,11 +18,12 @@ export const Music = () => {
 
 	const AddSongToPlaylist = (playlistName, p_ph) => {
 		console.log('adding to p:');
-		Axios.post(process.env.URL+'/add_song_to_playlist',{
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/add_song_to_playlist',{
 			pname: playlistName,
 			sname: sname,
 			p_ph: p_ph,
 			s_ph: phone_number
+		}, {headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 		}).then((response) => {
 			if (response.data === 'song-added-to-playlist') {
 				console.log('song added playlist Sucess!');
@@ -35,11 +36,13 @@ export const Music = () => {
 
 	const AddLike = () => {
 		setIsLiked(true);
-		Axios.post(process.env.URL+'/add_like', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/add_like', {
 			check: false,
 			phone_number: phone_number,
 			sname: sname,
 			liker_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
+		}, {
+			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 		}).then((response) => {
 			if (response.data === 'error') {
 				setIsLiked(false);
@@ -55,8 +58,10 @@ export const Music = () => {
 
 	const GetPlaylist = () => {
 		console.log('here');
-		Axios.post(process.env.URL+'/search_playlist', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/search_playlist', {
 				phone_number: JSON.parse(sessionStorage.getItem("user-data")).phone_number
+			}, {
+				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 			}).then((response) => {
 				if (response.data === 'no_match') {
 					setNoPlaylist(true);
@@ -68,19 +73,23 @@ export const Music = () => {
 	};
 
 	useEffect(() => {
-		Axios.post(process.env.URL+'/get-music', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/get-music', {
 			phone_number: phone_number,
 			sname: sname
+		}, {
+			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 		}).then((response) => {
 			setData(response.data[0]);
 			console.log('music info received');
 		});
 		//to check if user has already liked this song
-		Axios.post(process.env.URL+'/add_like', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/add_like', {
 		check: true,
 		phone_number: phone_number,
 		sname: sname,
 		liker_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
+		}, {
+			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 		}).then((response) => {
 			if (response.data === 'liked') {
 				setIsLiked(true);

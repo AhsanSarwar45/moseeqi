@@ -17,10 +17,12 @@ export const DeleteMusic = () => {
 		data = JSON.parse(data);
         console.log('song delete');
 
-        Axios.post(process.env.URL+'/delete_music', {
+        Axios.post('https://sharkbit-111.uc.r.appspot.com/delete_music', {
         sname: sname,
         phone_number: data.phone_number
-        }).then((response) => {
+        }, {
+			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+		}).then((response) => {
             if (response.data === 'no_match') {
                 setNoMatch(true);
             } else if (response.data === 'deletion_complete') {

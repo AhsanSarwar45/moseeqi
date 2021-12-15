@@ -11,10 +11,12 @@ export const CreatePlaylist = () => {
     const [playlistAdded, setPLAdded] = useState(false);
 
     const createPL = () => {
-        Axios.post(process.env.URL+'/create_playlist', {
+        Axios.post('https://sharkbit-111.uc.r.appspot.com/create_playlist', {
 			playlistName: playlistName,
             phone_number: JSON.parse(sessionStorage.getItem("user-data")).phone_number
 
+		}, {
+			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 		}).then((response) => {
             if (response.data === 'playlist-added'){
                 setPLAdded(true);

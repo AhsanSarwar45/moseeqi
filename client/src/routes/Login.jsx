@@ -16,7 +16,9 @@ export const Login = () => {
 		setIsInvalid(false);
 		setValid(false);
 		actions.setSubmitting(false);
-		Axios.post(process.env.URL+'/login', values).then((response) => {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/login', values, {
+			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+		}).then((response) => {
 			if (response.data === 'invalid') {
 				setIsInvalid(true);
 				console.log('user name or password is invalid');

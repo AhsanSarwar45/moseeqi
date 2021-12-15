@@ -101,8 +101,10 @@ export const Search = () => {
 	const navigate = useNavigate();
 
 	const UserRequest = () => {
-		Axios.post(process.env.URL+'/search_user', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/search_user', {
 			username: username
+		}, {
+			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 		}).then((response) => {
 			if (response.data === 'no_match') {
 				setNoMatch(true);
@@ -118,8 +120,10 @@ export const Search = () => {
 	};
 
 	const SongRequest = () => {
-		Axios.post(process.env.URL+'/search_music', {
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/search_music', {
 			sname: username
+		}, {
+			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 		}).then((response) => {
 			if (response.data === 'no_match') {
 				setNoMatch(true);
@@ -143,8 +147,10 @@ export const Search = () => {
 		} else if (value === 'both') {
 			console.log('both search');
 			setNoMatch(true);
-			Axios.post(process.env.URL+'/search_user', {
+			Axios.post('https://sharkbit-111.uc.r.appspot.com/search_user', {
 				username: username
+			}, {
+				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 			}).then((response) => {
 				if (response.data === 'no_match') {
 					setSongMatch(false);
@@ -157,8 +163,10 @@ export const Search = () => {
 					setNoMatch(false);
 				}
 			});
-			Axios.post(process.env.URL+'/search_music', {
+			Axios.post('https://sharkbit-111.uc.r.appspot.com/search_music', {
 				sname: username
+			}, {
+				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 			}).then((response) => {
 				if (response.data === 'no_match') {
 					setSongMatch(false);
