@@ -101,7 +101,7 @@ export const Search = () => {
 	const navigate = useNavigate();
 
 	const UserRequest = () => {
-		Axios.post(process.env.REACT_APP_LINK_URL+'/search_user', {
+		Axios.post(process.env.URL+'/search_user', {
 			username: username
 		}).then((response) => {
 			if (response.data === 'no_match') {
@@ -118,7 +118,7 @@ export const Search = () => {
 	};
 
 	const SongRequest = () => {
-		Axios.post(process.env.REACT_APP_LINK_URL+'/search_music', {
+		Axios.post(process.env.URL+'/search_music', {
 			sname: username
 		}).then((response) => {
 			if (response.data === 'no_match') {
@@ -143,7 +143,7 @@ export const Search = () => {
 		} else if (value === 'both') {
 			console.log('both search');
 			setNoMatch(true);
-			Axios.post(process.env.REACT_APP_LINK_URL+'/search_user', {
+			Axios.post(process.env.URL+'/search_user', {
 				username: username
 			}).then((response) => {
 				if (response.data === 'no_match') {
@@ -157,7 +157,7 @@ export const Search = () => {
 					setNoMatch(false);
 				}
 			});
-			Axios.post(process.env.REACT_APP_LINK_URL+'/search_music', {
+			Axios.post(process.env.URL+'/search_music', {
 				sname: username
 			}).then((response) => {
 				if (response.data === 'no_match') {

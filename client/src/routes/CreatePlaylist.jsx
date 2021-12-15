@@ -11,7 +11,7 @@ export const CreatePlaylist = () => {
     const [playlistAdded, setPLAdded] = useState(false);
 
     const createPL = () => {
-        Axios.post(process.env.REACT_APP_LINK_URL+'/create_playlist', {
+        Axios.post(process.env.URL+'/create_playlist', {
 			playlistName: playlistName,
             phone_number: JSON.parse(sessionStorage.getItem("user-data")).phone_number
 

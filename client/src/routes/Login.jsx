@@ -16,7 +16,7 @@ export const Login = () => {
 		setIsInvalid(false);
 		setValid(false);
 		actions.setSubmitting(false);
-		Axios.post(process.env.REACT_APP_LINK_URL+'/login', values).then((response) => {
+		Axios.post(process.env.URL+'/login', values).then((response) => {
 			if (response.data === 'invalid') {
 				setIsInvalid(true);
 				console.log('user name or password is invalid');
@@ -25,7 +25,7 @@ export const Login = () => {
 				sessionStorage.setItem('isUserLogged', true);
 				let data = sessionStorage.getItem('user-data');
 				data = JSON.parse(data);
-				Axios.post(process.env.REACT_APP_LINK_URL+'/get-user', {
+				Axios.post(process.env.URL+'/get-user', {
 					phone_number: data.phone_number
 				}).then((response) => {
 					sessionStorage.setItem('user-data', JSON.stringify(response.data[0]));

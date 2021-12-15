@@ -17,7 +17,7 @@ export const DeleteMusic = () => {
 		data = JSON.parse(data);
         console.log('song delete');
 
-        Axios.post(process.env.REACT_APP_LINK_URL+'/delete_music', {
+        Axios.post(process.env.URL+'/delete_music', {
         sname: sname,
         phone_number: data.phone_number
         }).then((response) => {

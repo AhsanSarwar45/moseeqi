@@ -15,7 +15,7 @@ export const SignUp = () => {
 	const SignUpOnClick = (values, actions) => {
 		setTimeout(() => {
 			actions.setSubmitting(false);
-			Axios.post(process.env.REACT_APP_LINK_URL + '/create_user', values, {
+			Axios.post(process.env.URL + '/create_user', values, {
 				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 			}).then((response) => {
 				console.log(response.data);

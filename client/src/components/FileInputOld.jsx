@@ -50,7 +50,7 @@ export const FileInputOld = () => {
 			formData.append('user_name', data.username);
 			formData.append('sname', songName);
 			formData.append('genre', genre);
-			Axios.post(process.env.REACT_APP_LINK_URL+'/', formData, {
+			Axios.post(process.env.URL+'/', formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data'
 				}
