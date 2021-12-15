@@ -36,6 +36,8 @@ app.use(function(req, res, next) {
 	next();
 });
 
+let phone_numbers = [];
+
 // const initiliazeTables = `
 
 // CREATE TABLE added (p_name VARCHAR(45) NOT NULL, s_name VARCHAR(45) NOT NULL, p_ph VARCHAR(45)NOT NULL, s_ph VARCHAR(45) NOT NULL, PRIMARY KEY(p_name, s_name, p_ph, s_ph))
@@ -75,6 +77,7 @@ db.connect(function(err) {
 	// });
 
 	SeedUsers(100);
+	//SeedPlaylists();
 });
 
 app.get('/', (req, res) => {
@@ -627,6 +630,7 @@ function SeedUsers(amount) {
 					if (err) {
 						console.log('Error creating table!:', err);
 					} else {
+						let values = [];
 						for (let index = 0; index < amount; index++) {
 							const username = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] });
 							const phone_number = getRandomArbitrary(10000, 100000000);
@@ -634,16 +638,54 @@ function SeedUsers(amount) {
 							const email =
 								uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] }) + '@site.com';
 
-							db.query(
-								'INSERT INTO user (phone_number, username, email, password) VALUES (?,?,?,?)',
-								[ phone_number, username, email, password ],
-								(err, result) => {
-									if (err) {
-										console.log(('error adding users to user table:', err));
-									}
-								}
-							);
+							values.push([ phone_number, username, email, password ]);
+							phone_numbers.push(phone_number);
 						}
+
+						db.query(
+							'INSERT INTO user (phone_number, username, email, password) VALUES ?',
+							[ values ],
+							(err, result) => {
+								if (err) {
+									console.log(('error adding users to user table:', err));
+								} else {
+									SeedPlaylists();
+								}
+							}
+						);
+					}
+				}
+			);
+		}
+	});
+}
+
+function SeedPlaylists() {
+	db.query('DROP TABLE IF EXISTS playlist', (err, result) => {
+		if (err) {
+			console.log('Error dropping playlist table!:', err);
+		} else {
+			db.query(
+				'CREATE TABLE playlist (pname varchar(45) NOT NULL, creator_phone_number varchar(45) NOT NULL, creator_username varchar(45) DEFAULT NULL, PRIMARY KEY (pname,creator_phone_number))',
+				(err, result) => {
+					if (err) {
+						console.log('Error creating table!:', err);
+					} else {
+						let values = [];
+						for (let index = 0; index < phone_numbers.length; index++) {
+							const pname = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] });
+							values.push([ pname, phone_numbers[index] ]);
+						}
+						db.query(
+							'INSERT INTO playlist (pname, creator_phone_number) VALUES ?',
+							[ values ],
+							(err, result) => {
+								if (err) {
+									console.log(('error adding playlists to playlist table:', err));
+								} else {
+								}
+							}
+						);
 					}
 				}
 			);
