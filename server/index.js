@@ -119,7 +119,6 @@ app.get('/check-db', (req, res) => {
 });
 
 app.post('/create_user', (req, res) => {
-	console.log(req.body);
 	const phone_number = req.body.phone_number;
 	const username = req.body.username;
 	const email = req.body.email;
@@ -130,10 +129,12 @@ app.post('/create_user', (req, res) => {
 		[ phone_number, username, email, password ],
 		(err, result) => {
 			if (err) {
+				console.log(err);
 				if (err.errno === 1062) {
 					res.send('duplicate-entry');
 				}
 			} else {
+				console.log(`Sucessfully Added User ${email}`);
 				res.send('user-added');
 			}
 		}
