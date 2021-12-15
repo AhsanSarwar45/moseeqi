@@ -18,10 +18,9 @@ export const Profile = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/get-user', {headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }},{
+		Axios.post('https://sharkbit-111.uc.r.appspot.com/get-user',{
 			phone_number: phone_number
-		}, {
-			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+		}, {headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 		}).then((response) => {
 			let selfData = sessionStorage.getItem("user-data");
 			selfData = JSON.parse(selfData);
@@ -38,8 +37,7 @@ export const Profile = () => {
 			check: true,
 			followed_ph: phone_number,
 			follower_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
-		}, {
-			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+		}, {headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 		}).then((response) => {
 			//console.log(response)
 			console.log("RES: ", response)
