@@ -63,10 +63,10 @@ CREATE TABLE user (phone_number varchar(45) NOT NULL, email varchar(45) NOT NULL
 CREATE TABLE views (pname varchar(45) NOT NULL, username varchar(45) DEFAULT NULL, user_number varchar(45) NOT NULL, PRIMARY KEY (pname,user_number));`;
 
 const db = mysql.createConnection({
-	host: 'localhost',
-	//socketPath: '/cloudsql/sharkbit-111:asia-southeast1:moseeqi',
+	//host: 'localhost',
+	socketPath: '/cloudsql/sharkbit-111:asia-southeast1:moseeqi',
 	user: 'root',
-	//password: '123',
+	password: '123',
 	database: 'moseeqi',
 	multipleStatements: true
 });
