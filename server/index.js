@@ -7,9 +7,7 @@ const path = require('path');
 const { devNull } = require('os');
 
 // If enviromental variable does not exist, set port to 3001
-const PORT = process.env.PORT || 3001,function(){
-	console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-  });;
+const PORT = process.env.PORT || 3001;
 
 const app = express();
 
