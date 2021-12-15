@@ -18,25 +18,25 @@ app.use(express.json());
 app.use(fileUpload());
 app.use(express.static('data'));
 
-app.use(function(req, res, next) {
-	// Website you wish to allow to connect
-	res.setHeader('Access-Control-Allow-Origin', '*');
+// app.use(function(req, res, next) {
+// 	// Website you wish to allow to connect
+// 	res.setHeader('Access-Control-Allow-Origin', '*');
 
-	// Request methods you wish to allow
-	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+// 	// Request methods you wish to allow
+// 	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
-	// Request headers you wish to allow
-	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+// 	// Request headers you wish to allow
+// 	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 
-	// // Set to true if you need the website to include cookies in the requests sent
-	// // to the API (e.g. in case you use sessions)
-	// res.setHeader('Access-Control-Allow-Credentials', true);
+// 	// // Set to true if you need the website to include cookies in the requests sent
+// 	// // to the API (e.g. in case you use sessions)
+// 	// res.setHeader('Access-Control-Allow-Credentials', true);
 
-	// Pass to next layer of middleware
-	next();
-});
+// 	// Pass to next layer of middleware
+// 	next();
+// });
 
-let phone_numbers = [];
+let users = []; //for seeding
 
 // const initiliazeTables = `
 
@@ -86,7 +86,7 @@ db.connect(function(err) {
 		}
 	});
 
-	SeedUsers(100);
+	SeedUsers(10000);
 	//SeedPlaylists();
 });
 
@@ -637,13 +637,17 @@ function SeedUsers(amount) {
 		const password = getRandomArbitrary(10000, 100000000);
 		const email = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] }) + '@site.com';
 
-		values.push([ phone_number, username, email, password ]);
-		phone_numbers.push(phone_number);
+		if (!users.some((e) => e.ph === phone_number || e.email === email)) {
+			values.push([ phone_number, username, email, password ]);
+			users.push({ ph: phone_number, username: username, email: email });
+		}
 	}
 
 	db.query('INSERT INTO user (phone_number, username, email, password) VALUES ?', [ values ], (err, result) => {
 		if (err) {
-			console.log(('error adding users to user table:', err));
+			if (err.errno === 1062) {
+				console.log('Error entry');
+			}
 		} else {
 			SeedPlaylists();
 		}
@@ -652,37 +656,16 @@ function SeedUsers(amount) {
 
 function SeedPlaylists() {
 	let values = [];
-	for (let index = 0; index < phone_numbers.length; index++) {
+	for (let index = 0; index < users.length; index++) {
 		const pname = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] });
-		values.push([ pname, phone_numbers[index] ]);
+		values.push([ pname, users[index].ph ]);
 	}
 	db.query('INSERT INTO playlist (pname, creator_phone_number) VALUES ?', [ values ], (err, result) => {
 		if (err) {
-			console.log(('error adding playlists to playlist table:', err));
+			if (err.errno === 1062) {
+				console.log('Error entry');
+			}
 		} else {
 		}
 	});
 }
-
-// function SeedPlaylists(amount) {
-// 	for (let index = 0; index < amount; index++) {
-// 		const pname = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] });
-// 		const phone_number = getRandomArbitrary(10000, 100000000);
-// 		const password = getRandomArbitrary(10000, 100000000);
-// 		const email = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] }) + '@site.com';
-
-// 		db.query(
-// 			'INSERT INTO playlist (pname, creator_phone_number) VALUES (?,?)',
-// 			[ pname, phone_number ],
-// 			(err, result) => {
-// 				if (err) {
-// 					if (err.errno === 1062) {
-// 						res.send('duplicate-entry');
-// 					}
-// 				} else {
-// 					res.send('playlist-added');
-// 				}
-// 			}
-// 		);
-// 	}
-// }
