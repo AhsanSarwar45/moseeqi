@@ -69,7 +69,7 @@ function initialize()
 
 
 const db = mysql.createConnection({
-	host: 'localhost',
+	// host: 'localhost',
 	socketPath: '/cloudsql/sharkbit-111:asia-southeast1:moseeqi',
 	user: 'root', 
 	password: '123',
