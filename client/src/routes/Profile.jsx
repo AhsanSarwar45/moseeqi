@@ -20,7 +20,7 @@ export const Profile = () => {
 	useEffect(() => {
 		Axios.post('https://sharkbit-111.uc.r.appspot.com/get-user',{
 			phone_number: phone_number
-		}, {headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json', 'Access-Control-Allow-Methods': 'GET, POST'}
+		}, {headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}
 		}).then((response) => {
 			let selfData = sessionStorage.getItem("user-data");
 			selfData = JSON.parse(selfData);
@@ -50,7 +50,7 @@ export const Profile = () => {
 			}
 		});
 
-	}, []);
+	});
 
 	const deleteAccount = () => {
 		Axios.post('https://sharkbit-111.uc.r.appspot.com/delete_account', {
