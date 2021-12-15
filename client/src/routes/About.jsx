@@ -1,8 +1,8 @@
-import { WithSubnavigation } from '../components/NavBar';
+import { Navbar } from '../components/NavBar';
 
 export const About = () => (
 	<div className="about">
-		<WithSubnavigation />
+		<Navbar />
 		Made by some idiots.
 	</div>
 );

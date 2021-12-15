@@ -63,6 +63,17 @@ const Theme = extendTheme({
 				}
 			},
 			defaultProps: {}
+		},
+		Select: {
+			sizes: {
+				md: {
+					field: {
+						height: 12,
+						borderRadius: 'full'
+					}
+				}
+			},
+			defaultProps: {}
 		}
 	}
 });

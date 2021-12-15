@@ -98,19 +98,24 @@ export const Search = () => {
 	const [ isSongMatch, setSongMatch ] = useState(false);
 	const [ isUserMatch, setUserMatch ] = useState(false);
 
-	const navigate = useNavigate();
+	//const navigate = useNavigate();
 
 	const UserRequest = () => {
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/search_user', {
-			username: username
-		}, {
-			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
-		}).then((response) => {
+		Axios.post(
+			`${process.env.REACT_APP_SERVER_URL}/search_user`,
+			{
+				username: username
+			},
+			{
+				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+			}
+		).then((response) => {
 			if (response.data === 'no_match') {
 				setNoMatch(true);
 				setSongMatch(false);
 				setUserMatch(false);
 			} else {
+				console.log('Found Users');
 				setUsers(response.data);
 				setNoMatch(false);
 				setUserMatch(true);
@@ -120,11 +125,15 @@ export const Search = () => {
 	};
 
 	const SongRequest = () => {
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/search_music', {
-			sname: username
-		}, {
-			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
-		}).then((response) => {
+		Axios.post(
+			`${process.env.REACT_APP_SERVER_URL}/search_music`,
+			{
+				sname: username
+			},
+			{
+				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+			}
+		).then((response) => {
 			if (response.data === 'no_match') {
 				setNoMatch(true);
 				setSongMatch(false);
@@ -147,27 +156,35 @@ export const Search = () => {
 		} else if (value === 'both') {
 			console.log('both search');
 			setNoMatch(true);
-			Axios.post('https://sharkbit-111.uc.r.appspot.com/search_user', {
-				username: username
-			}, {
-				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
-			}).then((response) => {
+			Axios.post(
+				`${process.env.REACT_APP_SERVER_URL}/search_user`,
+				{
+					username: username
+				},
+				{
+					headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+				}
+			).then((response) => {
 				if (response.data === 'no_match') {
 					setSongMatch(false);
 				} else {
-					for (let i = 0; i < response.data.length; i++) {
-						setUsers((users) => [ ...users, response.data[i] ]);
-					}
+					// for (let i = 0; i < response.data.length; i++) {
+					// 	setUsers((users) => [ ...users, response.data[i] ]);
+					// }
 					setUsers(response.data);
 					setUserMatch(true);
 					setNoMatch(false);
 				}
 			});
-			Axios.post('https://sharkbit-111.uc.r.appspot.com/search_music', {
-				sname: username
-			}, {
-				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
-			}).then((response) => {
+			Axios.post(
+				`${process.env.REACT_APP_SERVER_URL}/search_music`,
+				{
+					sname: username
+				},
+				{
+					headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+				}
+			).then((response) => {
 				if (response.data === 'no_match') {
 					setSongMatch(false);
 				} else {

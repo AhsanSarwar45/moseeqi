@@ -1,6 +1,21 @@
 // import { NavbarUser } from '../components/NavBarUser';
 import { Link, useNavigate } from 'react-router-dom';
-import { Spacer,  Menu, MenuButton, MenuDivider, MenuItem, MenuList, Image, HStack, Button, VStack, Heading, Text, Box, StackDivider } from '@chakra-ui/react';
+import {
+	Spacer,
+	Menu,
+	MenuButton,
+	MenuDivider,
+	MenuItem,
+	MenuList,
+	Image,
+	HStack,
+	Button,
+	VStack,
+	Heading,
+	Text,
+	Box,
+	StackDivider
+} from '@chakra-ui/react';
 import { useParams } from 'react-router';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useEffect, useState } from 'react';
@@ -11,36 +26,48 @@ export const Profile = () => {
 	// data = JSON.parse(sessionStorage.getItem('user-data'));
 	const { phone_number } = useParams();
 	const [ data, setData ] = useState({ phone_number: '', username: '', follower_count: 0, earnings: 0 });
-	const [ isSelfProfile, setSeltProfile] = useState (false);
-	const [ following , setFollowing ] = useState(false);
+	const [ isSelfProfile, setSeltProfile ] = useState(false);
+	const [ following, setFollowing ] = useState(false);
 	const [ noPlaylist, setNoPlaylist ] = useState(false);
+	const [ noSongs, setNoSong ] = useState(false);
 	const [ playlists, setPlaylists ] = useState([]);
+	const [ songs, setSongs ] = useState([]);
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/get-user',{
-			phone_number: phone_number
-		}, {headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'}
-		}).then((response) => {
-			let selfData = sessionStorage.getItem("user-data");
+		Axios.post(
+			`${process.env.REACT_APP_SERVER_URL}/get-user`,
+			{
+				phone_number: phone_number
+			},
+			{
+				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+			}
+		).then((response) => {
+			let selfData = sessionStorage.getItem('user-data');
 			selfData = JSON.parse(selfData);
 			setData(response.data[0]);
 			console.log(response.data[0]);
-			if(selfData.phone_number===response.data[0].phone_number){
+			if (selfData.phone_number === response.data[0].phone_number) {
 				setSeltProfile(true);
 			} else {
 				setSeltProfile(false);
 			}
 		});
 
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/follow_user', {
-			check: true,
-			followed_ph: phone_number,
-			follower_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
-		}, {headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
-		}).then((response) => {
+		Axios.post(
+			`${process.env.REACT_APP_SERVER_URL}/follow_user`,
+			{
+				check: true,
+				followed_ph: phone_number,
+				follower_ph: JSON.parse(sessionStorage.getItem('user-data')).phone_number
+			},
+			{
+				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+			}
+		).then((response) => {
 			//console.log(response)
-			console.log("RES: ", response)
+			console.log('RES: ', response);
 			if (response.data === 'following') {
 				setFollowing(true);
 				console.log('following already');
@@ -49,53 +76,85 @@ export const Profile = () => {
 				console.log('not following already');
 			}
 		});
+	}, []);
 
-	});
+	// const deleteAccount = () => {
+	// 	Axios.post(
+	// 		`${process.env.REACT_APP_SERVER_URL}/delete_account`,
+	// 		{
+	// 			phone_number: phone_number
+	// 		},
+	// 		{
+	// 			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+	// 		}
+	// 	).then((response) => {
+	// 		//TODO: create a page
+	// 	});
+	// };
 
-	const deleteAccount = () => {
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/delete_account', {
-			phone_number: phone_number
-		}, {
-			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
-		}).then((response) => {
-			//TODO: create a page 
+	const GetPlaylist = () => {
+		//console.log('here');
+		Axios.post(
+			`${process.env.REACT_APP_SERVER_URL}/search_playlist`,
+			{
+				phone_number: JSON.parse(sessionStorage.getItem('user-data')).phone_number
+			},
+			{
+				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+			}
+		).then((response) => {
+			if (response.data === 'no_match') {
+				setNoPlaylist(true);
+			} else {
+				setPlaylists(response.data);
+				setNoPlaylist(false);
+			}
 		});
 	};
 
-	const GetPlaylist = () => {
-		console.log('here');
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/search_playlist', {
-				phone_number: JSON.parse(sessionStorage.getItem("user-data")).phone_number
-			}, {
+	const GetSongs = () => {
+		//console.log('here');
+		Axios.post(
+			`${process.env.REACT_APP_SERVER_URL}/search_self_music`,
+			{
+				phone_number: JSON.parse(sessionStorage.getItem('user-data')).phone_number
+			},
+			{
 				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
-			}).then((response) => {
-				if (response.data === 'no_match') {
-					setNoPlaylist(true);
-				} else {
-					setPlaylists(response.data);
-					setNoPlaylist(false);
-				}
-			});
+			}
+		).then((response) => {
+			if (response.data === 'no_match') {
+				setNoSong(true);
+			} else {
+				console.log("Songs res: ",response.data);
+				setSongs(response.data);
+				setNoSong(false);
+			}
+		});
 	};
 
 	const followUser = () => {
 		setFollowing(true);
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/follow_user', {
-			check: false,
-			followed_ph: phone_number,
-			follower_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
-		}, {
-			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
-		}).then((response) => {
-			if (response.data === 'duplicate_entry'){
-				console.log("already following")
-			} else if (response.data === 'error'){
-				console.log("some error");
-			} else if (response.data === 'success'){
-				console.log("follow added succ");
+		Axios.post(
+			`${process.env.REACT_APP_SERVER_URL}/follow_user`,
+			{
+				check: false,
+				followed_ph: phone_number,
+				follower_ph: JSON.parse(sessionStorage.getItem('user-data')).phone_number
+			},
+			{
+				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+			}
+		).then((response) => {
+			if (response.data === 'duplicate_entry') {
+				console.log('already following');
+			} else if (response.data === 'error') {
+				console.log('some error');
+			} else if (response.data === 'success') {
+				console.log('follow added succ');
 			}
 		});
-	}
+	};
 
 	return (
 		<div>
@@ -103,49 +162,78 @@ export const Profile = () => {
 			<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
 				<Spacer />
 				<Menu>
-				<MenuButton
-					px={3}
-					py={1}
-					transition='all 0.2s'
-					// borderWidth='1px'
-					borderRadius='full'
-					textColor='white'
-					_hover={{ bg: 'gray.400' }}
-					_expanded={{ bg: 'green.500' }}
-					_focus={{ boxShadow: 'outline' }}
-					onClick={GetPlaylist}
-				>
-					My Playlists <ChevronDownIcon />
-				</MenuButton>
-				<MenuList>
-					<Link to="/create_playlist">
-						<MenuItem>New Playlist</MenuItem>
-					</Link>
-					<MenuDivider />
-					{ noPlaylist ? 
-					<MenuItem>
-						No Playlist Found
-					</MenuItem>
-					: playlists.map((p) => (
-						<MenuItem key={p.pname}>
-							{p.pname}
-						</MenuItem>
-					))}	
-				</MenuList>
+					<MenuButton
+						px={3}
+						py={1}
+						transition="all 0.2s"
+						// borderWidth='1px'
+						borderRadius="full"
+						textColor="white"
+						_hover={{ bg: 'gray.400' }}
+						_expanded={{ bg: 'green.500' }}
+						_focus={{ boxShadow: 'outline' }}
+						onClick={GetPlaylist}
+					>
+						My Playlists <ChevronDownIcon />
+					</MenuButton>
+					<MenuList>
+						<Link to="/create_playlist">
+							<MenuItem>New Playlist</MenuItem>
+						</Link>
+						<MenuDivider />
+						{noPlaylist ? (
+							<MenuItem>No Playlist Found</MenuItem>
+						) : (
+							playlists.map((p) => <Link to= {`/view_playlist/${p.pname}/${phone_number}`}><MenuItem key={p.pname}>{p.pname}</MenuItem></Link>)
+						)}
+					</MenuList>
 				</Menu>
-				< Button colorScheme="blue" textColor="white" size="sm" onClick={()=> navigate(-1)}>
+				<Menu>
+					<MenuButton
+						px={3}
+						py={1}
+						transition="all 0.2s"
+						// borderWidth='1px'
+						borderRadius="full"
+						textColor="white"
+						_hover={{ bg: 'gray.400' }}
+						_expanded={{ bg: 'green.500' }}
+						_focus={{ boxShadow: 'outline' }}
+						onClick={GetSongs}
+					>
+						My Songs <ChevronDownIcon />
+					</MenuButton>
+					<MenuList>
+						{noSongs ? (
+							<MenuItem>No Uploads</MenuItem>
+						) : (
+							songs.map((song) => <Link to= {`/music/${phone_number}/${song.sname}`}><MenuItem key={song.sname}>{song.sname}</MenuItem></Link>)
+						)}
+					</MenuList>
+				</Menu>
+				
+				<Button colorScheme="blue" textColor="white" size="sm" onClick={() => navigate(-1)}>
 					Back
 				</Button>
-				{isSelfProfile ? 
-				<Link to = "/"> 
-					<Button colorScheme="red" textColor="white" size="sm" onClick={deleteAccount}>
-						Delete Account
+				{/* {isSelfProfile ? (
+					<Link to="/">
+						<Button colorScheme="red" textColor="white" size="sm" onClick={deleteAccount}>
+							Delete Account
+						</Button>
+					</Link>
+				) : null} */}
+
+				{isSelfProfile ? null : following ? (
+					<Button colorScheme="red" textColor="white" size="sm">
+						{' '}
+						Following{' '}
 					</Button>
-				</Link> : null}
-
-				{isSelfProfile ? null : 
-				following ? <Button colorScheme="red" textColor="white" size="sm" > Following </Button> : <Button colorScheme="red" textColor="white" size="sm" onClick={followUser}> Follow </Button>}
-
+				) : (
+					<Button colorScheme="red" textColor="white" size="sm" onClick={followUser}>
+						{' '}
+						Follow{' '}
+					</Button>
+				)}
 			</HStack>
 			<VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} pt={3} align="center">
 				<Image
@@ -164,9 +252,6 @@ export const Profile = () => {
 				</Box>
 				<Box h="20px">
 					<Text> Followers: {data.follower_count} </Text>
-				</Box>
-				<Box h="20px">
-					<Text> Earnings: {data.earnings} </Text>
 				</Box>
 				<Spacer />
 			</VStack>

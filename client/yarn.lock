@@ -1885,6 +1885,21 @@
     "minimatch" "^3.0.4"
     "strip-json-comments" "^3.1.1"
 
+"@fontsource/jost@^4.5.1":
+  "integrity" "sha512-Vkg9fiuhWIzleINE1jXmqnHYnHsRdsVU4NY+1iYElCZcaNyk4bWQnEfU1Wb3vBoasqW0j4EOo1SNP66ZQeJl+Q=="
+  "resolved" "https://registry.npmjs.org/@fontsource/jost/-/jost-4.5.1.tgz"
+  "version" "4.5.1"
+
+"@fontsource/open-sans@^4.5.2":
+  "integrity" "sha512-aDQrW8s0KslG2aKb9nM5R6fiQR9iPomqWXf6iZCC30qv/UFlSY14SppodA3rE//+w37EqsJjyUq3BSEYzLdisg=="
+  "resolved" "https://registry.npmjs.org/@fontsource/open-sans/-/open-sans-4.5.2.tgz"
+  "version" "4.5.2"
+
+"@fontsource/raleway@^4.5.0":
+  "integrity" "sha512-Rzj90wbZQnNzazqzoiu5HzMEMdqMJLUVFOo699sinTXrZRm1aB5iX2HTiK2VlPnH4M6u8yYnJ7CebOyamfWlqw=="
+  "resolved" "https://registry.npmjs.org/@fontsource/raleway/-/raleway-4.5.0.tgz"
+  "version" "4.5.0"
+
 "@hapi/address@2.x.x":
   "integrity" "sha512-QD1PhQk+s31P1ixsX0H0Suoupp3VMXzIVMSwobR3F3MSUO2YCV0B7xqLcUw/Bh8yuvd3LhpyqLQWTNcRmp6IdQ=="
   "resolved" "https://registry.npmjs.org/@hapi/address/-/address-2.1.4.tgz"
@@ -10218,6 +10233,11 @@
     "@babel/runtime" "^7.10.2"
     "@iconify/icons-mdi" "^1.0.46"
     "@iconify/react" "^1.1.3"
+
+"react-icons@^4.3.1":
+  "integrity" "sha512-cB10MXLTs3gVuXimblAdI71jrJx8njrJZmNMEMC+sQu5B/BIOmlsAjskdqpn81y8UBVEGuHODd7/ci5DvoSzTQ=="
+  "resolved" "https://registry.npmjs.org/react-icons/-/react-icons-4.3.1.tgz"
+  "version" "4.3.1"
 
 "react-is@^16.7.0":
   "integrity" "sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ=="

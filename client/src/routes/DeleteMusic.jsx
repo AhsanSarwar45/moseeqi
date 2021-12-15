@@ -11,58 +11,67 @@ export const DeleteMusic = () => {
 	const [ isDeleted, setDeleted ] = useState(false);
 	const navigate = useNavigate();
 	const DeleteOnClick = () => {
-		setNoMatch(false);	
-        
-        let data = sessionStorage.getItem('user-data');
-		data = JSON.parse(data);
-        console.log('song delete');
+		setNoMatch(false);
 
-        Axios.post('https://sharkbit-111.uc.r.appspot.com/delete_music', {
-        sname: sname,
-        phone_number: data.phone_number
-        }, {
-			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
-		}).then((response) => {
-            if (response.data === 'no_match') {
-                setNoMatch(true);
-            } else if (response.data === 'deletion_complete') {
-                setDeleted(true);
-            } else {
-                console.log("SOME ERROR OCCURED");
-            }
-        });
+		let data = sessionStorage.getItem('user-data');
+		data = JSON.parse(data);
+		console.log('song delete');
+
+		Axios.post(
+			`${process.env.REACT_APP_SERVER_URL}/delete_music`,
+			{
+				sname: sname,
+				phone_number: data.phone_number
+			},
+			{
+				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+			}
+		).then((response) => {
+			if (response.data === 'no_match') {
+				setNoMatch(true);
+			} else if (response.data === 'deletion_complete') {
+				setDeleted(true);
+			} else {
+				console.log('SOME ERROR OCCURED');
+			}
+		});
 	};
 
 	return (
 		<div>
-		<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
-            <Spacer />
-			<Button colorScheme="blue" textColor="white" size="sm" onClick={()=> navigate(-1)}>
-				Back   
-			</Button>
-		</HStack>
-		<Container maxWidth="full" pt="30px">
-			<VStack padding={0} spacing={5}>
-				<Heading size="md">Delete Song</Heading>					
-				<SimpleInput
-					type="sname"
-					label="Enter Song Name:"
-					value={sname}
-					onChange={(event) => {
-						getSongName(event.target.value);
-					}}
-				/>
-				<VStack w="300px" align="left" pt={0}>
+			<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
+				<Spacer />
+				<Button colorScheme="blue" textColor="white" size="sm" onClick={() => navigate(-1)}>
+					Back
+				</Button>
+			</HStack>
+			<Container maxWidth="full" pt="30px">
+				<VStack padding={0} spacing={5}>
+					<Heading size="md">Delete Song</Heading>
+					<SimpleInput
+						type="sname"
+						label="Enter Song Name:"
+						value={sname}
+						onChange={(event) => {
+							getSongName(event.target.value);
+						}}
+					/>
+					<VStack w="300px" align="left" pt={0} />
+					<VStack w="300px" align="left" pt={5}>
+						<Button colorScheme="green" w="full" size="lg" onClick={DeleteOnClick}>
+							DELETE
+						</Button>
+					</VStack>
+					{isNoMatch ? <InvalidMessage message="No Match Found!" /> : null}
+					{isDeleted ? (
+						<InvalidMessage
+							message="Song Deleted Successfully!"
+							color="green.800"
+							bg="linear(to-t, green.200, green.100)"
+						/>
+					) : null}
 				</VStack>
-				<VStack w="300px" align="left" pt={5}>
-					<Button colorScheme="green" w="full" size="lg" onClick={DeleteOnClick}>
-				        DELETE
-					</Button>
-				</VStack>
-				{isNoMatch? <InvalidMessage message="No Match Found!" /> : null}
-				{isDeleted? <InvalidMessage message="Song Deleted Successfully!" color="green.800" bg="linear(to-t, green.200, green.100)" /> : null}
-			</VStack>
-		</Container>
+			</Container>
 		</div>
 	);
 };

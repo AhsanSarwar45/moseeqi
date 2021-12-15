@@ -1,11 +1,12 @@
-import { Button, HStack, Spacer, VStack, Heading, Container, Text } from '@chakra-ui/react';
+import { Button, Box, Image, HStack, Spacer, VStack, Heading, Container, Text } from '@chakra-ui/react';
 import { Formik, Form, Field } from 'formik';
 import validator from 'validator';
 import { TextInput, PasswordInput } from '../components/TextInput';
 import { useState } from 'react';
-
+import { Link as RouterLink } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
+import viola from '../assets/images/viola.png';
 import Axios from 'axios';
 
 export const SignUp = () => {
@@ -15,11 +16,16 @@ export const SignUp = () => {
 	const SignUpOnClick = (values, actions) => {
 		setTimeout(() => {
 			actions.setSubmitting(false);
-			Axios.post('https://sharkbit-111.uc.r.appspot.com/create_user', values, {
-				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
-			}, {
-				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
-			}).then((response) => {
+			Axios.post(
+				`${process.env.REACT_APP_SERVER_URL}/create_user`,
+				values,
+				{
+					headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+				},
+				{
+					headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+				}
+			).then((response) => {
 				console.log(response.data);
 				if (response.data === 'user-added') {
 					//console.log('Sucess!');
@@ -65,23 +71,66 @@ export const SignUp = () => {
 	};
 
 	return (
-		<div>
-			<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
-				<Spacer />
-				<Button colorScheme="blue" textColor="white" size="sm" onClick={() => navigate(-1)}>
+		<VStack overflowX="hidden" height="100vh" position="relative" width="100vw" alignItems="flex-start">
+			<HStack width="full" zIndex={10} paddingLeft="10vw" paddingRight="5vw">
+				<Button colorScheme="secondary" textColor="white" size="sm" onClick={() => navigate(-1)}>
 					Back
 				</Button>
-			</HStack>
-			<Container maxWidth="full" pt="30px">
-				<VStack padding={0} spacing={10}>
-					<Heading size="md">Create Account</Heading>
-					<Formik
-						initialValues={{ username: '', email: '', phone_number: '', password: '', confirm: '' }}
-						onSubmit={SignUpOnClick}
-						validate={validate}
+				<Spacer />
+				<RouterLink to="/">
+					<Text
+						fontWeight={700}
+						color="white"
+						fontSize="2xl"
+						opacity="60%"
+						paddingTop="30px"
+						paddingBottom="30px"
 					>
-						{(props) => (
-							<Form>
+						moseeqi
+					</Text>
+				</RouterLink>
+			</HStack>
+
+			<Box
+				borderRadius="100%"
+				position="absolute"
+				width="130vw"
+				height="130vw"
+				bgGradient="linear(to-r, brand.secondary, brand.primary)"
+				bottom={10}
+				left="50vw"
+			/>
+
+			<Image
+				position="absolute"
+				bottom="10vh"
+				right="10vw"
+				boxSize="60vh"
+				objectFit="contain"
+				src={viola}
+				alt="BG"
+				//filter="drop-shadow(10px 10px 10px #555)"
+			/>
+
+			<VStack position="absolute" right="5vw" top="20vh" spacing={5} alignItems="flex-end">
+				<Heading color="white">One of us already?</Heading>
+				<RouterLink to="/login">
+					<Button size="lg">LOGIN</Button>
+				</RouterLink>
+			</VStack>
+
+			<VStack spacing={10} paddingLeft="10vw" paddingTop="30px" paddingBottom="30px" width="40vw">
+				<Heading fontWeight={800} size="md">
+					Create Account
+				</Heading>
+				<Formik
+					initialValues={{ username: '', email: '', phone_number: '', password: '', confirm: '' }}
+					onSubmit={SignUpOnClick}
+					validate={validate}
+				>
+					{(props) => (
+						<Form>
+							<VStack spacing={8} width="30vw">
 								<Field name="username">
 									{({ field, form }) => (
 										<TextInput
@@ -146,23 +195,23 @@ export const SignUp = () => {
 
 								<Button
 									colorScheme="primary"
-									w="full"
+									width="50%"
 									size="lg"
 									isLoading={props.isSubmitting}
 									type="submit"
 								>
 									Sign Up
 								</Button>
-								<VStack w="300px" align="left" pt={5}>
-									<Text textColor="gray" align="center" fontSize="8pt">
-										By Signing up, you agree to our terms and conditions{' '}
-									</Text>
-								</VStack>
-							</Form>
-						)}
-					</Formik>
-				</VStack>
-			</Container>
-		</div>
+							</VStack>
+							<VStack w="300px" align="left" pt={5}>
+								<Text textColor="gray" align="center" fontSize="8pt">
+									By Signing up, you agree to our terms and conditions{' '}
+								</Text>
+							</VStack>
+						</Form>
+					)}
+				</Formik>
+			</VStack>
+		</VStack>
 	);
 };

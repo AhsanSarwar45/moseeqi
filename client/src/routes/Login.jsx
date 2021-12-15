@@ -1,4 +1,4 @@
-import { HStack, Spacer, Button, VStack, Heading, Container, Text } from '@chakra-ui/react';
+import { HStack, Image, Box, Spacer, Button, VStack, Heading, Container, Text } from '@chakra-ui/react';
 import { TextInput, PasswordInput } from '../components/TextInput';
 import { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Axios from 'axios';
 import { InvalidMessage } from '../components/InvalidMessage';
+import { Link as RouterLink } from 'react-router-dom';
+import drum from '../assets/images/drum.png';
 
 export const Login = () => {
 	const navigate = useNavigate();
@@ -16,7 +18,7 @@ export const Login = () => {
 		setIsInvalid(false);
 		setValid(false);
 		actions.setSubmitting(false);
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/login', values, {
+		Axios.post(`${process.env.REACT_APP_SERVER_URL}/login`, values, {
 			headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
 		}).then((response) => {
 			if (response.data === 'invalid') {
@@ -27,10 +29,15 @@ export const Login = () => {
 				sessionStorage.setItem('isUserLogged', true);
 				let data = sessionStorage.getItem('user-data');
 				data = JSON.parse(data);
-				Axios.post('https://sharkbit-111.uc.r.appspot.com/get-user',{
-					phone_number: data.phone_number
-				},  {headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
-				}).then((response) => {
+				Axios.post(
+					`${process.env.REACT_APP_SERVER_URL}/get-user`,
+					{
+						phone_number: data.phone_number
+					},
+					{
+						headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+					}
+				).then((response) => {
 					sessionStorage.setItem('user-data', JSON.stringify(response.data[0]));
 				});
 				sessionStorage.getItem('isUserLogged');
@@ -40,21 +47,62 @@ export const Login = () => {
 	};
 
 	return (
-		<div>
-			<HStack w="full" pr={20} pt={5} pb={5} pl={10} spacing={10} bg="brand.primary">
+		<VStack overflow="hidden" height="100vh" position="relative" width="100vw" alignItems="flex-end">
+			<HStack width="full" zIndex={10} paddingLeft="5vw" paddingRight="10vw">
+				<RouterLink to="/">
+					<Text
+						fontWeight={700}
+						color="white"
+						fontSize="2xl"
+						opacity="60%"
+						paddingTop="30px"
+						paddingBottom="30px"
+					>
+						moseeqi
+					</Text>
+				</RouterLink>
 				<Spacer />
-				<Link to="/">
-					<Button colorScheme="blue" textColor="white" size="sm">
-						Back
-					</Button>
-				</Link>
+				<Button colorScheme="primary" textColor="white" size="sm" onClick={() => navigate(-1)}>
+					Back
+				</Button>
 			</HStack>
-			<Container maxWidth="full" pt="30px">
-				<VStack padding={0} spacing={5}>
-					<Heading size="md">Login</Heading>
-					<Formik initialValues={{ phone_number: '', password: '' }} onSubmit={LoginOnClick}>
-						{(props) => (
-							<Form>
+
+			<Box
+				borderRadius="100%"
+				position="absolute"
+				width="130vw"
+				height="130vw"
+				bgGradient="linear(to-r, brand.secondary, brand.primary)"
+				bottom={10}
+				right="50vw"
+			/>
+
+			<Image
+				position="absolute"
+				bottom="10vh"
+				left="10vw"
+				boxSize="60vh"
+				objectFit="contain"
+				src={drum}
+				alt="BG"
+				//filter="drop-shadow(10px 10px 10px #555)"
+			/>
+
+			<VStack position="absolute" left="5vw" top="20vh" spacing={5} alignItems="flex-start">
+				<Heading color="white">Join us now!</Heading>
+				<RouterLink to="/signup">
+					<Button size="lg">Sign Up</Button>
+				</RouterLink>
+			</VStack>
+
+			<VStack spacing={10} width="40vw" paddingRight="10vw" paddingTop="30px">
+				<Heading fontWeight={800} size="md">
+					Login
+				</Heading>
+				<Formik initialValues={{ phone_number: '', password: '' }} onSubmit={LoginOnClick}>
+					{(props) => (
+						<Form>
+							<VStack spacing={8} width="30vw">
 								<Field name="phone_number">
 									{({ field, form }) => (
 										<TextInput
@@ -83,19 +131,19 @@ export const Login = () => {
 
 								<Button
 									colorScheme="secondary"
-									w="full"
+									width="50%"
 									size="lg"
 									isLoading={props.isSubmitting}
 									type="submit"
 								>
-									LOG IN
+									Log In
 								</Button>
-							</Form>
-						)}
-					</Formik>
-					{isInvalid ? <InvalidMessage message="Invalid Phone Number or Password!" /> : null}
-				</VStack>
-			</Container>
-		</div>
+							</VStack>
+						</Form>
+					)}
+				</Formik>
+				{isInvalid ? <InvalidMessage message="Invalid Phone Number or Password!" /> : null}
+			</VStack>
+		</VStack>
 	);
 };

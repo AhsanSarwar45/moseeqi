@@ -2,56 +2,46 @@ import {
 	Box,
 	Flex,
 	Text,
-	IconButton,
 	Button,
 	Stack,
 	Icon,
 	Link,
+	Spacer,
 	Popover,
 	PopoverTrigger,
-	PopoverContent,
-	useDisclosure
+	PopoverContent
 } from '@chakra-ui/react';
-import { HamburgerIcon, CloseIcon, ChevronRightIcon } from '@chakra-ui/icons';
+import { ChevronRightIcon } from '@chakra-ui/icons';
 import { Link as RouterLink } from 'react-router-dom';
 
-export function WithSubnavigation() {
-	const { isOpen, onToggle } = useDisclosure();
-
+export function Navbar() {
 	return (
-		<Box>
+		<Box zIndex={20}>
 			<Flex
+				zIndex={20}
 				bg="brand.primary"
 				minH={'60px'}
+				position="fixed"
+				top={0}
+				w="full"
 				py={{ base: 2 }}
 				px={{ base: 4 }}
 				align={'center'}
-				paddingLeft={20}
-				paddingRight={20}
+				justify="space-between"
+				paddingLeft="10vw"
+				paddingRight="10vw"
 				paddingTop={5}
 				paddingBottom={5}
 			>
-				<Flex flex={{ base: 1, md: 'auto' }} ml={{ base: -2 }} display={{ base: 'flex', md: 'none' }}>
-					<IconButton
-						onClick={onToggle}
-						icon={isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />}
-						variant={'ghost'}
-						aria-label={'Toggle Navigation'}
-					/>
-				</Flex>
-				<Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
-					<Text textColor="white" fontFamily={'heading'}>
-						Moseeqi
-					</Text>
+				<Text textColor="white" fontFamily={'heading'}>
+					moseeqi
+				</Text>
 
-					<Flex display={{ base: 'none', md: 'flex' }} ml={10}>
-						<Navbar />
-					</Flex>
-				</Flex>
+				<NavbarItems />
 
-				<Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
+				<Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={5}>
 					<RouterLink to="/login">
-						<Button textColor="white" fontWeight={400} variant={'link'} href={'/login'} paddingTop="5px">
+						<Button colorScheme="secondary" variant="outline" size="sm" textColor="white ">
 							Login
 						</Button>
 					</RouterLink>
@@ -66,31 +56,33 @@ export function WithSubnavigation() {
 	);
 }
 
-const Navbar = () => {
+const NavbarItems = () => {
 	return (
-		<Stack direction={'row'} spacing={4}>
+		<Stack direction={'row'} spacing={10}>
 			{NAV_ITEMS.map((navItem) => (
 				<Box key={navItem.label}>
 					<Popover trigger={'hover'} placement={'bottom-start'}>
 						<PopoverTrigger>
-							<Link
-								p={2}
-								color="white"
-								fontSize={'sm'}
-								fontWeight={500}
-								_hover={{
-									textDecoration: 'none',
-									color: 'secondary.300'
-								}}
-							>
-								{navItem.label}
-							</Link>
+							<RouterLink to={navItem.href ? navItem.href : '#'}>
+								<Text
+									p={2}
+									color="white"
+									fontSize={'sm'}
+									fontWeight={500}
+									_hover={{
+										textDecoration: 'none',
+										color: 'secondary.300'
+									}}
+								>
+									{navItem.label}
+								</Text>
+							</RouterLink>
 						</PopoverTrigger>
 
 						{navItem.children && (
 							<PopoverContent
 								border={0}
-								boxShadow={'xl'}
+								boxShadow={'lg'}
 								color="white"
 								bg="brand.secondary"
 								p={4}
@@ -148,7 +140,7 @@ const NAV_ITEMS = [
 			},
 			{
 				label: 'Artists',
-				subLabel: 'Established Up-and-coming Artists',
+				subLabel: 'Established and up-and-coming Artists',
 				href: '#'
 			}
 		]
@@ -159,17 +151,17 @@ const NAV_ITEMS = [
 			{
 				label: 'Moseeqi',
 				subLabel: 'Find the goal of this platform',
-				href: '#'
+				href: '/about'
 			},
 			{
 				label: 'Who we are',
 				subLabel: 'Get to know the team behind Moseeqi',
-				href: '#'
+				href: '/about'
 			}
 		]
 	},
 	{
-		label: 'Create',
-		href: '#'
+		label: 'Studio',
+		href: '/studio'
 	}
 ];

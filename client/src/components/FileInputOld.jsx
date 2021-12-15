@@ -1,8 +1,29 @@
 import Axios from 'axios';
-import { Button, VStack, Input } from '@chakra-ui/react';
+import { Button, VStack, Text, Input, Select } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { InvalidMessage } from './InvalidMessage';
 import { SimpleInput } from './TextInput';
+
+const Genres = [
+	'Rock',
+	'Jazz',
+	'Hip Hop',
+	'Pop',
+	'Folk',
+	'Blues',
+	'Country',
+	'Heavy Metal',
+	'Popular Music',
+	'Classical',
+	'Country',
+	'Punk',
+	'EDM',
+	'Techno',
+	'Trance',
+	'Disco',
+	'Dubstep',
+	'Instrumental'
+];
 
 export const FileInputOld = () => {
 	const [ file, setFile ] = useState('');
@@ -13,6 +34,7 @@ export const FileInputOld = () => {
 	const [ invalidFile, setInvalidFile ] = useState(false);
 	const [ songName, setSongName ] = useState('');
 	const [ genre, setGenre ] = useState('');
+	const [ isSubmitting, setIsSubmitting ] = useState(false);
 
 	const onChange = (e) => {
 		if (e.target.files.length > 0) {
@@ -42,6 +64,7 @@ export const FileInputOld = () => {
 		setNoFile(false);
 		e.preventDefault();
 		if (file !== '') {
+			setIsSubmitting(true);
 			let data = sessionStorage.getItem('user-data');
 			data = JSON.parse(data);
 			var formData = new FormData();
@@ -50,10 +73,10 @@ export const FileInputOld = () => {
 			formData.append('user_name', data.username);
 			formData.append('sname', songName);
 			formData.append('genre', genre);
-			Axios.post('https://sharkbit-111.uc.r.appspot.com//', formData, {
+			Axios.post(`${process.env.REACT_APP_SERVER_URL}/upload_music`, formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data',
-					'Access-Control-Allow-Origin': '*', 
+					'Access-Control-Allow-Origin': '*'
 					//'Content-Type': 'application/json
 				}
 			})
@@ -63,6 +86,7 @@ export const FileInputOld = () => {
 						setUploadedFile(true);
 						setIsDup(false);
 						setFile('');
+						setIsSubmitting(false);
 					} else if (response.data === 'duplicate-entry') {
 						setIsDup(true);
 						setNoFile(false);
@@ -87,8 +111,18 @@ export const FileInputOld = () => {
 	};
 
 	return (
-		<VStack padding={0} spacing={10}>
-			<Input type="file" id="customFile" accept="audio/*" bgColor="gray.100" padding={2} onChange={onChange} />
+		<VStack padding={0} spacing="20px">
+			<VStack w="300px" align="left">
+				<Text ml="18px">Music File</Text>
+				<Input
+					type="file"
+					id="customFile"
+					accept="audio/*"
+					bgColor="gray.100"
+					padding={2}
+					onChange={onChange}
+				/>
+			</VStack>
 			<SimpleInput
 				label="Song Name"
 				value={songName}
@@ -96,14 +130,41 @@ export const FileInputOld = () => {
 					setSongName(event.target.value);
 				}}
 			/>
-			<SimpleInput
+
+			<VStack w="300px" align="left">
+				<Text ml="18px">Genre</Text>
+				<Select
+					placeholder="Select Genre"
+					variant="filled"
+					onChange={(event) => {
+						setGenre(event.target.value);
+					}}
+				>
+					{Genres.map((genre, index) => (
+						<option key={index} value={index}>
+							{genre}
+						</option>
+					))}
+				</Select>
+			</VStack>
+
+			{/* <SimpleInput
 				label="Genre"
 				value={genre}
 				onChange={(event) => {
 					setGenre(event.target.value);
 				}}
-			/>
-			<Button type="submit" value="UPLOAD" w={200} colorScheme="green" onClick={onSubmit}>
+			/> */}
+
+			<Button
+				type="submit"
+				isLoading={isSubmitting}
+				value="UPLOAD"
+				w={200}
+				width="full"
+				colorScheme="primary"
+				onClick={onSubmit}
+			>
 				Upload
 			</Button>
 			{isDup ? <InvalidMessage message="Duplicate file name!" /> : null}

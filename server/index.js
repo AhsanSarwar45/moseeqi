@@ -3,8 +3,6 @@ const mysql = require('mysql');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const fs = require('fs');
-const path = require('path');
-const { devNull } = require('os');
 
 const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
 
@@ -18,23 +16,23 @@ app.use(express.json());
 app.use(fileUpload());
 app.use(express.static('data'));
 
-// app.use(function(req, res, next) {
-// 	// Website you wish to allow to connect
-// 	res.setHeader('Access-Control-Allow-Origin', '*');
+app.use(function(req, res, next) {
+	// Website you wish to allow to connect
+	res.setHeader('Access-Control-Allow-Origin', '*');
 
-// 	// Request methods you wish to allow
-// 	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+	// Request methods you wish to allow
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
-// 	// Request headers you wish to allow
-// 	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
+	// Request headers you wish to allow
+	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
 
-// 	// // Set to true if you need the website to include cookies in the requests sent
-// 	// // to the API (e.g. in case you use sessions)
-// 	// res.setHeader('Access-Control-Allow-Credentials', true);
+	// // Set to true if you need the website to include cookies in the requests sent
+	// // to the API (e.g. in case you use sessions)
+	// res.setHeader('Access-Control-Allow-Credentials', true);
 
-// 	// Pass to next layer of middleware
-// 	next();
-// });
+	// Pass to next layer of middleware
+	next();
+});
 
 let users = []; //for seeding
 
@@ -43,77 +41,76 @@ let users = []; //for seeding
 // CREATE TABLE added (p_name VARCHAR(45) NOT NULL, s_name VARCHAR(45) NOT NULL, p_ph VARCHAR(45)NOT NULL, s_ph VARCHAR(45) NOT NULL, PRIMARY KEY(p_name, s_name, p_ph, s_ph))
 // `
 
-const InitializeTables = `
-DROP TABLE IF EXISTS added;
-DROP TABLE IF EXISTS follows;
-DROP TABLE IF EXISTS likes;
-DROP TABLE IF EXISTS listens;
-DROP TABLE IF EXISTS music;
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS playlist;
-DROP TABLE IF EXISTS views;
+// const InitializeTables = `
+// DROP TABLE IF EXISTS added;
+// DROP TABLE IF EXISTS follows;
+// DROP TABLE IF EXISTS likes;
+// DROP TABLE IF EXISTS listens;
+// DROP TABLE IF EXISTS music;
+// DROP TABLE IF EXISTS user;
+// DROP TABLE IF EXISTS playlist;
+// DROP TABLE IF EXISTS views;
 
-CREATE TABLE added (p_name varchar(45) NOT NULL, s_name varchar(45) NOT NULL, p_ph varchar(45) NOT NULL, s_ph varchar(45) NOT NULL, PRIMARY KEY (p_name,s_name,p_ph,s_ph));
-CREATE TABLE follows (follower_phone_number varchar(45) NOT NULL, followed_phone_number varchar(45) NOT NULL, PRIMARY KEY (follower_phone_number,followed_phone_number));
-CREATE TABLE likes (s_name varchar(45) NOT NULL, s_ph varchar(45) NOT NULL, liker_ph varchar(45) NOT NULL, PRIMARY KEY (s_name,s_ph,liker_ph));
-CREATE TABLE listens (s_ph varchar(45) NOT NULL, s_name varchar(45) NOT NULL, listener_ph varchar(45) NOT NULL, listen_counts int unsigned DEFAULT 0, PRIMARY KEY (s_ph,s_name,listener_ph));
-CREATE TABLE music (sname varchar(45) NOT NULL, phone_number varchar(45) NOT NULL, username varchar(45) DEFAULT NULL, like_count int(10) unsigned zerofill DEFAULT NULL, genre varchar(45) DEFAULT NULL, music_path varchar(300) DEFAULT NULL, promoted tinyint DEFAULT NULL, PRIMARY KEY (sname,phone_number));
-CREATE TABLE playlist (pname varchar(45) NOT NULL, creator_phone_number varchar(45) NOT NULL, creator_username varchar(45) DEFAULT NULL, PRIMARY KEY (pname,creator_phone_number));
-CREATE TABLE user (phone_number varchar(45) NOT NULL, email varchar(45) NOT NULL, username varchar(45) NOT NULL, password varchar(45) NOT NULL, follower_count int unsigned NOT NULL DEFAULT 0, profile_picture blob, type varchar(45) DEFAULT 1, earnings int DEFAULT 0, PRIMARY KEY (phone_number), UNIQUE KEY email_UNIQUE (email), UNIQUE KEY phone_number_UNIQUE (phone_number));
-CREATE TABLE views (pname varchar(45) NOT NULL, username varchar(45) DEFAULT NULL, user_number varchar(45) NOT NULL, PRIMARY KEY (pname,user_number));`;
+// CREATE TABLE added (p_name varchar(45) NOT NULL, s_name varchar(45) NOT NULL, p_ph varchar(45) NOT NULL, s_ph varchar(45) NOT NULL, PRIMARY KEY (p_name,s_name,p_ph,s_ph));
+// CREATE TABLE follows (follower_phone_number varchar(45) NOT NULL, followed_phone_number varchar(45) NOT NULL, PRIMARY KEY (follower_phone_number,followed_phone_number));
+// CREATE TABLE likes (s_name varchar(45) NOT NULL, s_ph varchar(45) NOT NULL, liker_ph varchar(45) NOT NULL, PRIMARY KEY (s_name,s_ph,liker_ph));
+// CREATE TABLE listens (s_ph varchar(45) NOT NULL, s_name varchar(45) NOT NULL, listener_ph varchar(45) NOT NULL, listen_counts int unsigned DEFAULT 0, PRIMARY KEY (s_ph,s_name,listener_ph));
+// CREATE TABLE music (sname varchar(45) NOT NULL, phone_number varchar(45) NOT NULL, username varchar(45) DEFAULT NULL, like_count int(10) unsigned zerofill DEFAULT NULL, genre varchar(45) DEFAULT NULL, music_path varchar(300) DEFAULT NULL, promoted tinyint DEFAULT NULL, PRIMARY KEY (sname,phone_number));
+// CREATE TABLE playlist (pname varchar(45) NOT NULL, creator_phone_number varchar(45) NOT NULL, creator_username varchar(45) DEFAULT NULL, PRIMARY KEY (pname,creator_phone_number));
+// CREATE TABLE user (phone_number varchar(45) NOT NULL, email varchar(45) NOT NULL, username varchar(45) NOT NULL, password varchar(45) NOT NULL, follower_count int unsigned NOT NULL DEFAULT 0, profile_picture blob, type varchar(45) DEFAULT 1, earnings int DEFAULT 0, PRIMARY KEY (phone_number), UNIQUE KEY email_UNIQUE (email), UNIQUE KEY phone_number_UNIQUE (phone_number));
+// CREATE TABLE views (pname varchar(45) NOT NULL, username varchar(45) DEFAULT NULL, user_number varchar(45) NOT NULL, PRIMARY KEY (pname,user_number));`;
 
-const db = mysql.createConnection({
-	//host: 'localhost',
-	socketPath: '/cloudsql/sharkbit-111:asia-southeast1:moseeqi',
-	user: 'root',
-	password: '123',
-	database: 'moseeqi',
-	multipleStatements: true
-});
+var db;
 
-db.connect(function(err) {
-	if (err) {
-		console.error(`Error connecting to database: ${err}`);
-		return;
-	}
-	console.log(`Connected to database as id ${db.threadId}`);
+function HandleDatabseDisconnect() {
+	db = mysql.createConnection({
+		// host: 'localhost',
+		// database: 'moseeqi',
+		// user: 'root',
+		// multipleStatements: true
 
-	db.query(InitializeTables, (err) => {
+		//host: 'mysql://bf6e65fdfe9335:f4ac9a38@us-cdbr-east-05.cleardb.net/heroku_9cc6bf5a097a6a8?reconnect=true',
+		host: 'us-cdbr-east-05.cleardb.net',
+		reconnect: true,
+		user: 'bf6e65fdfe9335',
+		password: 'f4ac9a38',
+		//hostname: 'us-cdbr-east-05.cleardb.net',
+		database: 'heroku_9cc6bf5a097a6a8',
+		multipleStatements: true
+	});
+
+	db.connect(function(err) {
 		if (err) {
-			console.log(err);
-			throw err;
+			console.error(`Error connecting to database: ${err}`);
+			setTimeout(HandleDatabseDisconnect, 2000);
 		} else {
-			console.log('success');
+			console.log(`Connected to database as id ${db.threadId}`);
+			SeedUsers(100);
 		}
 	});
 
-	SeedUsers(10000);
-	//SeedPlaylists();
-});
+	db.on('error', function(err) {
+		console.log('db error', err);
+		if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+			// Connection to the MySQL server is usually
+			HandleDatabseDisconnect(); // lost due to either server restart, or a
+		} else {
+			// connnection idle timeout (the wait_timeout
+			throw err; // server variable configures this)
+		}
+	});
+}
+
+HandleDatabseDisconnect();
 
 app.get('/', (req, res) => {
 	res.send('Server is running');
 });
 
-// for (let i = 0; i < 10000; i++)
-// {
-// 	db.query('(phone_number, username, email, password) VALUES (?,?,?,?)',
-// 	[rn(options), random.first(), randomEmail(), random.first()],
-// 	(err, result) => {
-// 		if (err) {
-// 			if (err.errno === 1062) {
-// 				res.send('duplicate-entry');
-// 			}
-// 		} else {
-// 			res.send('user-added');
-// 		}
-// 	})
-// };
-
 app.get('/check-db', (req, res) => {
 	db.query(`SELECT * FROM user`, (req, res) => {
 		if (err) {
-			throw err;
+			console.log(err);
 		}
 		res.send('user-added');
 	});
@@ -130,9 +127,8 @@ app.post('/create_user', (req, res) => {
 		[ phone_number, username, email, password ],
 		(err, result) => {
 			if (err) {
-				console.log(err);
 				if (err.errno === 1062) {
-					res.send('duplicate-entry');
+					res.send('duplicate-entry', phone_number, username, email, password);
 				}
 			} else {
 				console.log(`Sucessfully Added User ${email}`);
@@ -194,7 +190,7 @@ app.post('/login', (req, res) => {
 		'SELECT username FROM user WHERE phone_number = ? AND password = ?',
 		[ phone_number, password ],
 		(err, result) => {
-			if (err) throw err;
+			if (err) console.log(err);
 			if (result[0]) {
 				//sql query result is not null
 				console.log('user name:', result[0].username);
@@ -221,7 +217,7 @@ app.post('/search_user', (req, res) => {
 		'SELECT username, phone_number, follower_count FROM user WHERE username LIKE ?',
 		[ '%' + username + '%' ],
 		(err, result) => {
-			if (err) throw err;
+			if (err) console.log(err);
 			if (result[0]) {
 				//sql query result is not null
 				console.log('query successful');
@@ -240,8 +236,8 @@ app.post('/search_playlist', (req, res) => {
 		'SELECT pname, creator_phone_number FROM playlist WHERE creator_phone_number = ?',
 		[ phone_number ],
 		(err, result) => {
-			if (err) throw err;
-			if (result[0]) {
+			if (err) console.log(err);
+			if (result) {
 				//sql query result is not null
 				console.log('query successful');
 				res.send(result);
@@ -252,13 +248,27 @@ app.post('/search_playlist', (req, res) => {
 	);
 });
 
+app.post('/get-recommended-playlist', (req, res) => {
+	console.log('recommed');
+	db.query('SELECT pname, creator_phone_number FROM playlist ORDER BY rand() LIMIT 20', [], (err, result) => {
+		if (err) console.log(err);
+		if (result) {
+			//sql query result is not null
+			//console.log('recommende:', result);
+			res.send(result);
+		} else {
+			res.send('no_match');
+		}
+	});
+});
+
 app.post('/delete_music', (req, res) => {
 	console.log(req.body);
 	const phone_number = req.body.phone_number;
 	const sname = req.body.sname;
 	db.query('SELECT sname FROM music WHERE sname=? AND phone_number=?', [ sname, phone_number ], (err, result) => {
 		console.log('phone_NUMBER: ', phone_number);
-		if (err) throw err;
+		if (err) console.log(err);
 		if (result[0]) {
 			//sql query result is not null
 			// DELETE ChildTable
@@ -267,7 +277,7 @@ app.post('/delete_music', (req, res) => {
 			db.query('DELETE FROM likes WHERE s_name=? AND s_ph=?', [ sname, phone_number ], (err) => {
 				if (err) {
 					console.log('likes deletion_failed');
-					throw err;
+					console.log(err);
 				} else {
 					console.log('likes deletion_complete');
 				}
@@ -275,7 +285,7 @@ app.post('/delete_music', (req, res) => {
 			db.query('SET FOREIGN_KEY_CHECKS=0;', (err) => {
 				if (err) {
 					console.log('foreign key drop check failed');
-					throw err;
+					console.log(err);
 				} else {
 					console.log('foreign key dropped check');
 				}
@@ -285,18 +295,18 @@ app.post('/delete_music', (req, res) => {
 					db.query('SET FOREIGN_KEY_CHECKS=1;', (err) => {
 						if (err) {
 							console.log('foreign key back-on failed');
-							throw err;
+							console.log(err);
 						} else {
 							console.log('foreign key back on full party mode');
 						}
 					});
 					res.send('deletion_failed');
-					throw err;
+					console.log(err);
 				} else {
 					db.query('SET FOREIGN_KEY_CHECKS=1;', (err) => {
 						if (err) {
 							console.log('foreign key back-on failed');
-							throw err;
+							console.log(err);
 						} else {
 							console.log('foreign key back on full party mode');
 						}
@@ -324,13 +334,13 @@ app.post('/delete_music', (req, res) => {
 });
 
 app.post('/search_music', (req, res) => {
-	console.log('sup', req.body);
+	//console.log('sup', req.body);
 	const sname = req.body.sname;
 	db.query(
 		'SELECT sname, phone_number, username, like_count, genre, music_path FROM music WHERE (sname LIKE ?) or (username LIKE ?)',
 		[ '%' + sname + '%', '%' + sname + '%' ],
 		(err, result) => {
-			if (err) throw err;
+			if (err) console.log(err);
 			if (result[0]) {
 				//sql query result is not null
 				console.log('query successful', result);
@@ -342,10 +352,64 @@ app.post('/search_music', (req, res) => {
 	);
 });
 
+app.post('/search_self_music', (req, res) => {
+	//console.log('sup', req.body);
+	const phone_number = req.body.phone_number;
+	db.query(
+		'SELECT sname, phone_number, username, like_count, genre, music_path FROM music WHERE phone_number = ?',
+		[ phone_number ],
+		(err, result) => {
+			if (err) console.log(err);
+			if (result[0]) {
+				//sql query result is not null
+				console.log('query successful', result);
+				res.send(result);
+			} else {
+				res.send('no_match');
+			}
+		}
+	);
+});
+
+app.post('/view_playlist', (req, res) => {
+	//console.log('sup', req.body);
+	const p_name = req.body.p_name;
+	const p_ph = req.body.p_ph;
+
+	db.query('SELECT s_name, s_ph FROM added where p_ph = ? and p_name = ?', [ p_ph, p_name ], (err, result) => {
+		console.log('HERE PL SONGS: ', result);
+		if (err) console.log(err);
+		if (result) {
+			//sql query result is not null
+			console.log('query successful', result);
+			res.send(result);
+		}
+	});
+});
+
 app.post('/get-user', (req, res) => {
 	console.log('get user request recei', req.body);
+
+	db.query(
+		'SELECT count(*) as followers FROM follows WHERE followed_phone_number=?',
+		[ req.body.phone_number ],
+		(err, result) => {
+			if (err) console.log(err);
+			if (result[0]) {
+				db.query(
+					'UPDATE user SET follower_count=? WHERE phone_number=?',
+					[ result[0].followers, req.body.phone_number ],
+					(err) => {
+						if (err) {
+							console.log(err);
+						}
+					}
+				);
+			}
+		}
+	);
 	db.query('SELECT * FROM user WHERE phone_number=?', [ req.body.phone_number ], (err, result) => {
-		if (err) throw err;
+		if (err) console.log(err);
 		if (result[0]) {
 			//sql query result is not null
 			console.log('query successful');
@@ -361,7 +425,7 @@ app.post('/get-music', (req, res) => {
 		'SELECT count(liker_ph) as tot_likes FROM likes WHERE s_ph=? AND s_name=?',
 		[ req.body.phone_number, req.body.sname ],
 		(err, result) => {
-			if (err) throw err;
+			if (err) console.log(err);
 			if (result[0]) {
 				//sql query result is not null
 				console.log('count successful');
@@ -371,7 +435,7 @@ app.post('/get-music', (req, res) => {
 					[ result[0].tot_likes, req.body.sname, req.body.phone_number ],
 					(err) => {
 						if (err) {
-							throw err;
+							console.log(err);
 						} else {
 							console.log('like count added in music successful');
 						}
@@ -385,7 +449,7 @@ app.post('/get-music', (req, res) => {
 		'SELECT SUM(listen_counts) as tot_listens FROM listens WHERE s_ph=? AND s_name=?',
 		[ req.body.phone_number, req.body.sname ],
 		(err, result) => {
-			if (err) throw err;
+			if (err) console.log(err);
 			if (result[0]) {
 				//sql query result is not null
 				console.log('view count successful');
@@ -395,7 +459,7 @@ app.post('/get-music', (req, res) => {
 					[ result[0].tot_listens, req.body.sname, req.body.phone_number ],
 					(err) => {
 						if (err) {
-							throw err;
+							console.log(err);
 						} else {
 							console.log('listen count added in music successful');
 						}
@@ -409,7 +473,7 @@ app.post('/get-music', (req, res) => {
 		'SELECT * FROM music WHERE phone_number=? AND sname=?',
 		[ req.body.phone_number, req.body.sname ],
 		(err, result) => {
-			if (err) throw err;
+			if (err) console.log(err);
 			if (result[0]) {
 				//sql query result is not null
 				console.log('query successful');
@@ -431,7 +495,7 @@ app.post('/add_like', (req, res) => {
 			'SELECT s_ph FROM likes WHERE s_name=? AND s_ph=? AND liker_ph=?',
 			[ sname, phone_number, liker_ph ],
 			(err, result) => {
-				if (err) throw err;
+				if (err) console.log(err);
 				if (result[0]) {
 					//sql query result is not null
 					console.log('like found');
@@ -470,7 +534,7 @@ app.post('/add_listen', (req, res) => {
 		'SELECT listen_counts FROM listens WHERE s_name=? AND s_ph=? AND listener_ph=?',
 		[ s_name, s_ph, listener_ph ],
 		(err, result) => {
-			if (err) throw err;
+			if (err) console.log(err);
 			if (result[0]) {
 				//sql query result is not null
 				db.query(
@@ -478,7 +542,7 @@ app.post('/add_listen', (req, res) => {
 					[ s_name, s_ph, listener_ph ],
 					(err) => {
 						if (err) {
-							throw err;
+							console.log(err);
 						} else {
 							console.log('like count added in music successful');
 						}
@@ -506,12 +570,12 @@ app.post('/delete_account', (req, res) => {
 	//console.log(res);
 	const phone_number = req.body.phone_number;
 	db.query('SELECT username FROM user WHERE phone_number = ?', [ phone_number ], (err, result) => {
-		if (err) throw err;
+		if (err) console.log(err);
 		if (result[0]) {
 			db.query('DELETE FROM user WHERE phone_number = ?', [ phone_number ], (err, result) => {
 				if (err) {
 					res.send('deletion_failed');
-					throw err;
+					console.log(err);
 				} else {
 					var dir = `/data/${phone_number}`;
 					if (!fs.existsSync(dir)) {
@@ -546,7 +610,7 @@ app.post('/follow_user', (req, res) => {
 			[ follower_ph, followed_ph ],
 			(err, result) => {
 				console.log('RES: ', result);
-				if (err) throw err;
+				if (err) console.log(err);
 				if (result[0]) {
 					//sql query result is not null
 					console.log('like found');
@@ -608,7 +672,7 @@ app.post('/add_song_to_playlist', (req, res) => {
 			if (err.errno === 1062) {
 				res.send('duplicate-entry');
 			} else {
-				throw err;
+				console.log(err);
 			}
 		} else {
 			res.send('song-added-to-playlist');
@@ -617,57 +681,69 @@ app.post('/add_song_to_playlist', (req, res) => {
 });
 
 app.listen(PORT, () => {
-	console.log(`Server listening on http://localhost:${PORT}`);
+	console.log(`Server listening on PORT:${PORT}`);
 });
 
 // Clean up process
-process.on('SIGTERM', () => {
-	server.close(() => {
-		console.log('Server stopped');
-	});
-});
+// process.on('SIGTERM', () => {
+// 	server.close(() => {
+// 		console.log('Server stopped');
+// 	});
+// });
 
 function getRandomArbitrary(min, max) {
 	return Math.floor(Math.random() * (max - min) + min);
 }
 
 function SeedUsers(amount) {
-	let values = [];
-	for (let index = 0; index < amount; index++) {
-		const username = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] });
-		const phone_number = getRandomArbitrary(10000, 100000000);
-		const password = getRandomArbitrary(10000, 100000000);
-		const email = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] }) + '@site.com';
-
-		if (!users.some((e) => e.ph === phone_number || e.email === email)) {
-			values.push([ phone_number, username, email, password ]);
-			users.push({ ph: phone_number, username: username, email: email });
-		}
-	}
-
-	db.query('INSERT INTO user (phone_number, username, email, password) VALUES ?', [ values ], (err, result) => {
+	db.query('SELECT COUNT(*) AS userCount FROM user', [], (err, result) => {
 		if (err) {
-			if (err.errno === 1062) {
-				console.log('Error entry');
-			}
+			console.log('Error counting users:', err);
 		} else {
-			SeedPlaylists();
-		}
-	});
-}
+			amount = amount - result[0].userCount;
+			if (amount <= 0) {
+				console.log('No Users to Seed.');
+				return;
+			}
+			console.log(`Please Wait, Seeding ${amount} Users...`);
+			let values = [];
+			for (let index = 0; index < amount; index++) {
+				const username = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] });
+				const phone_number = getRandomArbitrary(10000, 100000000);
+				const password = getRandomArbitrary(10000, 100000000);
+				const email = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] }) + '@site.com';
 
-function SeedPlaylists() {
-	let values = [];
-	for (let index = 0; index < users.length; index++) {
-		const pname = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] });
-		values.push([ pname, users[index].ph ]);
-	}
-	db.query('INSERT INTO playlist (pname, creator_phone_number) VALUES ?', [ values ], (err, result) => {
-		if (err) {
-			if (err.errno === 1062) {
-				console.log('Error entry');
+				db.query(
+					'INSERT INTO user (phone_number, username, email, password) VALUES (?,?,?,?) ',
+					[ phone_number, username, email, password ],
+					(err, result) => {
+						if (err) {
+							if (err.errno === 1062) {
+								console.log('Error entry user', index, err);
+							} else {
+								console.log(err);
+							}
+						} else {
+							const pname = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] });
+							db.query(
+								'INSERT INTO playlist (pname, creator_phone_number) VALUES (?,?)',
+								[ pname, phone_number ],
+								(err, result) => {
+									if (err) {
+										if (err.errno === 1062) {
+											console.log('Error entry playlist');
+										}
+									} else {
+										if (index === amount - 1) {
+											console.log('Seeding Users Complete!');
+										}
+									}
+								}
+							);
+						}
+					}
+				);
 			}
-		} else {
 		}
 	});
 }
