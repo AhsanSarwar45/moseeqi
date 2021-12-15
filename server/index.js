@@ -617,16 +617,59 @@ function getRandomArbitrary(min, max) {
 }
 
 function SeedUsers(amount) {
-	for (let index = 0; index < amount; index++) {
-		const username = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] });
-		const phone_number = getRandomArbitrary(10000, 100000000);
-		const password = getRandomArbitrary(10000, 100000000);
-		const email = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] }) + '@site.com';
+	db.query('DROP TABLE IF EXISTS user', (err, result) => {
+		if (err) {
+			console.log('Error dropping user table!:', err);
+		} else {
+			db.query(
+				'CREATE TABLE user (phone_number varchar(45) NOT NULL, email varchar(45) NOT NULL, username varchar(45) NOT NULL, password varchar(45) NOT NULL, follower_count int unsigned NOT NULL DEFAULT 0, profile_picture blob, type varchar(45) DEFAULT 1, earnings int DEFAULT 0, PRIMARY KEY (phone_number), UNIQUE KEY email_UNIQUE (email), UNIQUE KEY phone_number_UNIQUE (phone_number))',
+				(err, result) => {
+					if (err) {
+						console.log('Error creating table!:', err);
+					} else {
+						for (let index = 0; index < amount; index++) {
+							const username = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] });
+							const phone_number = getRandomArbitrary(10000, 100000000);
+							const password = getRandomArbitrary(10000, 100000000);
+							const email =
+								uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] }) + '@site.com';
 
-		db.query(
-			'INSERT INTO user (phone_number, username, email, password) VALUES (?,?,?,?)',
-			[ phone_number, username, email, password ],
-			(err, result) => {}
-		);
-	}
+							db.query(
+								'INSERT INTO user (phone_number, username, email, password) VALUES (?,?,?,?)',
+								[ phone_number, username, email, password ],
+								(err, result) => {
+									if (err) {
+										console.log(('error adding users to user table:', err));
+									}
+								}
+							);
+						}
+					}
+				}
+			);
+		}
+	});
 }
+
+// function SeedPlaylists(amount) {
+// 	for (let index = 0; index < amount; index++) {
+// 		const pname = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] });
+// 		const phone_number = getRandomArbitrary(10000, 100000000);
+// 		const password = getRandomArbitrary(10000, 100000000);
+// 		const email = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] }) + '@site.com';
+
+// 		db.query(
+// 			'INSERT INTO playlist (pname, creator_phone_number) VALUES (?,?)',
+// 			[ pname, phone_number ],
+// 			(err, result) => {
+// 				if (err) {
+// 					if (err.errno === 1062) {
+// 						res.send('duplicate-entry');
+// 					}
+// 				} else {
+// 					res.send('playlist-added');
+// 				}
+// 			}
+// 		);
+// 	}
+// }
