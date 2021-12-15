@@ -30,7 +30,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "proxy": "https://sharkbit-111.uc.r.appspot.com/get-user",
   "eslintConfig": {
     "extends": [
       "react-app",
