@@ -80,6 +80,7 @@ db.connect(function(err) {
 
 	db.query(InitializeTables, (err) => {
 		if (err) {
+			console.log(err);
 			throw err;
 		} else {
 			console.log('success');
