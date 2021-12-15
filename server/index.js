@@ -90,20 +90,20 @@ app.get('/', (req, res) => {
 	res.send("server is running");
 })
 
-for (let i = 0; i < 10000; i++)
-{
-	db.query('(phone_number, username, email, password) VALUES (?,?,?,?)',
-	[rn(options), random.first(), randomEmail(), random.first()],
-	(err, result) => {
-		if (err) {
-			if (err.errno === 1062) {
-				res.send('duplicate-entry');
-			}
-		} else {
-			res.send('user-added');
-		}
-	})
-};
+// for (let i = 0; i < 10000; i++)
+// {
+// 	db.query('(phone_number, username, email, password) VALUES (?,?,?,?)',
+// 	[rn(options), random.first(), randomEmail(), random.first()],
+// 	(err, result) => {
+// 		if (err) {
+// 			if (err.errno === 1062) {
+// 				res.send('duplicate-entry');
+// 			}
+// 		} else {
+// 			res.send('user-added');
+// 		}
+// 	})
+// };
 
 app.get('/check-db', (req, res) => {
 	db.query(`SELECT * FROM user`, (req, res) => {
