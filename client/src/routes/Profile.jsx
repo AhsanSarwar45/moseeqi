@@ -18,7 +18,7 @@ export const Profile = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/get-user', {
+		Axios.post(process.env.REACT_APP_LINK_URL+'/get-user', {
 			phone_number: phone_number
 		}).then((response) => {
 			let selfData = sessionStorage.getItem("user-data");
@@ -32,7 +32,7 @@ export const Profile = () => {
 			}
 		});
 
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/follow_user', {
+		Axios.post(process.env.REACT_APP_LINK_URL+'/follow_user', {
 			check: true,
 			followed_ph: phone_number,
 			follower_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number
@@ -51,7 +51,7 @@ export const Profile = () => {
 	}, []);
 
 	const deleteAccount = () => {
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/delete_account', {
+		Axios.post(process.env.REACT_APP_LINK_URL+'/delete_account', {
 			phone_number: phone_number
 		}).then((response) => {
 			//TODO: create a page 
@@ -74,7 +74,7 @@ export const Profile = () => {
 
 	const followUser = () => {
 		setFollowing(true);
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/follow_user', {
+		Axios.post(process.env.REACT_APP_LINK_URL+'/follow_user', {
 			check: false,
 			followed_ph: phone_number,
 			follower_ph: JSON.parse(sessionStorage.getItem("user-data")).phone_number

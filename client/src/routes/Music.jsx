@@ -18,7 +18,7 @@ export const Music = () => {
 
 	const AddSongToPlaylist = (playlistName, p_ph) => {
 		console.log('adding to p:');
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/add_song_to_playlist',{
+		Axios.post(process.env.REACT_APP_LINK_URL+'/add_song_to_playlist',{
 			pname: playlistName,
 			sname: sname,
 			p_ph: p_ph,
@@ -35,7 +35,7 @@ export const Music = () => {
 
 	const AddLike = () => {
 		setIsLiked(true);
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/add_like', {
+		Axios.post(process.env.REACT_APP_LINK_URL+'/add_like', {
 			check: false,
 			phone_number: phone_number,
 			sname: sname,
@@ -55,7 +55,7 @@ export const Music = () => {
 
 	const GetPlaylist = () => {
 		console.log('here');
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/search_playlist', {
+		Axios.post(process.env.REACT_APP_LINK_URL+'/search_playlist', {
 				phone_number: JSON.parse(sessionStorage.getItem("user-data")).phone_number
 			}).then((response) => {
 				if (response.data === 'no_match') {
@@ -68,7 +68,7 @@ export const Music = () => {
 	};
 
 	useEffect(() => {
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/get-music', {
+		Axios.post(process.env.REACT_APP_LINK_URL+'/get-music', {
 			phone_number: phone_number,
 			sname: sname
 		}).then((response) => {
@@ -76,7 +76,7 @@ export const Music = () => {
 			console.log('music info received');
 		});
 		//to check if user has already liked this song
-		Axios.post('https://sharkbit-111.uc.r.appspot.com/add_like', {
+		Axios.post(process.env.REACT_APP_LINK_URL+'/add_like', {
 		check: true,
 		phone_number: phone_number,
 		sname: sname,
