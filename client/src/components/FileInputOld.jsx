@@ -50,9 +50,11 @@ export const FileInputOld = () => {
 			formData.append('user_name', data.username);
 			formData.append('sname', songName);
 			formData.append('genre', genre);
-			Axios.post(process.env.URL+'/', formData, {
+			Axios.post('https://sharkbit-111.uc.r.appspot.com//', formData, {
 				headers: {
-					'Content-Type': 'multipart/form-data'
+					'Content-Type': 'multipart/form-data',
+					'Access-Control-Allow-Origin': '*', 
+					//'Content-Type': 'application/json
 				}
 			})
 				.then((response) => {
