@@ -14,10 +14,17 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
+<<<<<<< Updated upstream
     "mysql": "^2.18.1"
   },
   "engines": {
     "npm": "8.1.0",
     "node": "v16.13.0"
+=======
+    "mysql": "^2.18.1",
+    "random-email": "^1.0.3",
+    "random-name": "^0.1.2",
+    "random-number": "^0.0.9"
+>>>>>>> Stashed changes
   }
 }
