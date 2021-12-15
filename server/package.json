@@ -15,5 +15,9 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "mysql": "^2.18.1"
+  },
+  "engines": {
+    "npm": "8.1.0",
+    "node": "v16.13.0"
   }
 }
