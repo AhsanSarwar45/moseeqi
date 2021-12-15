@@ -1,1 +1,3 @@
 runtime: nodejs14
+beta_settings:
+  cloud_sql_instances: sharkbit-111:asia-southeast1:moseeqi

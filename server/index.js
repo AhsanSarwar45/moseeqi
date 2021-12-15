@@ -62,8 +62,7 @@ CREATE TABLE playlist (pname varchar(45) NOT NULL, creator_phone_number varchar(
 CREATE TABLE user (phone_number varchar(45) NOT NULL, email varchar(45) NOT NULL, username varchar(45) NOT NULL, password varchar(45) NOT NULL, follower_count int unsigned NOT NULL DEFAULT 0, profile_picture blob, type varchar(45) DEFAULT 1, earnings int DEFAULT 0, PRIMARY KEY (phone_number), UNIQUE KEY email_UNIQUE (email), UNIQUE KEY phone_number_UNIQUE (phone_number));
 CREATE TABLE views (pname varchar(45) NOT NULL, username varchar(45) DEFAULT NULL, user_number varchar(45) NOT NULL, PRIMARY KEY (pname,user_number));`;
 
-const db = mysql.createPool({
-	connectionLimit: 100,
+const db = mysql.createConnection({
 	//host: 'localhost',
 	socketPath: '/cloudsql/sharkbit-111:asia-southeast1:moseeqi',
 	user: 'root',
@@ -72,49 +71,43 @@ const db = mysql.createPool({
 	multipleStatements: true
 });
 
-mysql.getConnection(function(err, conn) {
-	conn.query(InitializeTables, (err) => {
+db.connect(function(err) {
+	if (err) {
+		console.error(`Error connecting to database: ${err}`);
+		return;
+	}
+	console.log(`Connected to database as id ${db.threadId}`);
+
+	db.query(InitializeTables, (err) => {
 		if (err) {
 			throw err;
 		} else {
-			console.log('Success Initializing');
+			console.log('success');
 		}
 	});
+
+	SeedUsers(10000);
+	//SeedPlaylists();
 });
-
-SeedUsers(10000);
-
-// const dbSingle = mysql.createConnection({
-// 	//host: 'localhost',
-// 	socketPath: '/cloudsql/sharkbit-111:asia-southeast1:moseeqi',
-// 	user: 'root',
-// 	password: '123',
-// 	database: 'moseeqi',
-// 	multipleStatements: true
-// });
-
-// dbSingle.connect(function(err) {
-// 	if (err) {
-// 		console.error(`Error connecting to database: ${err}`);
-// 		return;
-// 	}
-// 	console.log(`Connected to database as id ${dbSingle.threadId}`);
-
-// 	dbSingle.query(InitializeTables, (err) => {
-// 		if (err) {
-// 			throw err;
-// 		} else {
-// 			console.log('success');
-// 		}
-// 	});
-
-// 	SeedUsers(10000);
-// 	//SeedPlaylists();
-// });
 
 app.get('/', (req, res) => {
-	res.send('server is running');
+	res.send('Server is running');
 });
+
+// for (let i = 0; i < 10000; i++)
+// {
+// 	db.query('(phone_number, username, email, password) VALUES (?,?,?,?)',
+// 	[rn(options), random.first(), randomEmail(), random.first()],
+// 	(err, result) => {
+// 		if (err) {
+// 			if (err.errno === 1062) {
+// 				res.send('duplicate-entry');
+// 			}
+// 		} else {
+// 			res.send('user-added');
+// 		}
+// 	})
+// };
 
 app.get('/check-db', (req, res) => {
 	db.query(`SELECT * FROM user`, (req, res) => {
@@ -131,23 +124,21 @@ app.post('/create_user', (req, res) => {
 	const email = req.body.email;
 	const password = req.body.password;
 
-	mysql.getConnection(function(err, conn) {
-		conn.query(
-			'INSERT INTO user (phone_number, username, email, password) VALUES (?,?,?,?)',
-			[ phone_number, username, email, password ],
-			(err, result) => {
-				if (err) {
-					console.log(err);
-					if (err.errno === 1062) {
-						res.send('duplicate-entry');
-					}
-				} else {
-					console.log(`Sucessfully Added User ${email}`);
-					res.send('user-added');
+	db.query(
+		'INSERT INTO user (phone_number, username, email, password) VALUES (?,?,?,?)',
+		[ phone_number, username, email, password ],
+		(err, result) => {
+			if (err) {
+				console.log(err);
+				if (err.errno === 1062) {
+					res.send('duplicate-entry');
 				}
+			} else {
+				console.log(`Sucessfully Added User ${email}`);
+				res.send('user-added');
 			}
-		);
-	});
+		}
+	);
 });
 
 app.post('/upload_music', (req, res) => {
