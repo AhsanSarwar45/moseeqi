@@ -36,12 +36,24 @@ app.use(function(req, res, next) {
 	next();
 });
 
+let phone_numbers = [];
+
 // const initiliazeTables = `
 
 // CREATE TABLE added (p_name VARCHAR(45) NOT NULL, s_name VARCHAR(45) NOT NULL, p_ph VARCHAR(45)NOT NULL, s_ph VARCHAR(45) NOT NULL, PRIMARY KEY(p_name, s_name, p_ph, s_ph))
 // `
 
-const InitializeTables = `CREATE TABLE added (p_name varchar(45) NOT NULL, s_name varchar(45) NOT NULL, p_ph varchar(45) NOT NULL, s_ph varchar(45) NOT NULL, PRIMARY KEY (p_name,s_name,p_ph,s_ph));
+const InitializeTables = `
+DROP TABLE IF EXISTS added;
+DROP TABLE IF EXISTS follows;
+DROP TABLE IF EXISTS likes;
+DROP TABLE IF EXISTS listens;
+DROP TABLE IF EXISTS music;
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS playlist;
+DROP TABLE IF EXISTS views;
+
+CREATE TABLE added (p_name varchar(45) NOT NULL, s_name varchar(45) NOT NULL, p_ph varchar(45) NOT NULL, s_ph varchar(45) NOT NULL, PRIMARY KEY (p_name,s_name,p_ph,s_ph));
 CREATE TABLE follows (follower_phone_number varchar(45) NOT NULL, followed_phone_number varchar(45) NOT NULL, PRIMARY KEY (follower_phone_number,followed_phone_number));
 CREATE TABLE likes (s_name varchar(45) NOT NULL, s_ph varchar(45) NOT NULL, liker_ph varchar(45) NOT NULL, PRIMARY KEY (s_name,s_ph,liker_ph));
 CREATE TABLE listens (s_ph varchar(45) NOT NULL, s_name varchar(45) NOT NULL, listener_ph varchar(45) NOT NULL, listen_counts int unsigned DEFAULT 0, PRIMARY KEY (s_ph,s_name,listener_ph));
@@ -56,7 +68,7 @@ const db = mysql.createConnection({
 	user: 'root',
 	//password: '123',
 	database: 'moseeqi',
-	multipleStatemets: true
+	multipleStatements: true
 });
 
 db.connect(function(err) {
@@ -66,15 +78,16 @@ db.connect(function(err) {
 	}
 	console.log(`Connected to database as id ${db.threadId}`);
 
-	// db.query(InitializeTables, (err) => {
-	// 	if (err) {
-	// 		throw err;
-	// 	} else {
-	// 		console.log('success');
-	// 	}
-	// });
+	db.query(InitializeTables, (err) => {
+		if (err) {
+			throw err;
+		} else {
+			console.log('success');
+		}
+	});
 
 	SeedUsers(100);
+	//SeedPlaylists();
 });
 
 app.get('/', (req, res) => {
@@ -617,36 +630,36 @@ function getRandomArbitrary(min, max) {
 }
 
 function SeedUsers(amount) {
-	db.query('DROP TABLE IF EXISTS user', (err, result) => {
-		if (err) {
-			console.log('Error dropping user table!:', err);
-		} else {
-			db.query(
-				'CREATE TABLE user (phone_number varchar(45) NOT NULL, email varchar(45) NOT NULL, username varchar(45) NOT NULL, password varchar(45) NOT NULL, follower_count int unsigned NOT NULL DEFAULT 0, profile_picture blob, type varchar(45) DEFAULT 1, earnings int DEFAULT 0, PRIMARY KEY (phone_number), UNIQUE KEY email_UNIQUE (email), UNIQUE KEY phone_number_UNIQUE (phone_number))',
-				(err, result) => {
-					if (err) {
-						console.log('Error creating table!:', err);
-					} else {
-						for (let index = 0; index < amount; index++) {
-							const username = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] });
-							const phone_number = getRandomArbitrary(10000, 100000000);
-							const password = getRandomArbitrary(10000, 100000000);
-							const email =
-								uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] }) + '@site.com';
+	let values = [];
+	for (let index = 0; index < amount; index++) {
+		const username = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] });
+		const phone_number = getRandomArbitrary(10000, 100000000);
+		const password = getRandomArbitrary(10000, 100000000);
+		const email = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] }) + '@site.com';
 
-							db.query(
-								'INSERT INTO user (phone_number, username, email, password) VALUES (?,?,?,?)',
-								[ phone_number, username, email, password ],
-								(err, result) => {
-									if (err) {
-										console.log(('error adding users to user table:', err));
-									}
-								}
-							);
-						}
-					}
-				}
-			);
+		values.push([ phone_number, username, email, password ]);
+		phone_numbers.push(phone_number);
+	}
+
+	db.query('INSERT INTO user (phone_number, username, email, password) VALUES ?', [ values ], (err, result) => {
+		if (err) {
+			console.log(('error adding users to user table:', err));
+		} else {
+			SeedPlaylists();
+		}
+	});
+}
+
+function SeedPlaylists() {
+	let values = [];
+	for (let index = 0; index < phone_numbers.length; index++) {
+		const pname = uniqueNamesGenerator({ dictionaries: [ adjectives, colors, animals ] });
+		values.push([ pname, phone_numbers[index] ]);
+	}
+	db.query('INSERT INTO playlist (pname, creator_phone_number) VALUES ?', [ values ], (err, result) => {
+		if (err) {
+			console.log(('error adding playlists to playlist table:', err));
+		} else {
 		}
 	});
 }
