@@ -18,7 +18,7 @@ export const Profile = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		Axios.post(process.env.URL+'/get-user', {
+		Axios.post(process.env.URL+'/get-user', {headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }},{
 			phone_number: phone_number
 		}).then((response) => {
 			let selfData = sessionStorage.getItem("user-data");

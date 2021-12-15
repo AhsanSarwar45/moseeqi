@@ -15,9 +15,7 @@ export const SignUp = () => {
 	const SignUpOnClick = (values, actions) => {
 		setTimeout(() => {
 			actions.setSubmitting(false);
-			Axios.post(process.env.URL + '/create_user', values, {
-				headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
-			}).then((response) => {
+			Axios.post(process.env.URL + '/create_user', values, {headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }}).then((response) => {
 				console.log(response.data);
 				if (response.data === 'user-added') {
 					//console.log('Sucess!');

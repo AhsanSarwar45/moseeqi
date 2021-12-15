@@ -25,7 +25,7 @@ export const Login = () => {
 				sessionStorage.setItem('isUserLogged', true);
 				let data = sessionStorage.getItem('user-data');
 				data = JSON.parse(data);
-				Axios.post(process.env.URL+'/get-user', {
+				Axios.post(process.env.URL+'/get-user', {headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }},{
 					phone_number: data.phone_number
 				}).then((response) => {
 					sessionStorage.setItem('user-data', JSON.stringify(response.data[0]));
